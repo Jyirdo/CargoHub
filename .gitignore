@@ -1,5 +1,7 @@
 bin/
 obj/
+api/__pycache__/
+api/.pytest_cache/
 .vscode/
 .venv/
 .pytest_cache/
