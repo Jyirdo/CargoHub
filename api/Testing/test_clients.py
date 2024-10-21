@@ -22,7 +22,7 @@ def test_get_all_clients(api_data):
         # Ensure that key fields are present in each client
         assert "id" in client
         assert "name" in client
-        assert "email" in client
+        assert "address" in client
 
 
 # Test to GET a specific client by its ID
@@ -36,7 +36,7 @@ def test_get_client_by_id(api_data):
 
     assert client["id"] == client_id  # Ensure ID matches
     assert "name" in client  # Check necessary fields
-    assert "email" in client
+    assert "address" in client
 
 
 # Test to ADD a new client and DELETE it afterwards
