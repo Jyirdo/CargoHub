@@ -1,7 +1,6 @@
 import pytest
 import requests
 
-# Setup common API info using a fixture
 @pytest.fixture
 def api_data():
     url = 'http://localhost:3000/api/v1'
@@ -17,9 +16,8 @@ def test_get_all_item_groups(api_data):
     assert response.status_code == 200
     item_groups = response.json()
 
-    assert isinstance(item_groups, list)  # Check if the result is a list
+    assert isinstance(item_groups, list)
     for item_groups in item_groups:
-        # Ensure that key fields are present in each item_groups
         assert "id" in item_groups
         assert "name" in item_groups
         assert "description" in item_groups
