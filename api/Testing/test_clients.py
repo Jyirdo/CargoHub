@@ -1,7 +1,6 @@
 import pytest
 import requests
 
-# Setup common API info using a fixture
 @pytest.fixture
 def api_data():
     url = 'http://localhost:3000/api/v1'
@@ -17,9 +16,8 @@ def test_get_all_clients(api_data):
     assert response.status_code == 200
     clients = response.json()
 
-    assert isinstance(clients, list)  # Check if the result is a list
+    assert isinstance(clients, list)
     for client in clients:
-        # Ensure that key fields are present in each client
         assert "id" in client
         assert "name" in client
         assert "address" in client
@@ -28,14 +26,14 @@ def test_get_all_clients(api_data):
 # Test to GET a specific client by its ID
 def test_get_client_by_id(api_data):
     url, api_key = api_data
-    client_id = 1  # Adjust this ID based on what exists in your database
+    client_id = 1
     response = requests.get(f"{url}/clients/{client_id}", headers={"API_KEY": api_key})
 
     assert response.status_code == 200
     client = response.json()
 
-    assert client["id"] == client_id  # Ensure ID matches
-    assert "name" in client  # Check necessary fields
+    assert client["id"] == client_id
+    assert "name" in client
     assert "address" in client
 
 
@@ -50,11 +48,11 @@ def test_add_and_delete_client(api_data):
         "updated_at": "2024-01-01 12:00:00"
     }
 
-    # Add the client (POST request)
+    # Add the client
     post_response = requests.post(f"{url}/clients", json=new_client, headers={"API_KEY": api_key})
     assert post_response.status_code == 201
 
-    # Delete the newly added client (DELETE request)
+    # Delete the newly added client
     delete_response = requests.delete(f"{url}/clients/{new_client['id']}", headers={"API_KEY": api_key})
     assert delete_response.status_code == 200
 
@@ -62,7 +60,7 @@ def test_add_and_delete_client(api_data):
 # Test to UPDATE an existing client
 def test_update_client(api_data):
     url, api_key = api_data
-    client_id = 1  # Adjust this ID based on your data
+    client_id = 1
 
     # Fetch current client data to update
     original_data = requests.get(f"{url}/clients/{client_id}", headers={"API_KEY": api_key}).json()

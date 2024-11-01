@@ -2,7 +2,6 @@ import pytest
 import requests
 
 
-# Setup common API info using a fixture
 @pytest.fixture
 def api_data():
     url = 'http://localhost:3000/api/v1'
@@ -18,9 +17,8 @@ def test_get_all_inventories(api_data):
     assert response.status_code == 200
     inventories = response.json()
 
-    assert isinstance(inventories, list)  # Check if the result is a list
+    assert isinstance(inventories, list)
     for inventory in inventories:
-        # Ensure that key fields are present in each inventory
         assert "id" in inventory
         assert "item_id" in inventory
         assert "description" in inventory
@@ -30,14 +28,14 @@ def test_get_all_inventories(api_data):
 # Test to GET a specific inventory by its ID
 def test_get_inventory_by_id(api_data):
     url, api_key = api_data
-    inventory_id = 1  # Adjust this ID based on what exists in your database
+    inventory_id = 1
     response = requests.get(f"{url}/inventories/{inventory_id}", headers={"API_KEY": api_key})
 
     assert response.status_code == 200
     inventory = response.json()
 
-    assert inventory["id"] == inventory_id  # Ensure ID matches
-    assert "item_id" in inventory  # Check necessary fields
+    assert inventory["id"] == inventory_id
+    assert "item_id" in inventory
     assert "description" in inventory
 
 
@@ -53,11 +51,11 @@ def test_add_and_delete_inventory(api_data):
         "updated_at": "2024-01-01 12:00:00"
     }
 
-    # Add the inventory (POST request)
+    # Add the inventory
     post_response = requests.post(f"{url}/inventories", json=new_inventory, headers={"API_KEY": api_key})
     assert post_response.status_code == 201
 
-    # Delete the newly added inventory (DELETE request)
+    # Delete added inventory
     delete_response = requests.delete(f"{url}/inventories/{new_inventory['id']}", headers={"API_KEY": api_key})
     assert delete_response.status_code == 200
 
@@ -65,7 +63,7 @@ def test_add_and_delete_inventory(api_data):
 # Test to UPDATE an existing inventory
 def test_update_inventory(api_data):
     url, api_key = api_data
-    inventory_id = 1  # Adjust this ID based on your data
+    inventory_id = 1
 
     # Fetch current inventory data to update
     original_data = requests.get(f"{url}/inventories/{inventory_id}", headers={"API_KEY": api_key}).json()
