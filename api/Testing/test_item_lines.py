@@ -8,8 +8,7 @@ def api_data():
     api_key = 'a1b2c3d4e5'
     return url, api_key
 
-
-# Test to GET all itemitem_lines
+# Test to GET all item_lines
 def test_get_all_item_lines(api_data):
     url, api_key = api_data
     response = requests.get(f"{url}/item_lines", headers={"API_KEY": api_key})
