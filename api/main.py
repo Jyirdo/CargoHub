@@ -32,16 +32,16 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(json.dumps(warehouse).encode("utf-8"))
                 case 3:
-                    if path[2] == "locations":
-                        warehouse_id = int(path[1])
-                        locations = data_provider.fetch_location_pool().get_locations_in_warehouse(warehouse_id)
+                    warehouse_id = int(path[1])
+                    data = data_provider.fetch_warehouse_pool().get_warehouse_data(warehouse_id, path[2])
+                    if data == None:
+                        self.send_response(404)
+                        self.end_headers()
+                    else:
                         self.send_response(200)
                         self.send_header("Content-type", "application/json")
                         self.end_headers()
-                        self.wfile.write(json.dumps(locations).encode("utf-8"))
-                    else:
-                        self.send_response(404)
-                        self.end_headers()
+                        self.wfile.write(json.dumps(data).encode("utf-8"))
                 case _:
                     self.send_response(404)
                     self.end_headers()
@@ -61,6 +61,17 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(location).encode("utf-8"))
+                case 3:
+                    location_id = int(path[1])
+                    data = data_provider.fetch_location_pool().get_location_data(location_id, path[2])
+                    if data == None:
+                        self.send_response(404)
+                        self.end_headers()
+                    else:
+                        self.send_response(200)
+                        self.send_header("Content-type", "application/json")
+                        self.end_headers()
+                        self.wfile.write(json.dumps(data).encode("utf-8"))
                 case _:
                     self.send_response(404)
                     self.end_headers()
@@ -81,16 +92,16 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(json.dumps(transfer).encode("utf-8"))
                 case 3:
-                    if path[2] == "items":
-                        transfer_id = int(path[1])
-                        items = data_provider.fetch_transfer_pool().get_items_in_transfer(transfer_id)
+                    transfer_id = int(path[1])
+                    data = data_provider.fetch_transfer_pool().get_transfer_data(transfer_id, path[2])
+                    if data == None:
+                        self.send_response(404)
+                        self.end_headers()
+                    else:
                         self.send_response(200)
                         self.send_header("Content-type", "application/json")
                         self.end_headers()
-                        self.wfile.write(json.dumps(items).encode("utf-8"))
-                    else:
-                        self.send_response(404)
-                        self.end_headers()
+                        self.wfile.write(json.dumps(data).encode("utf-8"))
                 case _:
                     self.send_response(404)
                     self.end_headers()
@@ -111,16 +122,16 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(json.dumps(item).encode("utf-8"))
                 case 3:
-                    if path[2] == "inventory":
-                        item_id = path[1]
-                        inventories = data_provider.fetch_inventory_pool().get_inventories_for_item(item_id)
+                    item_id = path[1]
+                    data = data_provider.fetch_item_pool().get_item_data(item_id, path[2])
+                    if data == None:
+                        self.send_response(404)
+                        self.end_headers()
+                    else:
                         self.send_response(200)
                         self.send_header("Content-type", "application/json")
                         self.end_headers()
-                        self.wfile.write(json.dumps(inventories).encode("utf-8"))
-                    else:
-                        self.send_response(404)
-                        self.end_headers()
+                        self.wfile.write(json.dumps(data).encode("utf-8"))
                 case 4:
                     if path[2] == "inventory" and path[3] == "totals":
                         item_id = path[1]
@@ -154,16 +165,16 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(json.dumps(item_line).encode("utf-8"))
                 case 3:
-                    if path[2] == "items":
-                        item_line_id = int(path[1])
-                        items = data_provider.fetch_item_pool().get_items_for_item_line(item_line_id)
+                    item_line_id = int(path[1])
+                    data = data_provider.fetch_item_line_pool().get_item_line_data(item_line_id, path[2])
+                    if data == None:
+                        self.send_response(404)
+                        self.end_headers()
+                    else:
                         self.send_response(200)
                         self.send_header("Content-type", "application/json")
                         self.end_headers()
-                        self.wfile.write(json.dumps(items).encode("utf-8"))
-                    else:
-                        self.send_response(404)
-                        self.end_headers()
+                        self.wfile.write(json.dumps(data).encode("utf-8"))
                 case _:
                     self.send_response(404)
                     self.end_headers()
@@ -184,16 +195,16 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(json.dumps(item_group).encode("utf-8"))
                 case 3:
-                    if path[2] == "items":
-                        item_group_id = int(path[1])
-                        items = data_provider.fetch_item_pool().get_items_for_item_group(item_group_id)
+                    item_group_id = int(path[1])
+                    data = data_provider.fetch_item_group_pool().get_item_group_data(item_group_id, path[2])
+                    if data == None:
+                        self.send_response(404)
+                        self.end_headers()
+                    else:
                         self.send_response(200)
                         self.send_header("Content-type", "application/json")
                         self.end_headers()
-                        self.wfile.write(json.dumps(items).encode("utf-8"))
-                    else:
-                        self.send_response(404)
-                        self.end_headers()
+                        self.wfile.write(json.dumps(data).encode("utf-8"))
                 case _:
                     self.send_response(404)
                     self.end_headers()
@@ -214,16 +225,16 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(json.dumps(item_type).encode("utf-8"))
                 case 3:
-                    if path[2] == "items":
-                        item_type_id = int(path[1])
-                        items = data_provider.fetch_item_pool().get_items_for_item_type(item_type_id)
+                    item_type_id = int(path[1])
+                    data = data_provider.fetch_item_type_pool().get_item_type_data(item_type_id, path[2])
+                    if data == None:
+                        self.send_response(404)
+                        self.end_headers()
+                    else:
                         self.send_response(200)
                         self.send_header("Content-type", "application/json")
                         self.end_headers()
-                        self.wfile.write(json.dumps(items).encode("utf-8"))
-                    else:
-                        self.send_response(404)
-                        self.end_headers()
+                        self.wfile.write(json.dumps(data).encode("utf-8"))
                 case _:
                     self.send_response(404)
                     self.end_headers()
@@ -243,6 +254,17 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(inventory).encode("utf-8"))
+                case 3:
+                    inventory_id = int(path[1])
+                    data = data_provider.fetch_inventory_pool().get_inventory_data(inventory_id, path[2])
+                    if data == None:
+                        self.send_response(404)
+                        self.end_headers()
+                    else:
+                        self.send_response(200)
+                        self.send_header("Content-type", "application/json")
+                        self.end_headers()
+                        self.wfile.write(json.dumps(data).encode("utf-8"))
                 case _:
                     self.send_response(404)
                     self.end_headers()
@@ -263,16 +285,16 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(json.dumps(supplier).encode("utf-8"))
                 case 3:
-                    if path[2] == "items":
-                        supplier_id = int(path[1])
-                        items = data_provider.fetch_item_pool().get_items_for_supplier(supplier_id)
+                    supplier_id = int(path[1])
+                    data = data_provider.fetch_supplier_pool().get_supplier_data(supplier_id, path[2])
+                    if data == None:
+                        self.send_response(404)
+                        self.end_headers()
+                    else:
                         self.send_response(200)
                         self.send_header("Content-type", "application/json")
                         self.end_headers()
-                        self.wfile.write(json.dumps(items).encode("utf-8"))
-                    else:
-                        self.send_response(404)
-                        self.end_headers()
+                        self.wfile.write(json.dumps(data).encode("utf-8"))
                 case _:
                     self.send_response(404)
                     self.end_headers()
@@ -293,16 +315,16 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(json.dumps(order).encode("utf-8"))
                 case 3:
-                    if path[2] == "items":
-                        order_id = int(path[1])
-                        items = data_provider.fetch_order_pool().get_items_in_order(order_id)
+                    order_id = int(path[1])
+                    data = data_provider.fetch_order_pool().get_data_from_order(order_id, path[2])
+                    if data == None:
+                        self.send_response(404)
+                        self.end_headers()
+                    else:
                         self.send_response(200)
                         self.send_header("Content-type", "application/json")
                         self.end_headers()
-                        self.wfile.write(json.dumps(items).encode("utf-8"))
-                    else:
-                        self.send_response(404)
-                        self.end_headers()
+                        self.wfile.write(json.dumps(data).encode("utf-8"))
                 case _:
                     self.send_response(404)
                     self.end_headers()
@@ -323,16 +345,16 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(json.dumps(client).encode("utf-8"))
                 case 3:
-                    if path[2] == "orders":
-                        client_id = int(path[1])
-                        orders = data_provider.fetch_order_pool().get_orders_for_client(client_id)
+                    client_id = int(path[1])
+                    data = data_provider.fetch_client_pool().get_client_data(client_id, path[2])
+                    if data == None:
+                        self.send_response(404)
+                        self.end_headers()
+                    else:
                         self.send_response(200)
                         self.send_header("Content-type", "application/json")
                         self.end_headers()
-                        self.wfile.write(json.dumps(orders).encode("utf-8"))
-                    else:
-                        self.send_response(404)
-                        self.end_headers()
+                        self.wfile.write(json.dumps(data).encode("utf-8"))
                 case _:
                     self.send_response(404)
                     self.end_headers()
@@ -353,23 +375,16 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(json.dumps(shipment).encode("utf-8"))
                 case 3:
-                    if path[2] == "orders":
-                        shipment_id = int(path[1])
-                        orders = data_provider.fetch_order_pool().get_orders_in_shipment(shipment_id)
-                        self.send_response(200)
-                        self.send_header("Content-type", "application/json")
-                        self.end_headers()
-                        self.wfile.write(json.dumps(orders).encode("utf-8"))
-                    elif path[2] == "items":
-                        shipment_id = int(path[1])
-                        items = data_provider.fetch_shipment_pool().get_items_in_shipment(shipment_id)
-                        self.send_response(200)
-                        self.send_header("Content-type", "application/json")
-                        self.end_headers()
-                        self.wfile.write(json.dumps(items).encode("utf-8"))
-                    else:
+                    shipment_id = int(path[1])
+                    data = data_provider.fetch_shipment_pool().get_shipment_data(shipment_id, path[2])
+                    if data == None:
                         self.send_response(404)
                         self.end_headers()
+                    else:
+                        self.send_response(200)
+                        self.send_header("Content-type", "application/json")
+                        self.end_headers()
+                        self.wfile.write(json.dumps(data).encode("utf-8"))
                 case _:
                     self.send_response(404)
                     self.end_headers()
@@ -388,7 +403,8 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                 path = self.path.split("/")
                 if len(path) > 3 and path[1] == "api" and path[2] == "v1":
                     self.handle_get_version_1(path[3:], user)
-            except Exception:
+            except Exception as e:
+                print(f"Exception occurred: {e}")
                 self.send_response(500)
                 self.end_headers()
 
@@ -806,5 +822,6 @@ if __name__ == "__main__":
         auth_provider.init()
         data_provider.init()
         notification_processor.start()
-        print(f"Serving on port {PORT}...")
+        print(f"Welcome to CargoHub! (Serving on port {PORT})")
+        print("Waiting for requests...")
         httpd.serve_forever()

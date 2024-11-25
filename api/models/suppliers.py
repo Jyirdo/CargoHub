@@ -18,6 +18,14 @@ class Suppliers(Base):
             if x["id"] == supplier_id:
                 return x
         return None
+    
+    def get_supplier_data(self, supplier_id, data_type):
+        for x in self.data:
+            if x["id"] == supplier_id:
+                if data_type in x:
+                    return x[data_type]
+                else:
+                    return None
 
     def add_supplier(self, supplier):
         supplier["created_at"] = self.get_timestamp()

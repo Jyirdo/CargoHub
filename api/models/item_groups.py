@@ -18,6 +18,14 @@ class ItemGroups(Base):
             if x["id"] == item_group_id:
                 return x
         return None
+    
+    def get_item_group_data(self, item_group_id, data_type):
+        for x in self.data:
+            if x["id"] == item_group_id:
+                if data_type in x:
+                    return x[data_type]
+                else:
+                    return None
 
     def add_item_group(self, item_group):
         item_group["created_at"] = self.get_timestamp()

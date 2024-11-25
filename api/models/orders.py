@@ -19,12 +19,14 @@ class Orders(Base):
             if x["id"] == order_id:
                 return x
         return None
-
-    def get_items_in_order(self, order_id):
+    
+    def get_order_data(self, order_id, data_type):
         for x in self.data:
             if x["id"] == order_id:
-                return x["items"]
-        return None
+                if data_type in x:
+                    return x[data_type]
+                else:
+                    return None
 
     def get_orders_in_shipment(self, shipment_id):
         result = []

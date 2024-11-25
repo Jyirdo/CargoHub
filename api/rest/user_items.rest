@@ -1,0 +1,24 @@
+// request client with client id 1 
+GET http://localhost:3000/api/v1/clients/1
+API_KEY: f6g7h8i9j0
+####
+
+// request client name from client with id 1 
+GET http://localhost:3000/api/v1/clients/1/name
+API_KEY: f6g7h8i9j0
+####
+
+// request client address from client with id 1 
+GET http://localhost:3000/api/v1/clients/1/address
+API_KEY: f6g7h8i9j0
+####
+
+// request client email from client with id 1 
+GET http://localhost:3000/api/v1/clients/1/contact_email
+API_KEY: f6g7h8i9j0
+####
+
+// faulty request 
+GET http://localhost:3000/api/v1/clients/1/contact_email1
+API_KEY: f6g7h8i9j0
+####

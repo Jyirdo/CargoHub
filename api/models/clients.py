@@ -18,6 +18,14 @@ class Clients(Base):
             if x["id"] == client_id:
                 return x
         return None
+    
+    def get_client_data(self, client_id, data_type):
+        for x in self.data:
+            if x["id"] == client_id:
+                if data_type in x:
+                    return x[data_type]
+                else:
+                    return None
 
     def add_client(self, client):
         client["created_at"] = self.get_timestamp()

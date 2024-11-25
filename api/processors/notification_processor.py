@@ -2,7 +2,7 @@ import threading
 
 NOTIFICATION_UPDATE_INTERVAL_SEC = 30
 
-_queue = ["Dummy message"]
+_queue = []
 
 def push(notification):
     global _queue

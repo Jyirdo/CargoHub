@@ -18,6 +18,14 @@ class ItemTypes(Base):
             if x["id"] == item_type_id:
                 return x
         return None
+    
+    def get_item_type_data(self, item_type_id, data_type):
+        for x in self.data:
+            if x["id"] == item_type_id:
+                if data_type in x:
+                    return x[data_type]
+                else:
+                    return None
 
     def add_item_type(self, item_type):
         item_type["created_at"] = self.get_timestamp()

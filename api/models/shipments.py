@@ -20,11 +20,13 @@ class Shipments(Base):
                 return x
         return None
 
-    def get_items_in_shipment(self, shipment_id):
+    def get_shipment_data(self, shipment_id, data_type):
         for x in self.data:
             if x["id"] == shipment_id:
-                return x["items"]
-        return None
+                if data_type in x:
+                    return x[data_type]
+                else:
+                    return None
 
     def add_shipment(self, shipment):
         shipment["created_at"] = self.get_timestamp()

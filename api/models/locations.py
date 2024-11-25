@@ -18,6 +18,14 @@ class Locations(Base):
             if x["id"] == location_id:
                 return x
         return None
+    
+    def get_location_data(self, location_id, data_type):
+        for x in self.data:
+            if x["id"] == location_id:
+                if data_type in x:
+                    return x[data_type]
+                else:
+                    return None
 
     def get_locations_in_warehouse(self, warehouse_id):
         result = []
