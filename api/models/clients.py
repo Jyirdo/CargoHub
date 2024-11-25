@@ -33,10 +33,10 @@ class Clients(Base):
         self.data.append(client)
 
     def update_client(self, client_id, client):
-        client["updated_at"] = self.get_timestamp()
         for i in range(len(self.data)):
-            if self.data[i]["id"] == client_id:
-                self.data[i] = client
+            if self.data[i]['id'] == client_id:
+                self.data[i].update(client)
+                self.data[i]['updated_at'] = self.get_timestamp()
                 break
 
     def remove_client(self, client_id):

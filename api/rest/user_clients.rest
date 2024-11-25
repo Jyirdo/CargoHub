@@ -22,3 +22,14 @@ API_KEY: f6g7h8i9j0
 GET http://localhost:3000/api/v1/clients/1/contact_email1
 API_KEY: f6g7h8i9j0
 ####
+
+// Update client info 
+PUT http://localhost:3000/api/v1/clients/1
+Content-Type: application/json
+API_KEY: a1b2c3d4e5
+
+{
+  "name": "Raymond Inc",
+  "address": "1296 Daniel Road Apt. 349"
+}
+####

@@ -5,4 +5,4 @@ class Base:
         pass
 
     def get_timestamp(self):
-        return datetime.utcnow().isoformat() + "Z"
+        return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
