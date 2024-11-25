@@ -3,17 +3,17 @@ GET http://localhost:3000/api/v1/inventories/1
 API_KEY: f6g7h8i9j0
 ####
 
-// request inventory description from inventories with id 1 
+// request inventory description from description with id 1 
 GET http://localhost:3000/api/v1/inventories/1/description
 API_KEY: f6g7h8i9j0
 ####
 
-// request inventory locations from inventories with id 1 
+// request inventory locations from description with id 1 
 GET http://localhost:3000/api/v1/inventories/1/locations
 API_KEY: f6g7h8i9j0
 ####
 
-// request inventory created at from inventories with id 1 
+// request inventory created at from description with id 1 
 GET http://localhost:3000/api/v1/inventories/1/created_at
 API_KEY: f6g7h8i9j0
 ####

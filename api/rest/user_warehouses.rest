@@ -1,24 +1,24 @@
-// request client with client id 1 
-GET http://localhost:3000/api/v1/clients/1
+// request warehouse with warehouse id 1 
+GET http://localhost:3000/api/v1/warehouses/1
 API_KEY: f6g7h8i9j0
 ####
 
-// request client name from client with id 1 
-GET http://localhost:3000/api/v1/clients/1/name
+// request warehouse name from warehouse with id 1 
+GET http://localhost:3000/api/v1/warehouses/1/name
 API_KEY: f6g7h8i9j0
 ####
 
-// request client address from client with id 1 
-GET http://localhost:3000/api/v1/clients/1/address
+// request warehouse contact from warehouse with id 1 
+GET http://localhost:3000/api/v1/warehouses/1/contact
 API_KEY: f6g7h8i9j0
 ####
 
-// request client email from client with id 1 
-GET http://localhost:3000/api/v1/clients/1/contact_email
+// request warehouse created at from warehouse with id 1 
+GET http://localhost:3000/api/v1/warehouses/1/created_at
 API_KEY: f6g7h8i9j0
 ####
 
 // faulty request 
-GET http://localhost:3000/api/v1/clients/1/contact_email1
+GET http://localhost:3000/api/v1/warehouses/1/created_at1
 API_KEY: f6g7h8i9j0
 ####

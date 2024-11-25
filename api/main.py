@@ -35,7 +35,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     warehouse_id = int(path[1])
                     data = data_provider.fetch_warehouse_pool().get_warehouse_data(warehouse_id, path[2])
                     if data == None:
-                        self.send_response(404)
+                        self.send_response(404, "The data you're trying to reach doesn't exist or is located elsewhere. Please try again.")
                         self.end_headers()
                     else:
                         self.send_response(200)
@@ -65,7 +65,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     location_id = int(path[1])
                     data = data_provider.fetch_location_pool().get_location_data(location_id, path[2])
                     if data == None:
-                        self.send_response(404)
+                        self.send_response(404, "The data you're trying to reach doesn't exist or is located elsewhere. Please try again.")
                         self.end_headers()
                     else:
                         self.send_response(200)
@@ -95,7 +95,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     transfer_id = int(path[1])
                     data = data_provider.fetch_transfer_pool().get_transfer_data(transfer_id, path[2])
                     if data == None:
-                        self.send_response(404)
+                        self.send_response(404, "The data you're trying to reach doesn't exist or is located elsewhere. Please try again.")
                         self.end_headers()
                     else:
                         self.send_response(200)
@@ -125,7 +125,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     item_id = path[1]
                     data = data_provider.fetch_item_pool().get_item_data(item_id, path[2])
                     if data == None:
-                        self.send_response(404)
+                        self.send_response(404, "The data you're trying to reach doesn't exist or is located elsewhere. Please try again.")
                         self.end_headers()
                     else:
                         self.send_response(200)
@@ -168,7 +168,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     item_line_id = int(path[1])
                     data = data_provider.fetch_item_line_pool().get_item_line_data(item_line_id, path[2])
                     if data == None:
-                        self.send_response(404)
+                        self.send_response(404, "The data you're trying to reach doesn't exist or is located elsewhere. Please try again.")
                         self.end_headers()
                     else:
                         self.send_response(200)
@@ -198,7 +198,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     item_group_id = int(path[1])
                     data = data_provider.fetch_item_group_pool().get_item_group_data(item_group_id, path[2])
                     if data == None:
-                        self.send_response(404)
+                        self.send_response(404, "The data you're trying to reach doesn't exist or is located elsewhere. Please try again.")
                         self.end_headers()
                     else:
                         self.send_response(200)
@@ -228,7 +228,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     item_type_id = int(path[1])
                     data = data_provider.fetch_item_type_pool().get_item_type_data(item_type_id, path[2])
                     if data == None:
-                        self.send_response(404)
+                        self.send_response(404, "The data you're trying to reach doesn't exist or is located elsewhere. Please try again.")
                         self.end_headers()
                     else:
                         self.send_response(200)
@@ -258,7 +258,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     inventory_id = int(path[1])
                     data = data_provider.fetch_inventory_pool().get_inventory_data(inventory_id, path[2])
                     if data == None:
-                        self.send_response(404)
+                        self.send_response(404, "The data you're trying to reach doesn't exist or is located elsewhere. Please try again.")
                         self.end_headers()
                     else:
                         self.send_response(200)
@@ -288,7 +288,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     supplier_id = int(path[1])
                     data = data_provider.fetch_supplier_pool().get_supplier_data(supplier_id, path[2])
                     if data == None:
-                        self.send_response(404)
+                        self.send_response(404, "The data you're trying to reach doesn't exist or is located elsewhere. Please try again.")
                         self.end_headers()
                     else:
                         self.send_response(200)
@@ -316,9 +316,9 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.wfile.write(json.dumps(order).encode("utf-8"))
                 case 3:
                     order_id = int(path[1])
-                    data = data_provider.fetch_order_pool().get_data_from_order(order_id, path[2])
+                    data = data_provider.fetch_order_pool().get_order_data(order_id, path[2])
                     if data == None:
-                        self.send_response(404)
+                        self.send_response(404, "The data you're trying to reach doesn't exist or is located elsewhere. Please try again.")
                         self.end_headers()
                     else:
                         self.send_response(200)
@@ -348,7 +348,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     client_id = int(path[1])
                     data = data_provider.fetch_client_pool().get_client_data(client_id, path[2])
                     if data == None:
-                        self.send_response(404)
+                        self.send_response(404, "The data you're trying to reach doesn't exist or is located elsewhere. Please try again.")
                         self.end_headers()
                     else:
                         self.send_response(200)
@@ -378,7 +378,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     shipment_id = int(path[1])
                     data = data_provider.fetch_shipment_pool().get_shipment_data(shipment_id, path[2])
                     if data == None:
-                        self.send_response(404)
+                        self.send_response(404, "The data you're trying to reach doesn't exist or is located elsewhere. Please try again.")
                         self.end_headers()
                     else:
                         self.send_response(200)

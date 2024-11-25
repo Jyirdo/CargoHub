@@ -21,7 +21,7 @@ class Items(Base):
     
     def get_item_data(self, item_id, data_type):
         for x in self.data:
-            if x["id"] == item_id:
+            if x["uid"] == item_id:
                 if data_type in x:
                     return x[data_type]
                 else:
