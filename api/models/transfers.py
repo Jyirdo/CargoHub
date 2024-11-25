@@ -18,6 +18,14 @@ class Transfers(Base):
             if x["id"] == transfer_id:
                 return x
         return None
+    
+    def get_transfer_data(self, transfer_id, data_type):
+        for x in self.data:
+            if x["id"] == transfer_id:
+                if data_type in x:
+                    return x[data_type]
+                else:
+                    return None
 
     def get_items_in_transfer(self, transfer_id):
         for x in self.data:

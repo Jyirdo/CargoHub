@@ -60,6 +60,13 @@ USERS = [
                 "put": False,
                 "delete": False
             },
+            "inventories":  {
+                "full": False,
+                "get": True,
+                "post": False,
+                "put": False,
+                "delete": False
+            },
             "suppliers":  {
                 "full": False,
                 "get": True,
@@ -99,9 +106,9 @@ def init():
     _users = USERS
 
 def get_user(api_key):
-    for x in _users:
-        if x["api_key"] == api_key:
-            return x
+    for user in _users:
+        if user["api_key"] == api_key:
+            return user
     return None
  
 def has_access(user, path, method):
@@ -109,4 +116,4 @@ def has_access(user, path, method):
     if access["full"]:
         return True
     else:
-        return access[path][method]
+        return access[path[0]][method]

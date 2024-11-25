@@ -1,0 +1,24 @@
+// request order with order id 1 
+GET http://localhost:3000/api/v1/orders/1
+API_KEY: f6g7h8i9j0
+####
+
+// request order date from order with id 1 
+GET http://localhost:3000/api/v1/orders/1/order_date
+API_KEY: f6g7h8i9j0
+####
+
+// request order reference from order with id 1 
+GET http://localhost:3000/api/v1/orders/1/reference_extra
+API_KEY: f6g7h8i9j0
+####
+
+// request order picking notes from order with id 1 
+GET http://localhost:3000/api/v1/orders/1/picking_notes
+API_KEY: f6g7h8i9j0
+####
+
+// faulty request 
+GET http://localhost:3000/api/v1/orders/1/picking_notes1
+API_KEY: f6g7h8i9j0
+####

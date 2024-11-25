@@ -18,6 +18,14 @@ class Inventories(Base):
             if x["id"] == inventory_id:
                 return x
         return None
+    
+    def get_inventory_data(self, inventory_id, data_type):
+        for x in self.data:
+            if x["id"] == inventory_id:
+                if data_type in x:
+                    return x[data_type]
+                else:
+                    return None
 
     def get_inventories_for_item(self, item_id):
         result = []
