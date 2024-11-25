@@ -13,12 +13,12 @@ GET http://localhost:3000/api/v1/shipments/1/notes
 API_KEY: f6g7h8i9j0
 ####
 
-// request shipment items notes from shipment with id 1 
+// request shipment items from shipment with id 1 
 GET http://localhost:3000/api/v1/shipments/1/items
 API_KEY: f6g7h8i9j0
 ####
 
 // faulty request 
-GET http://localhost:3000/api/v1/orders/1/items1
+GET http://localhost:3000/api/v1/shipments/1/items1
 API_KEY: f6g7h8i9j0
 ####

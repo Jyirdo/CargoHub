@@ -1,24 +1,24 @@
-// request client with client id 1 
-GET http://localhost:3000/api/v1/clients/1
+// request item group with item group id 1 
+GET http://localhost:3000/api/v1/item_groups/1
 API_KEY: f6g7h8i9j0
 ####
 
-// request client name from client with id 1 
-GET http://localhost:3000/api/v1/clients/1/name
+// request item group name from item group with id 1 
+GET http://localhost:3000/api/v1/item_groups/1/name
 API_KEY: f6g7h8i9j0
 ####
 
-// request client address from client with id 1 
-GET http://localhost:3000/api/v1/clients/1/address
+// request item group description from item group with id 1 
+GET http://localhost:3000/api/v1/item_groups/1/description
 API_KEY: f6g7h8i9j0
 ####
 
-// request client email from client with id 1 
-GET http://localhost:3000/api/v1/clients/1/contact_email
+// request item group created at from item group with id 1 
+GET http://localhost:3000/api/v1/item_groups/1/created_at
 API_KEY: f6g7h8i9j0
 ####
 
 // faulty request 
-GET http://localhost:3000/api/v1/clients/1/contact_email1
+GET http://localhost:3000/api/v1/item_groups/1/created_at1
 API_KEY: f6g7h8i9j0
 ####
