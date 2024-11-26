@@ -1,0 +1,51 @@
+// request item group with item group id 1 
+GET http://localhost:3000/api/v1/item_groups/1
+API_KEY: f6g7h8i9j0
+####
+
+// request item group name from item group with id 1 
+GET http://localhost:3000/api/v1/item_groups/1/name
+API_KEY: f6g7h8i9j0
+####
+
+// request item group description from item group with id 1 
+GET http://localhost:3000/api/v1/item_groups/1/description
+API_KEY: f6g7h8i9j0
+####
+
+// request item group created at from item group with id 1 
+GET http://localhost:3000/api/v1/item_groups/1/created_at
+API_KEY: f6g7h8i9j0
+####
+
+// faulty request 
+GET http://localhost:3000/api/v1/item_groups/1/created_at1
+API_KEY: f6g7h8i9j0
+####
+
+// Update item group info 
+PUT http://localhost:3000/api/v1/item_groups/1
+Content-Type: application/json
+API_KEY: a1b2c3d4e5
+
+{
+  "name": "Furniture",
+  "description": ""
+}
+####
+# Add a new item group
+POST http://localhost:3000/api/v1/item_groups
+Content-Type: application/json
+API_KEY: a1b2c3d4e5
+
+{
+  "id": 1,
+  "name": "Electronics",
+  "description": "Group for electronic items"
+}
+###
+
+
+DELETE http://localhost:3000/api/v1/item_groups/1
+Admin-Key: a1b2c3d4e5
+ADMIN_KEY: a1b2c3d4e5
