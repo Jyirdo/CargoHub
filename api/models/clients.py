@@ -55,7 +55,6 @@ class Clients(Base):
                 break
 
     def remove_client(self, client_id, dry_run=False):
-        """Simulate or perform deletion of a client by ID."""
         client_to_remove = None
         for client in self.data:
             if client["id"] == client_id:

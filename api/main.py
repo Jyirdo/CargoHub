@@ -17,7 +17,24 @@ from models.locations import Locations
 from models.suppliers import Suppliers
 from models.transfers import Transfers
 from models.warehouses import Warehouses
+from models.inventories import Inventories
+from models.shipments import Shipments
+from models.item_types import ItemTypes
+
 clients_instance = Clients(root_path="./models/", is_debug=False)
+warehouses_instance = Warehouses(root_path="./models/", is_debug=False)
+locations_instance = Locations(root_path="./models/", is_debug=False)
+transfers_instance = Transfers(root_path="./models/", is_debug=False)
+items_instance = Items(root_path="./models/", is_debug=False)
+item_lines_instance = ItemLines(root_path="./models/", is_debug=False)
+item_groups_instance = ItemGroups(root_path="./models/", is_debug=False)
+item_types_instance =  ItemTypes(root_path="./models/", is_debug=False)
+inventories_instance = Inventories(root_path="./models/", is_debug=False)
+suppliers_instance = Suppliers(root_path="./models/", is_debug=False)
+orders_instance = Orders(root_path="./models/", is_debug=False)
+shipments_instance = Shipments(root_path="./models/", is_debug=False)
+
+
 class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
 
     def handle_get_version_1(self, path, user):
@@ -812,232 +829,59 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_DELETE(self):
         """Handle DELETE requests."""
-        path = self.path.split("/")[1:]  # Split the path into parts
-        if len(path) >= 2 and path[0] == "api" and path[1] == "v1":
-            if path[2] == "clients":
-                self.handle_delete_clients(path)
-            elif path[2] == "orders":
-                self.handle_delete_orders(path)
-            elif path[2] == "items":
-                self.handle_delete_items(path)
-            elif path[2] == "item_groups":
-                self.handle_delete_item_groups(path)
-            elif path[2] == "item_lines":
-                self.handle_delete_item_lines(path)
-            elif path[2] == "locations":
-                self.handle_delete_locations(path)
-            elif path[2] == "suppliers":
-                self.handle_delete_suppliers(path)
-            elif path[2] == "transfers":
-                self.handle_delete_transfers(path)
-            elif path[2] == "warehouses":
-                self.handle_delete_warehouses(path)
-            elif path[2] == "inventories":
-                self.handle_delete_inventories(path)
-            elif path[2] == "shipments":
-                self.handle_delete_shipments(path)
-            elif path[2] == "item_types":
-                self.handle_delete_item_types(path)
+        path_parts = self.path.split('/')
+        if len(path_parts) == 5 and path_parts[1] == "api" and path_parts[2] == "v1":
+            # Extract resource type and ID
+            resource_type = path_parts[3]
+            try:
+                resource_id = int(path_parts[4])
+            except ValueError:
+                self.send_response(400)
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": "Invalid resource ID"}).encode())
+                return
+
+            # Check for dry-run mode
+            dry_run = "dry_run=true" in self.path
+
+            # Perform or simulate deletion
+            if resource_type == "clients":
+                response, status_code = clients_instance.remove_client(resource_id, dry_run)
+            elif resource_type == "warehouses":
+                response, status_code = warehouses_instance.remove_warehouse(resource_id, dry_run)
+            elif resource_type == "locations":
+                response, status_code = locations_instance.remove_location(resource_id, dry_run)
+            elif resource_type == "transfers":
+                response, status_code = transfers_instance.remove_transfer(resource_id, dry_run)
+            elif resource_type == "items":
+                response, status_code = items_instance.remove_item(resource_id, dry_run)
+            elif resource_type == "item_lines":
+                response, status_code = item_lines_instance.remove_item_line(resource_id, dry_run)
+            elif resource_type == "item_groups":
+                response, status_code = item_groups_instance.remove_item_group(resource_id, dry_run)
+            elif resource_type == "item_types":
+                response, status_code = item_types_instance.remove_item_type(resource_id, dry_run)
+            elif resource_type == "inventories":
+                response, status_code = inventories_instance.remove_inventory(resource_id, dry_run)
+            elif resource_type == "suppliers":
+                response, status_code = suppliers_instance.remove_supplier(resource_id, dry_run)
+            elif resource_type == "orders":
+                response, status_code = orders_instance.remove_order(resource_id, dry_run)
+            elif resource_type == "shipments":
+                response, status_code = shipments_instance.remove_shipment(resource_id, dry_run)
             else:
                 self.send_response(404)
                 self.end_headers()
-                self.wfile.write(b"Endpoint not found.")
+                return
+
+            self.send_response(status_code)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps(response).encode())
         else:
-            self.send_response(400)
+            self.send_response(404)
             self.end_headers()
-            self.wfile.write(b"Invalid API request.")
 
-    def handle_delete_clients(self, path):
-        """Handle DELETE request for clients."""
-        client_id = int(path[3])
-        admin_key = self.headers.get("ADMIN-KEY")
-        if not admin_key or admin_key != "a1b2c3d4e5":  # Ensure correct admin key
-            self.send_response(401)
-            self.end_headers()
-            self.wfile.write(b"Unauthorized access.")
-            return
-        
-        clients = Clients(os.getcwd() + "/data/", is_debug=True)
-        message, status_code = clients.remove_client(client_id)
-        self.send_response(status_code)
-        self.end_headers()
-        self.wfile.write(json.dumps(message).encode())
-
-    def handle_delete_orders(self, path):
-        """Handle DELETE request for orders."""
-        order_id = int(path[3])
-        admin_key = self.headers.get("ADMIN-KEY")
-        if not admin_key or admin_key != "a1b2c3d4e5":  # Ensure correct admin key
-            self.send_response(401)
-            self.end_headers()
-            self.wfile.write(b"Unauthorized access.")
-            return
-        
-        orders = Orders(os.getcwd() + "/data/", is_debug=True)
-        message, status_code = orders.remove_order(order_id)
-        self.send_response(status_code)
-        self.end_headers()
-        self.wfile.write(json.dumps(message).encode())
-
-    def handle_delete_items(self, path):
-        """Handle DELETE request for items."""
-        item_id = int(path[3])
-        admin_key = self.headers.get("ADMIN-KEY")
-        if not admin_key or admin_key != "a1b2c3d4e5":  # Ensure correct admin key
-            self.send_response(401)
-            self.end_headers()
-            self.wfile.write(b"Unauthorized access.")
-            return
-        
-        items = Items(os.getcwd() + "/data/", is_debug=True)
-        message, status_code = items.remove_item(item_id)
-        self.send_response(status_code)
-        self.end_headers()
-        self.wfile.write(json.dumps(message).encode())
-
-    def handle_delete_item_groups(self, path):
-        """Handle DELETE request for item groups."""
-        item_group_id = int(path[3])
-        admin_key = self.headers.get("ADMIN-KEY")
-        if not admin_key or admin_key != "a1b2c3d4e5":  # Ensure correct admin key
-            self.send_response(401)
-            self.end_headers()
-            self.wfile.write(b"Unauthorized access.")
-            return
-        
-        item_groups = ItemGroups(os.getcwd() + "/data/", is_debug=True)
-        message, status_code = item_groups.remove_item_group(item_group_id)
-        self.send_response(status_code)
-        self.end_headers()
-        self.wfile.write(json.dumps(message).encode())
-
-    def handle_delete_item_lines(self, path):
-        """Handle DELETE request for item lines."""
-        item_line_id = int(path[3])
-        admin_key = self.headers.get("ADMIN-KEY")
-        if not admin_key or admin_key != "a1b2c3d4e5":  # Ensure correct admin key
-            self.send_response(401)
-            self.end_headers()
-            self.wfile.write(b"Unauthorized access.")
-            return
-        
-        item_lines = ItemLines(os.getcwd() + "/data/", is_debug=True)
-        message, status_code = item_lines.remove_item_line(item_line_id)
-        self.send_response(status_code)
-        self.end_headers()
-        self.wfile.write(json.dumps(message).encode())
-
-    def handle_delete_locations(self, path):
-        """Handle DELETE request for locations."""
-        location_id = int(path[3])
-        admin_key = self.headers.get("ADMIN-KEY")
-        if not admin_key or admin_key != "a1b2c3d4e5":  # Ensure correct admin key
-            self.send_response(401)
-            self.end_headers()
-            self.wfile.write(b"Unauthorized access.")
-            return
-        
-        locations = Locations(os.getcwd() + "/data/", is_debug=True)
-        message, status_code = locations.remove_location(location_id)
-        self.send_response(status_code)
-        self.end_headers()
-        self.wfile.write(json.dumps(message).encode())
-
-    def handle_delete_suppliers(self, path):
-        """Handle DELETE request for suppliers."""
-        supplier_id = int(path[3])
-        admin_key = self.headers.get("ADMIN-KEY")
-        if not admin_key or admin_key != "a1b2c3d4e5":  # Ensure correct admin key
-            self.send_response(401)
-            self.end_headers()
-            self.wfile.write(b"Unauthorized access.")
-            return
-        
-        suppliers = Suppliers(os.getcwd() + "/data/", is_debug=True)
-        message, status_code = suppliers.remove_supplier(supplier_id)
-        self.send_response(status_code)
-        self.end_headers()
-        self.wfile.write(json.dumps(message).encode())
-
-    def handle_delete_transfers(self, path):
-        """Handle DELETE request for transfers."""
-        transfer_id = int(path[3])
-        admin_key = self.headers.get("ADMIN-KEY")
-        if not admin_key or admin_key != "a1b2c3d4e5":  # Ensure correct admin key
-            self.send_response(401)
-            self.end_headers()
-            self.wfile.write(b"Unauthorized access.")
-            return
-        
-        transfers = Transfers(os.getcwd() + "/data/", is_debug=True)
-        message, status_code = transfers.remove_transfer(transfer_id)
-        self.send_response(status_code)
-        self.end_headers()
-        self.wfile.write(json.dumps(message).encode())
-
-    def handle_delete_warehouses(self, path):
-        """Handle DELETE request for warehouses."""
-        warehouse_id = int(path[3])
-        admin_key = self.headers.get("ADMIN-KEY")
-        if not admin_key or admin_key != "a1b2c3d4e5":  # Ensure correct admin key
-            self.send_response(401)
-            self.end_headers()
-            self.wfile.write(b"Unauthorized access.")
-            return
-        
-        warehouses = Warehouses(os.getcwd() + "/data/", is_debug=True)
-        message, status_code = warehouses.remove_warehouse(warehouse_id)
-        self.send_response(status_code)
-        self.end_headers()
-        self.wfile.write(json.dumps(message).encode())
-
-    def handle_delete_inventories(self, path):
-        """Handle DELETE request for inventories."""
-        inventory_id = int(path[3])
-        admin_key = self.headers.get("ADMIN-KEY")
-        if not admin_key or admin_key != "a1b2c3d4e5":  # Ensure correct admin key
-            self.send_response(401)
-            self.end_headers()
-            self.wfile.write(b"Unauthorized access.")
-            return
-        
-        inventories = inventories(os.getcwd() + "/data/", is_debug=True)
-        message, status_code = inventories.remove_inventory(inventory_id)
-        self.send_response(status_code)
-        self.end_headers()
-        self.wfile.write(json.dumps(message).encode())
-
-    def handle_delete_shipments(self, path):
-        """Handle DELETE request for shipments."""
-        shipment_id = int(path[3])
-        admin_key = self.headers.get("ADMIN-KEY")
-        if not admin_key or admin_key != "a1b2c3d4e5":  # Ensure correct admin key
-            self.send_response(401)
-            self.end_headers()
-            self.wfile.write(b"Unauthorized access.")
-            return
-        
-        shipments = shipments(os.getcwd() + "/data/", is_debug=True)
-        message, status_code = shipments.remove_shipment(shipment_id)
-        self.send_response(status_code)
-        self.end_headers()
-        self.wfile.write(json.dumps(message).encode())
-
-    def handle_delete_item_types(self, path):
-        """Handle DELETE request for item types."""
-        item_type_id = int(path[3])
-        admin_key = self.headers.get("ADMIN-KEY")
-        if not admin_key or admin_key != "a1b2c3d4e5":  # Ensure correct admin key
-            self.send_response(401)
-            self.end_headers()
-            self.wfile.write(b"Unauthorized access.")
-            return
-        
-        item_types = item_types(os.getcwd() + "/data/", is_debug=True)
-        message, status_code = item_types.remove_item_type(item_type_id)
-        self.send_response(status_code)
-        self.end_headers()
-        self.wfile.write(json.dumps(message).encode())
 
 if __name__ == "__main__":
     PORT = 3000
