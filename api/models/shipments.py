@@ -34,10 +34,10 @@ class Shipments(Base):
         self.data.append(shipment)
 
     def update_shipment(self, shipment_id, shipment):
-        shipment["updated_at"] = self.get_timestamp()
         for i in range(len(self.data)):
             if self.data[i]["id"] == shipment_id:
-                self.data[i] = shipment
+                self.data[i].update(shipment)
+                self.data[i]['updated_at'] = self.get_timestamp()
                 break
 
     def update_items_in_shipment(self, shipment_id, items):

@@ -33,10 +33,10 @@ class ItemLines(Base):
         self.data.append(item_line)
 
     def update_item_line(self, item_line_id, item_line):
-        item_line["updated_at"] = self.get_timestamp()
         for i in range(len(self.data)):
-            if self.data[i]["id"] == item_line_id:
-                self.data[i] = item_line
+            if self.data[i]['id'] == item_line_id:
+                self.data[i].update(item_line)
+                self.data[i]['updated_at'] = self.get_timestamp()
                 break
 
     def remove_item_line(self, item_line_id):

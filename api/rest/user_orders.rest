@@ -22,3 +22,14 @@ API_KEY: f6g7h8i9j0
 GET http://localhost:3000/api/v1/orders/1/picking_notes1
 API_KEY: f6g7h8i9j0
 ####
+
+// Update order info 
+PUT http://localhost:3000/api/v1/orders/1
+Content-Type: application/json
+API_KEY: a1b2c3d4e5
+
+{
+  "order_status": "Delivered",  
+  "picking_notes": "Ademen fijn volgorde scherp aardappel op leren."
+}
+####

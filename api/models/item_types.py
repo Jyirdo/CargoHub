@@ -33,10 +33,10 @@ class ItemTypes(Base):
         self.data.append(item_type)
 
     def update_item_type(self, item_type_id, item_type):
-        item_type["updated_at"] = self.get_timestamp()
         for i in range(len(self.data)):
-            if self.data[i]["id"] == item_type_id:
-                self.data[i] = item_type
+            if self.data[i]['id'] == item_type_id:
+                self.data[i].update(item_type)
+                self.data[i]['updated_at'] = self.get_timestamp()
                 break
 
     def remove_item_type(self, item_type_id):

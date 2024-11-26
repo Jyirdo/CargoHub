@@ -40,10 +40,10 @@ class Locations(Base):
         self.data.append(location)
 
     def update_location(self, location_id, location):
-        location["updated_at"] = self.get_timestamp()
         for i in range(len(self.data)):
             if self.data[i]["id"] == location_id:
-                self.data[i] = location
+                self.data[i].update(location)
+                self.data[i]['updated_at'] = self.get_timestamp()
                 break
 
     def remove_location(self, location_id):

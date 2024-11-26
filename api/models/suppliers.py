@@ -33,10 +33,10 @@ class Suppliers(Base):
         self.data.append(supplier)
 
     def update_supplier(self, supplier_id, supplier):
-        supplier["updated_at"] = self.get_timestamp()
         for i in range(len(self.data)):
             if self.data[i]["id"] == supplier_id:
-                self.data[i] = supplier
+                self.data[i].update(supplier)
+                self.data[i]['updated_at'] = self.get_timestamp()
                 break
 
     def remove_supplier(self, supplier_id):

@@ -40,10 +40,10 @@ class Transfers(Base):
         self.data.append(transfer)
 
     def update_transfer(self, transfer_id, transfer):
-        transfer["updated_at"] = self.get_timestamp()
         for i in range(len(self.data)):
             if self.data[i]["id"] == transfer_id:
-                self.data[i] = transfer
+                self.data[i].update(transfer)
+                self.data[i]['updated_at'] = self.get_timestamp()
                 break
 
     def remove_transfer(self, transfer_id):

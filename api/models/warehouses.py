@@ -33,10 +33,10 @@ class Warehouses(Base):
         self.data.append(warehouse)
 
     def update_warehouse(self, warehouse_id, warehouse):
-        warehouse["updated_at"] = self.get_timestamp()
         for i in range(len(self.data)):
             if self.data[i]["id"] == warehouse_id:
-                self.data[i] = warehouse
+                self.data[i].update(warehouse)
+                self.data[i]['updated_at'] = self.get_timestamp()
                 break
 
     def remove_warehouse(self, warehouse_id):

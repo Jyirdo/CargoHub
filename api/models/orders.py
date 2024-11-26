@@ -48,10 +48,10 @@ class Orders(Base):
         self.data.append(order)
 
     def update_order(self, order_id, order):
-        order["updated_at"] = self.get_timestamp()
         for i in range(len(self.data)):
-            if self.data[i]["id"] == order_id:
-                self.data[i] = order
+            if self.data[i]['id'] == order_id:
+                self.data[i].update(order)
+                self.data[i]['updated_at'] = self.get_timestamp()
                 break
 
     def update_items_in_order(self, order_id, items):

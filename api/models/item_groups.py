@@ -33,10 +33,10 @@ class ItemGroups(Base):
         self.data.append(item_group)
 
     def update_item_group(self, item_group_id, item_group):
-        item_group["updated_at"] = self.get_timestamp()
         for i in range(len(self.data)):
-            if self.data[i]["id"] == item_group_id:
-                self.data[i] = item_group
+            if self.data[i]['id'] == item_group_id:
+                self.data[i].update(item_group)
+                self.data[i]['updated_at'] = self.get_timestamp()
                 break
 
     def remove_item_group(self, item_group_id):

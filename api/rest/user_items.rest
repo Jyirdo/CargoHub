@@ -22,3 +22,14 @@ API_KEY: f6g7h8i9j0
 GET http://localhost:3000/api/v1/items/P000001/created_at1
 API_KEY: f6g7h8i9j0
 ####
+
+// Update item info 
+PUT http://localhost:3000/api/v1/items/P000001
+Content-Type: application/json
+API_KEY: a1b2c3d4e5
+
+{
+  "description": "Face-to-face clear-thinking complexity",
+  "model_number": "63-OFFTq0T"
+}
+####

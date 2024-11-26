@@ -55,10 +55,10 @@ class Inventories(Base):
         self.data.append(inventory)
 
     def update_inventory(self, inventory_id, inventory):
-        inventory["updated_at"] = self.get_timestamp()
         for i in range(len(self.data)):
-            if self.data[i]["id"] == inventory_id:
-                self.data[i] = inventory
+            if self.data[i]['id'] == inventory_id:
+                self.data[i].update(inventory)
+                self.data[i]['updated_at'] = self.get_timestamp()
                 break
 
     def remove_inventory(self, inventory_id):
