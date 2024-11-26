@@ -33,6 +33,26 @@ API_KEY: a1b2c3d4e5
   "address": "5989 Sullivan Drives"
 }
 ####
+# Add a new supplier
+POST http://localhost:3000/api/v1/suppliers
+Content-Type: application/json
+API_KEY: a1b2c3d4e5
+
+{
+  "id": 1,
+  "code": "SUP0001",
+  "name": "Lee, Parks and Johnson",
+  "address": "5989 Sullivan Drives",
+  "address_extra": "Apt. 996",
+  "city": "Port Anitaburgh",
+  "zip_code": "91688",
+  "province": "Illinois",
+  "country": "Czech Republic",
+  "contact_name": "Toni Barnett",
+  "phonenumber": "363.541.7282x36825",
+  "reference": "LPaJ-SUP0001"
+}
+
 ####
 
 DELETE http://localhost:3000/api/v1/suppliers/1
