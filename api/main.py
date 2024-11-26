@@ -1,11 +1,38 @@
 import socketserver
 import http.server
 import json
+import os
 
 from providers import auth_provider
 from providers import data_provider
 
 from processors import notification_processor
+ 
+from models.clients import Clients
+from models.orders import Orders
+from models.items import Items
+from models.item_groups import ItemGroups
+from models.item_lines import ItemLines
+from models.locations import Locations
+from models.suppliers import Suppliers
+from models.transfers import Transfers
+from models.warehouses import Warehouses
+from models.inventories import Inventories
+from models.shipments import Shipments
+from models.item_types import ItemTypes
+
+clients_instance = Clients(root_path="./models/", is_debug=False)
+warehouses_instance = Warehouses(root_path="./models/", is_debug=False)
+locations_instance = Locations(root_path="./models/", is_debug=False)
+transfers_instance = Transfers(root_path="./models/", is_debug=False)
+items_instance = Items(root_path="./models/", is_debug=False)
+item_lines_instance = ItemLines(root_path="./models/", is_debug=False)
+item_groups_instance = ItemGroups(root_path="./models/", is_debug=False)
+item_types_instance =  ItemTypes(root_path="./models/", is_debug=False)
+inventories_instance = Inventories(root_path="./models/", is_debug=False)
+suppliers_instance = Suppliers(root_path="./models/", is_debug=False)
+orders_instance = Orders(root_path="./models/", is_debug=False)
+shipments_instance = Shipments(root_path="./models/", is_debug=False)
 
 
 class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
@@ -862,19 +889,59 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.end_headers()
 
     def do_DELETE(self):
-        api_key = self.headers.get("API_KEY")
-        user = auth_provider.get_user(api_key)
-        if user == None:
-            self.send_response(401)
-            self.end_headers()
-        else:
+        """Handle DELETE requests."""
+        path_parts = self.path.split('/')
+        if len(path_parts) == 5 and path_parts[1] == "api" and path_parts[2] == "v1":
+            # Extract resource type and ID
+            resource_type = path_parts[3]
             try:
-                path = self.path.split("/")
-                if len(path) > 3 and path[1] == "api" and path[2] == "v1":
-                    self.handle_delete_version_1(path[3:], user)
-            except Exception:
-                self.send_response(500)
+                resource_id = int(path_parts[4])
+            except ValueError:
+                self.send_response(400)
                 self.end_headers()
+                self.wfile.write(json.dumps({"error": "Invalid resource ID"}).encode())
+                return
+
+            # Check for dry-run mode
+            dry_run = "dry_run=true" in self.path
+
+            # Perform or simulate deletion
+            if resource_type == "clients":
+                response, status_code = clients_instance.remove_client(resource_id, dry_run)
+            elif resource_type == "warehouses":
+                response, status_code = warehouses_instance.remove_warehouse(resource_id, dry_run)
+            elif resource_type == "locations":
+                response, status_code = locations_instance.remove_location(resource_id, dry_run)
+            elif resource_type == "transfers":
+                response, status_code = transfers_instance.remove_transfer(resource_id, dry_run)
+            elif resource_type == "items":
+                response, status_code = items_instance.remove_item(resource_id, dry_run)
+            elif resource_type == "item_lines":
+                response, status_code = item_lines_instance.remove_item_line(resource_id, dry_run)
+            elif resource_type == "item_groups":
+                response, status_code = item_groups_instance.remove_item_group(resource_id, dry_run)
+            elif resource_type == "item_types":
+                response, status_code = item_types_instance.remove_item_type(resource_id, dry_run)
+            elif resource_type == "inventories":
+                response, status_code = inventories_instance.remove_inventory(resource_id, dry_run)
+            elif resource_type == "suppliers":
+                response, status_code = suppliers_instance.remove_supplier(resource_id, dry_run)
+            elif resource_type == "orders":
+                response, status_code = orders_instance.remove_order(resource_id, dry_run)
+            elif resource_type == "shipments":
+                response, status_code = shipments_instance.remove_shipment(resource_id, dry_run)
+            else:
+                self.send_response(404)
+                self.end_headers()
+                return
+
+            self.send_response(status_code)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps(response).encode())
+        else:
+            self.send_response(404)
+            self.end_headers()
 
 
 if __name__ == "__main__":
