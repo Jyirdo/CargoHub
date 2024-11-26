@@ -22,3 +22,8 @@ API_KEY: f6g7h8i9j0
 GET http://localhost:3000/api/v1/clients/1/contact_email1
 API_KEY: f6g7h8i9j0
 ####
+
+DELETE http://localhost:3000/api/v1/clients/1
+API_KEY: f6g7h8i9j0
+Admin-Key: a1b2c3d4e5
+###

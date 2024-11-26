@@ -33,3 +33,8 @@ API_KEY: a1b2c3d4e5
   "description": "test"
 }
 ####
+
+
+DELETE http://localhost:3000/api/v1/item_lines/1
+Admin-Key: a1b2c3d4e5
+ADMIN_KEY: a1b2c3d4e5
