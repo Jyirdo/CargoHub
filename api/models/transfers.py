@@ -63,3 +63,19 @@ class Transfers(Base):
         f = open(self.data_path, "w")
         json.dump(self.data, f)
         f.close()
+  
+    def validate_transfer_data(self, transfer):
+        required_fields = ["id", "reference", "transfer_from", "transfer_to", "items"]
+        for field in required_fields:
+            if field not in transfer:
+                raise ValueError(f"Field '{field}' is missing in the transfer data.")
+        if not isinstance(transfer["items"], list):
+            raise ValueError("The 'items' field must be a list.")
+
+    def add_transfer(self, transfer):
+        self.validate_transfer_data(transfer)
+        transfer["transfer_status"] = "Scheduled"
+        transfer["created_at"] = self.get_timestamp()
+        transfer["updated_at"] = self.get_timestamp()
+        self.data.append(transfer)
+        self.save()
