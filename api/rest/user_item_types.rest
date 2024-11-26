@@ -33,10 +33,20 @@ API_KEY: a1b2c3d4e5
   "description": "test"
 }
 ####
+# Add a new item type
+POST http://localhost:3000/api/v1/item_types
+Content-Type: application/json
+API_KEY: a1b2c3d4e5
+
+{
+  "id": 1,
+  "name": "Furniture",
+  "description": "Type for furniture items"
+}
+
 
 ####
 
 DELETE http://localhost:3000/api/v1/item_types/1
 API_KEY: f6g7h8i9j0
 ADMIN_KEY: a1b2c3d4e5
-####
