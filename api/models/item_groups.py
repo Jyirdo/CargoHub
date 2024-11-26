@@ -56,3 +56,18 @@ class ItemGroups(Base):
         f = open(self.data_path, "w")
         json.dump(self.data, f)
         f.close()
+
+    def validate_item_group_data(self, item_group):
+        required_fields = [
+            "id", "name", "description"
+        ]
+        for field in required_fields:
+            if field not in item_group:
+                raise ValueError(f"Field '{field}' is missing in the item group data.")
+
+    def add_item_group(self, item_group):
+        self.validate_item_group_data(item_group)
+        item_group["created_at"] = self.get_timestamp()
+        item_group["updated_at"] = self.get_timestamp()
+        self.data.append(item_group)
+        self.save()

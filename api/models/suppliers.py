@@ -56,3 +56,20 @@ class Suppliers(Base):
         f = open(self.data_path, "w")
         json.dump(self.data, f)
         f.close()
+    
+    def validate_supplier_data(self, supplier):
+        required_fields = [
+            "id", "code", "name", "address", "address_extra", "city",
+            "zip_code", "province", "country", "contact_name", 
+            "phonenumber", "reference"
+        ]
+        for field in required_fields:
+            if field not in supplier:
+                raise ValueError(f"Field '{field}' is missing in the supplier data.")
+
+    def add_supplier(self, supplier):
+        self.validate_supplier_data(supplier)
+        supplier["created_at"] = self.get_timestamp()
+        supplier["updated_at"] = self.get_timestamp()
+        self.data.append(supplier)
+        self.save()

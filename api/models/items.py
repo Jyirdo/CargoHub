@@ -84,3 +84,22 @@ class Items(Base):
         f = open(self.data_path, "w")
         json.dump(self.data, f)
         f.close()
+    
+    def validate_item_data(self, item):
+        required_fields = [
+            "uid", "code", "description", "short_description", "upc_code",
+            "model_number", "commodity_code", "item_line", "item_group",
+            "item_type", "unit_purchase_quantity", "unit_order_quantity",
+            "pack_order_quantity", "supplier_id", "supplier_code",
+            "supplier_part_number"
+        ]
+        for field in required_fields:
+            if field not in item:
+                raise ValueError(f"Field '{field}' is missing in the item data.")
+
+    def add_item(self, item):
+        self.validate_item_data(item)
+        item["created_at"] = self.get_timestamp()
+        item["updated_at"] = self.get_timestamp()
+        self.data.append(item)
+        self.save()

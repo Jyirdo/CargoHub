@@ -63,3 +63,18 @@ class Locations(Base):
         f = open(self.data_path, "w")
         json.dump(self.data, f)
         f.close()
+    
+    def validate_item_type_data(self, item_type):
+        required_fields = [
+            "id", "name", "description"
+        ]
+        for field in required_fields:
+            if field not in item_type:
+                raise ValueError(f"Field '{field}' is missing in the item type data.")
+
+    def add_item_type(self, item_type):
+        self.validate_item_type_data(item_type)
+        item_type["created_at"] = self.get_timestamp()
+        item_type["updated_at"] = self.get_timestamp()
+        self.data.append(item_type)
+        self.save()

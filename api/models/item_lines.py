@@ -56,3 +56,18 @@ class ItemLines(Base):
         f = open(self.data_path, "w")
         json.dump(self.data, f)
         f.close()
+
+    def validate_item_line_data(self, item_line):
+        required_fields = [
+            "id", "name", "description"
+        ]
+        for field in required_fields:
+            if field not in item_line:
+                raise ValueError(f"Field '{field}' is missing in the item line data.")
+
+    def add_item_line(self, item_line):
+        self.validate_item_line_data(item_line)
+        item_line["created_at"] = self.get_timestamp()
+        item_line["updated_at"] = self.get_timestamp()
+        self.data.append(item_line)
+        self.save()

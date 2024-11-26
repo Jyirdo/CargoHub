@@ -121,3 +121,24 @@ class Orders(Base):
         f = open(self.data_path, "w")
         json.dump(self.data, f)
         f.close()
+
+    def validate_order_data(self, order):
+        required_fields = [
+            "id", "source_id", "order_date", "request_date", "reference",
+            "reference_extra", "order_status", "notes", "shipping_notes",
+            "picking_notes", "warehouse_id", "ship_to", "bill_to",
+            "shipment_id", "total_amount", "total_discount", "total_tax",
+            "total_surcharge", "items"
+        ]
+        for field in required_fields:
+            if field not in order:
+                raise ValueError(f"Field '{field}' is missing in the order data.")
+        if not isinstance(order["items"], list):
+            raise ValueError("The 'items' field must be a list.")
+
+    def add_order(self, order):
+        self.validate_order_data(order)
+        order["created_at"] = self.get_timestamp()
+        order["updated_at"] = self.get_timestamp()
+        self.data.append(order)
+        self.save()

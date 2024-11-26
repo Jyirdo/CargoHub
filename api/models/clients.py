@@ -56,3 +56,19 @@ class Clients(Base):
         f = open(self.data_path, "w")
         json.dump(self.data, f)
         f.close()
+        
+    def validate_client_data(self, client):
+        required_fields = [
+            "id", "name", "address", "city", "zip_code", "province",
+            "country", "contact_name", "contact_phone", "contact_email"
+        ]
+        for field in required_fields:
+            if field not in client:
+                raise ValueError(f"Het veld '{field}' ontbreekt in de gegevens van de client.")
+    
+    def add_client(self, client):
+        self.validate_client_data(client)
+        client["created_at"] = self.get_timestamp()
+        client["updated_at"] = self.get_timestamp()
+        self.data.append(client)
+        self.save()

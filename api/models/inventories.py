@@ -78,3 +78,24 @@ class Inventories(Base):
         f = open(self.data_path, "w")
         json.dump(self.data, f)
         f.close()
+
+    def validate_inventory_data(self, inventory):
+        required_fields = [
+            "id", "item_id", "description", "item_reference", "locations",
+            "total_on_hand", "total_expected", "total_ordered",
+            "total_allocated", "total_available"
+        ]
+        for field in required_fields:
+            if field not in inventory:
+                raise ValueError(f"Field '{field}' is missing in the inventory data.")
+        if not isinstance(inventory["locations"], list):
+            raise ValueError("The 'locations' field must be a list.")
+
+    def add_inventory(self, inventory):
+        self.validate_inventory_data(inventory)
+        inventory["created_at"] = self.get_timestamp()
+        inventory["updated_at"] = self.get_timestamp()
+        self.data.append(inventory)
+        self.save()
+
+    

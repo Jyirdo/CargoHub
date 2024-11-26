@@ -18,7 +18,7 @@ class Warehouses(Base):
             if x["id"] == warehouse_id:
                 return x
         return None
-    
+
     def get_warehouse_data(self, warehouse_id, data_type):
         for x in self.data:
             if x["id"] == warehouse_id:
@@ -56,3 +56,25 @@ class Warehouses(Base):
         f = open(self.data_path, "w")
         json.dump(self.data, f)
         f.close()
+
+    def validate_warehouse_data(self, warehouse):
+        required_fields = [
+            "id", "code", "name", "address", "zip", "city", 
+            "province", "country", "contact"
+        ]
+        for field in required_fields:
+            if field not in warehouse:
+                raise ValueError(f"Field '{field}' is missing in the warehouse data.")
+        if not isinstance(warehouse["contact"], dict):
+            raise ValueError("The 'contact' field must be a dictionary.")
+        contact_required_fields = ["name", "phone", "email"]
+        for field in contact_required_fields:
+            if field not in warehouse["contact"]:
+                raise ValueError(f"Field '{field}' is missing in the 'contact' data.")
+
+    def add_warehouse(self, warehouse):
+        self.validate_warehouse_data(warehouse)
+        warehouse["created_at"] = self.get_timestamp()
+        warehouse["updated_at"] = self.get_timestamp()
+        self.data.append(warehouse)
+        self.save()
