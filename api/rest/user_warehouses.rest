@@ -1,0 +1,28 @@
+// request warehouse with warehouse id 1 
+GET http://localhost:3000/api/v1/warehouses/1
+API_KEY: f6g7h8i9j0
+####
+
+// request warehouse name from warehouse with id 1 
+GET http://localhost:3000/api/v1/warehouses/1/name
+API_KEY: f6g7h8i9j0
+####
+
+// request warehouse contact from warehouse with id 1 
+GET http://localhost:3000/api/v1/warehouses/1/contact
+API_KEY: f6g7h8i9j0
+####
+
+// request warehouse created at from warehouse with id 1 
+GET http://localhost:3000/api/v1/warehouses/1/created_at
+API_KEY: f6g7h8i9j0
+####
+
+// faulty request 
+GET http://localhost:3000/api/v1/warehouses/1/created_at1
+API_KEY: f6g7h8i9j0
+####
+
+### DELETE Request for Warehouses
+DELETE http://localhost:3000/api/v1/warehouses/1
+Admin-Key: a1b2c3d4e5

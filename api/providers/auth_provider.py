@@ -16,77 +16,84 @@ USERS = [
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "locations":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "transfers":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "items":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "item_lines":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "item_groups":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "item_types":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
+            },
+            "inventories":  {
+                "full": False,
+                "get": True,
+                "post": False,
+                "put": False,
+                "delete": True
             },
             "suppliers":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "orders":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "clients":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "shipments":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             }
         }
     }
@@ -99,9 +106,9 @@ def init():
     _users = USERS
 
 def get_user(api_key):
-    for x in _users:
-        if x["api_key"] == api_key:
-            return x
+    for user in _users:
+        if user["api_key"] == api_key:
+            return user
     return None
  
 def has_access(user, path, method):
@@ -109,4 +116,4 @@ def has_access(user, path, method):
     if access["full"]:
         return True
     else:
-        return access[path][method]
+        return access[path[0]][method]
