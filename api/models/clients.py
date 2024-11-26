@@ -9,13 +9,14 @@ class Clients(Base):
     def __init__(self, root_path, is_debug=False):
         # Correct path to `clients.json` in the `data` folder
         self.data_path = os.path.join(root_path, "../data/clients.json")
-        print(f"Initializing Clients: data_path set to {self.data_path}")
         self.load(is_debug)
 
     def get_clients(self):
+        self.load(is_debug=False)
         return self.data
 
     def get_client(self, client_id):
+        self.load(is_debug=False)
         for x in self.data:
             if x["id"] == client_id:
                 return x
@@ -28,19 +29,6 @@ class Clients(Base):
                     return x[data_type]
                 else:
                     return None
-            
-#def get_clients(self):
-#    """Fetch all clients from the file (always up-to-date)."""
-#    self.load(is_debug=False)  # Always reload from file
-#    return self.data
-
-#def get_client(self, client_id):
-#    """Fetch a single client by ID (always up-to-date)."""
-#    self.load(is_debug=False)  # Always reload from file
-#    for client in self.data:
-#        if client["id"] == client_id:
-#            return client
-#    return None
 
     def add_client(self, client):
         client["created_at"] = self.get_timestamp()
