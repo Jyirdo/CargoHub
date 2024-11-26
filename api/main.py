@@ -421,6 +421,8 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             data_provider.fetch_warehouse_pool().save()
             self.send_response(201)
             self.end_headers()
+            self.wfile.write(json.dumps(new_warehouse).encode("utf-8"))
+
         elif path[0] == "locations":
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
@@ -429,6 +431,8 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             data_provider.fetch_location_pool().save()
             self.send_response(201)
             self.end_headers()
+            self.wfile.write(json.dumps(new_location).encode("utf-8"))
+
         elif path[0] == "transfers":
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
@@ -438,6 +442,8 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             notification_processor.push(f"Scheduled batch transfer {new_transfer['id']}")
             self.send_response(201)
             self.end_headers()
+            self.wfile.write(json.dumps(new_transfer).encode("utf-8"))
+
         elif path[0] == "items":
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
@@ -446,6 +452,8 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             data_provider.fetch_item_pool().save()
             self.send_response(201)
             self.end_headers()
+            self.wfile.write(json.dumps(new_item).encode("utf-8"))
+
         elif path[0] == "inventories":
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
@@ -454,6 +462,9 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             data_provider.fetch_inventory_pool().save()
             self.send_response(201)
             self.end_headers()
+            self.wfile.write(json.dumps(new_inventory).encode("utf-8"))
+
+
         elif path[0] == "suppliers":
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
@@ -462,6 +473,8 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             data_provider.fetch_supplier_pool().save()
             self.send_response(201)
             self.end_headers()
+            self.wfile.write(json.dumps(new_supplier).encode("utf-8"))
+
         elif path[0] == "orders":
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
@@ -470,6 +483,8 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             data_provider.fetch_order_pool().save()
             self.send_response(201)
             self.end_headers()
+            self.wfile.write(json.dumps(new_order).encode("utf-8"))
+
         elif path[0] == "clients":
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
@@ -477,7 +492,49 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             data_provider.fetch_client_pool().add_client(new_client)
             data_provider.fetch_client_pool().save()
             self.send_response(201)
+            self.send_header("Content-type", "application/json")
             self.end_headers()
+            # Zorg ervoor dat de clientgegevens worden weergegeven
+            self.wfile.write(json.dumps(new_client).encode("utf-8"))
+        
+        elif path[0] == "item_groups":
+            content_length = int(self.headers["Content-Length"])
+            post_data = self.rfile.read(content_length)
+            new_item_group = json.loads(post_data.decode())
+            data_provider.fetch_item_group_pool().add_item_group(new_item_group)
+            data_provider.fetch_item_group_pool().save()
+            self.send_response(201)
+            self.send_header("Content-type", "application/json")
+            self.end_headers()
+            # Return the added item group data
+            self.wfile.write(json.dumps(new_item_group).encode("utf-8"))
+            
+        elif path[0] == "item_lines":
+            content_length = int(self.headers["Content-Length"])
+            post_data = self.rfile.read(content_length)
+            new_item_line = json.loads(post_data.decode())
+            data_provider.fetch_item_line_pool().add_item_line(new_item_line)
+            data_provider.fetch_item_line_pool().save()
+            self.send_response(201)
+            self.send_header("Content-type", "application/json")
+            self.end_headers()
+            # Return the added item line data
+            self.wfile.write(json.dumps(new_item_line).encode("utf-8"))
+        
+        elif path[0] == "item_types":
+            content_length = int(self.headers["Content-Length"])
+            post_data = self.rfile.read(content_length)
+            new_item_type = json.loads(post_data.decode())
+            data_provider.fetch_item_type_pool().add_item_type(new_item_type)
+            data_provider.fetch_item_type_pool().save()
+            self.send_response(201)
+            self.send_header("Content-type", "application/json")
+            self.end_headers()
+            # Return the added item type data
+            self.wfile.write(json.dumps(new_item_type).encode("utf-8"))
+
+
+            
         elif path[0] == "shipments":
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
@@ -486,9 +543,13 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             data_provider.fetch_shipment_pool().save()
             self.send_response(201)
             self.end_headers()
+            self.wfile.write(json.dumps(new_shipment).encode("utf-8"))
+
         else:
             self.send_response(404)
             self.end_headers()
+            self.wfile.write(json.dumps(new_shipment).encode("utf-8"))
+
 
     def do_POST(self):
         api_key = self.headers.get("API_KEY")
