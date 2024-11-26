@@ -22,3 +22,7 @@ API_KEY: f6g7h8i9j0
 GET http://localhost:3000/api/v1/inventories/1/created_at1
 API_KEY: f6g7h8i9j0
 ####
+DELETE http://localhost:3000/api/v1/inventories/1
+API_KEY: f6g7h8i9j0
+ADMIN_KEY: a1b2c3d4e5
+####

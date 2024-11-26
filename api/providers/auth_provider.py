@@ -16,84 +16,84 @@ USERS = [
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "locations":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "transfers":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "items":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "item_lines":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "item_groups":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "item_types":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "inventories":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "suppliers":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "orders":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "clients":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             },
             "shipments":  {
                 "full": False,
                 "get": True,
                 "post": False,
                 "put": False,
-                "delete": False
+                "delete": True
             }
         }
     }
