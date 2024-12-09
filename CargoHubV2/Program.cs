@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<CargoHubDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("WebApiDatabase")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("CargoHubDatabase")));
 
 
 builder.Services.AddScoped<ItemGroupService>();

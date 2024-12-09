@@ -13,7 +13,7 @@ namespace Cargohub_V2.Contexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(Configuration.GetConnectionString("WebApiDatabase"));
+            optionsBuilder.UseNpgsql(Configuration.GetConnectionString("CargoHubDatabase"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
