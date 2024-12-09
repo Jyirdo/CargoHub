@@ -1,11 +1,11 @@
 bin/
 obj/
-api/__pycache__/
-api/.pytest_cache/
-api/models/__pycache__/
-api/processors/__pycache__/
-api/providers/__pycache__/
-api/testing/__pycache__/
+CargohubV1/api/__pycache__/
+CargohubV1/api/.pytest_cache/
+CargohubV1/api/models/__pycache__/
+CargohubV1/api/processors/__pycache__/
+CargohubV1/api/providers/__pycache__/
+CargohubV1/api/testing/__pycache__/
 .vscode/
 .venv/
 .pytest_cache/
