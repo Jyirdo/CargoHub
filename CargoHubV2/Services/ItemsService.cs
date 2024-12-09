@@ -29,7 +29,7 @@ namespace Cargohub_V2.Services
         }
 
 
-        public async Task<Item> GetItemByUidAsync(string uid)
+        public async Task<Item?> GetItemByUidAsync(string uid)
         {
             return await _context.Items
                 .Include(i => i.ItemLine)
