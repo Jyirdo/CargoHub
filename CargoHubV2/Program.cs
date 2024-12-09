@@ -16,8 +16,7 @@ builder.Services.AddScoped<ItemLineService>();
 builder.Services.AddScoped<ItemTypeService>();
 builder.Services.AddScoped<ItemService>();
 builder.Services.AddScoped<ClientsService>();
-builder.Services.AddScoped<ShipmentService>();
-builder.Services.AddScoped<OrderService>();
+
 
 
 builder.Services.AddControllers();
