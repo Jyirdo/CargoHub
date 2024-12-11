@@ -10,7 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<CargoHubDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("CargoHubDatabase")));
 
-
 builder.Services.AddScoped<ItemGroupService>();
 builder.Services.AddScoped<ItemLineService>();
 builder.Services.AddScoped<ItemTypeService>();
@@ -18,13 +17,12 @@ builder.Services.AddScoped<ItemService>();
 builder.Services.AddScoped<ClientsService>();
 builder.Services.AddScoped<TransferService>();
 builder.Services.AddScoped<WarehouseService>();
-
-
-
+builder.Services.AddScoped<InventoriesService>();
+builder.Services.AddScoped<ShipmentService>();
+builder.Services.AddScoped<OrderService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
 
 var app = builder.Build();
 if (args.Length > 0 && args[0] == "seed")
