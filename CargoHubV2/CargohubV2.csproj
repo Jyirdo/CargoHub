@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Cargohub_V2</RootNamespace>
+    <RootNamespace>CargohubV2</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
