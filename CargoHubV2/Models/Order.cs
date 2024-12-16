@@ -1,8 +1,8 @@
-﻿using Cargohub_V2.DataConverters;
+﻿using CargohubV2.DataConverters;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace Cargohub_V2.Models
+namespace CargohubV2.Models
 {
     public class Order
     {

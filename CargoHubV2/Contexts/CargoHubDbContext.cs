@@ -1,7 +1,7 @@
-﻿using Cargohub_V2.Models;
+﻿using CargohubV2.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cargohub_V2.Contexts
+namespace CargohubV2.Contexts
 {
     public class CargoHubDbContext : DbContext
     {

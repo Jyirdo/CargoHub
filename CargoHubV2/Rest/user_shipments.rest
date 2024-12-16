@@ -1,0 +1,79 @@
+// request shipment with shipment id 1 
+GET https://localhost:5001/api/shipments/1
+API_KEY: f6g7h8i9j0
+####
+
+// request shipment date from shipment with id 1 
+GET https://localhost:5001/api/shipments/1/shipment_date
+API_KEY: f6g7h8i9j0
+####
+
+// request shipment notes from shipment with id 1 
+GET https://localhost:5001/api/shipments/1/notes
+API_KEY: f6g7h8i9j0
+####
+
+// request shipment items from shipment with id 1 
+GET https://localhost:5001/api/shipments/1/items
+API_KEY: f6g7h8i9j0
+####
+
+// faulty request 
+GET https://localhost:5001/api/shipments/1/items1
+API_KEY: f6g7h8i9j0
+####
+
+// Update shipments info 
+PUT https://localhost:5001/api/shipments/1
+Content-Type: application/json
+API_KEY: a1b2c3d4e5
+
+{
+  "shipment_status": "Delivered",  
+  "carrier_description": "Dynamic Parcel Distribution"
+}
+####
+# Add a new shipment
+POST https://localhost:5001/api/shipments
+Content-Type: application/json
+API_KEY: a1b2c3d4e5
+
+{
+  "id": 1,
+  "order_id": 1,
+  "source_id": 33,
+  "order_date": "2000-03-09",
+  "request_date": "2000-03-11",
+  "shipment_date": "2000-03-13",
+  "shipment_type": "I",
+  "shipment_status": "Pending",
+  "notes": "Zee vertrouwen klas rots heet lachen oneven begrijpen.",
+  "carrier_code": "DPD",
+  "carrier_description": "Dynamic Parcel Distribution",
+  "service_code": "Fastest",
+  "payment_type": "Manual",
+  "transfer_mode": "Ground",
+  "total_package_count": 31,
+  "total_package_weight": 594.42,
+  "items": [
+    {
+      "item_id": "P007435",
+      "amount": 23
+    },
+    {
+      "item_id": "P009557",
+      "amount": 1
+    },
+    {
+      "item_id": "P009553",
+      "amount": 50
+    }
+  ]
+}
+
+####
+
+
+DELETE https://localhost:5001/api/suppliers/1
+Admin-Key: a1b2c3d4e5
+ADMIN_KEY: a1b2c3d4e5

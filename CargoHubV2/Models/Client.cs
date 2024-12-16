@@ -1,8 +1,8 @@
-﻿using Cargohub_V2.DataConverters;
+﻿using CargohubV2.DataConverters;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
-namespace Cargohub_V2.Models
+namespace CargohubV2.Models
 {
     public class Client
     {

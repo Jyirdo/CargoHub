@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System.Globalization;
 
-namespace Cargohub_V2.DataConverters
+namespace CargohubV2.DataConverters
 {
     public class FlexibleDateTimeConverter : DateTimeConverterBase
     {

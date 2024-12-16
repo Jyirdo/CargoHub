@@ -1,11 +1,11 @@
-﻿namespace Cargohub_V2.DataConverters
+﻿namespace CargohubV2.DataConverters
 {
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
     using System.Runtime.Serialization;
-    using Cargohub_V2.Contexts;
-    using Cargohub_V2.Models;
+    using CargohubV2.Contexts;
+    using CargohubV2.Models;
     using Microsoft.EntityFrameworkCore;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cargohub_V2.Contexts;
-using Cargohub_V2.Models;
+using CargohubV2.Contexts;
+using CargohubV2.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cargohub_V2.Services
+namespace CargohubV2.Services
 {
     public class InventoriesService
     {

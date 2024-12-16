@@ -1,0 +1,48 @@
+// request client with client id 1 
+GET https://localhost:5001/api/clients/1
+API_KEY: f6g7h8i9j0
+####
+
+// request client name from client with id 1 
+GET https://localhost:5001/api/clients/1/name
+API_KEY: f6g7h8i9j0
+####
+
+// request client address from client with id 1 
+GET https://localhost:5001/api/clients/1/address
+API_KEY: f6g7h8i9j0
+####
+
+// request client email from client with id 1 
+GET https://localhost:5001/api/clients/1/contact_email
+API_KEY: f6g7h8i9j0
+####
+
+// faulty request 
+GET https://localhost:5001/api/clients/1/contact_email1
+API_KEY: f6g7h8i9j0
+####
+# Voeg een nieuwe client toe
+POST https://localhost:5001/api/clients
+Content-Type: application/json
+API_KEY: a1b2c3d4e5
+
+{
+  "id": 1,
+  "name": "Raymond Inc",
+  "address": "1296 Daniel Road Apt. 349",
+  "city": "Pierceview",
+  "zip_code": "28301",
+  "province": "Colorado",
+  "country": "United States",
+  "contact_name": "Bryan Clark",
+  "contact_phone": "242.732.3483x2573",
+  "contact_email": "robertcharles@example.net"
+}
+
+####
+
+DELETE https://localhost:5001/api/clients/1
+API_KEY: f6g7h8i9j0
+Admin-Key: a1b2c3d4e5
+###

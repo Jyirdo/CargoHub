@@ -1,7 +1,7 @@
-using Cargohub_V2.Contexts;
-using Cargohub_V2.DataConverters;
+using CargohubV2.Contexts;
+using CargohubV2.DataConverters;
 using Microsoft.EntityFrameworkCore;
-using Cargohub_V2.Services;
+using CargohubV2.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
