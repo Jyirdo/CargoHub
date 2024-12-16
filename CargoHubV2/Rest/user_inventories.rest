@@ -1,0 +1,68 @@
+// request inventory with inventory id 1 
+GET https://localhost:5001/api/inventories/1
+API_KEY: f6g7h8i9j0
+####
+
+// request inventory description from description with id 1 
+GET https://localhost:5001/api/inventories/1/description
+API_KEY: f6g7h8i9j0
+####
+
+// request inventory locations from description with id 1 
+GET https://localhost:5001/api/inventories/1/locations
+API_KEY: f6g7h8i9j0
+####
+
+// request inventory created at from description with id 1 
+GET https://localhost:5001/api/inventories/1/created_at
+API_KEY: f6g7h8i9j0
+####
+
+// faulty request 
+GET https://localhost:5001/api/inventories/1/created_at1
+API_KEY: f6g7h8i9j0
+####
+
+// Update inventory info 
+PUT https://localhost:5001/api/inventories/1
+Content-Type: application/json
+API_KEY: a1b2c3d4e5
+
+{
+  "description": "Face-to-face clear-thinking complexity",
+  "total_on_hand": 262
+}
+
+####
+
+# Add a new inventory
+POST https://localhost:5001/api/inventories
+Content-Type: application/json
+API_KEY: a1b2c3d4e5
+
+{
+  "id": 1,
+  "item_id": "P000001",
+  "description": "Face-to-face clear-thinking complexity",
+  "item_reference": "sjQ23408K",
+  "locations": [
+    3211,
+    24700,
+    14123,
+    19538,
+    31071,
+    24701,
+    11606,
+    11817
+  ],
+  "total_on_hand": 262,
+  "total_expected": 0,
+  "total_ordered": 80,
+  "total_allocated": 41,
+  "total_available": 141
+}
+####
+DELETE https://localhost:5001/api/inventories/1
+API_KEY: f6g7h8i9j0
+ADMIN_KEY: a1b2c3d4e5
+####

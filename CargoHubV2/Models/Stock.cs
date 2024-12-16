@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Cargohub_V2.Models
+namespace CargohubV2.Models
 {
     public class Stock
     {

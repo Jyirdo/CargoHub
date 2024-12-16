@@ -5,7 +5,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Cargohub_V2.Migrations
+namespace CargohubV2.Migrations
 {
     /// <inheritdoc />
     public partial class m1 : Migration

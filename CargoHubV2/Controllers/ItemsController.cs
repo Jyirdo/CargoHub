@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Cargohub_V2.Models;
-using Cargohub_V2.Services;
+using CargohubV2.Models;
+using CargohubV2.Services;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace Cargohub_V2.Controllers
+namespace CargohubV2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

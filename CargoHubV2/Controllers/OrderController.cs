@@ -1,10 +1,10 @@
-using Cargohub_V2.Models;
-using Cargohub_V2.Services;
+using CargohubV2.Models;
+using CargohubV2.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Cargohub_V2.Controllers
+namespace CargohubV2.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

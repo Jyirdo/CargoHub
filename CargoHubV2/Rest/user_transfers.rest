@@ -1,0 +1,58 @@
+// request transfer with transfer id 1 
+GET https://localhost:5001/api/transfers/1
+API_KEY: f6g7h8i9j0
+####
+
+// request transfer status from transfer with id 1 
+GET https://localhost:5001/api/transfers/1/transfer_status
+API_KEY: f6g7h8i9j0
+####
+
+// request transfer items from transfer with id 1 
+GET https://localhost:5001/api/transfers/1/items
+API_KEY: f6g7h8i9j0
+####
+
+// request transfer created at from transfer with id 1 
+GET https://localhost:5001/api/transfers/1/created_at
+API_KEY: f6g7h8i9j0
+####
+
+// faulty request 
+GET https://localhost:5001/api/transfers/1/created_at1
+API_KEY: f6g7h8i9j0
+####
+
+// Update transfer info 
+PUT https://localhost:5001/api/transfers/1
+Content-Type: application/json
+API_KEY: a1b2c3d4e5
+
+{
+  "transfer_from": 9299,
+  "transfer_status": "Completed"
+}
+####
+# Add a new transfer
+POST https://localhost:5001/api/transfers
+Content-Type: application/json
+API_KEY: a1b2c3d4e5
+
+{
+  "id": 1,
+  "reference": "TR00001",
+  "transfer_from": null,
+  "transfer_to": 9229,
+  "items": [
+    {
+      "item_id": "P007435",
+      "amount": 23
+    }
+  ]
+}
+
+####
+
+DELETE https://localhost:5001/api/transfers/1
+Admin-Key: a1b2c3d4e5
+ADMIN_KEY: a1b2c3d4e5
