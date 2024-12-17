@@ -1,0 +1,38 @@
+name: CargoHub application
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+          dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: |
+        dotnet restore
+      working-directory: CargoHubV2
+
+    - name: Build CargoHubV2
+      run: dotnet build --no-restore
+      working-directory: CargoHubV2
+
+  test: 
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Restore dependencies
+        run: |
+          dotnet restore
+        working-directory: CargoHubV2
+
+      - name: Run UnitTests
+        run: dotnet test
+        working-directory: CargoHubTest

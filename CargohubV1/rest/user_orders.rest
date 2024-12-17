@@ -1,0 +1,81 @@
+// request order with order id 1 
+GET http://localhost:3000/api/v1/orders/1
+API_KEY: f6g7h8i9j0
+####
+
+// request order date from order with id 1 
+GET http://localhost:3000/api/v1/orders/1/order_date
+API_KEY: f6g7h8i9j0
+####
+
+// request order reference from order with id 1 
+GET http://localhost:3000/api/v1/orders/1/reference_extra
+API_KEY: f6g7h8i9j0
+####
+
+// request order picking notes from order with id 1 
+GET http://localhost:3000/api/v1/orders/1/picking_notes
+API_KEY: f6g7h8i9j0
+####
+
+// faulty request 
+GET http://localhost:3000/api/v1/orders/1/picking_notes1
+API_KEY: f6g7h8i9j0
+####
+
+// Update order info 
+PUT http://localhost:3000/api/v1/orders/1
+Content-Type: application/json
+API_KEY: a1b2c3d4e5
+
+{
+  "order_status": "Delivered",  
+  "picking_notes": "Ademen fijn volgorde scherp aardappel op leren."
+}
+####
+# Add a new order
+POST http://localhost:3000/api/v1/orders
+Content-Type: application/json
+API_KEY: a1b2c3d4e5
+
+{
+  "id": 1,
+  "source_id": 33,
+  "order_date": "2019-04-03T11:33:15Z",
+  "request_date": "2019-04-07T11:33:15Z",
+  "reference": "ORD00001",
+  "reference_extra": "Bedreven arm straffen bureau.",
+  "order_status": "Delivered",
+  "notes": "Voedsel vijf vork heel.",
+  "shipping_notes": "Buurman betalen plaats bewolkt.",
+  "picking_notes": "Ademen fijn volgorde scherp aardappel op leren.",
+  "warehouse_id": 18,
+  "ship_to": null,
+  "bill_to": null,
+  "shipment_id": 1,
+  "total_amount": 9905.13,
+  "total_discount": 150.77,
+  "total_tax": 372.72,
+  "total_surcharge": 77.6,
+  "items": [
+    {
+      "item_id": "P007435",
+      "amount": 23
+    },
+    {
+      "item_id": "P009557",
+      "amount": 1
+    },
+    {
+      "item_id": "P009553",
+      "amount": 50
+    }
+  ]
+}
+
+####
+
+
+DELETE http://localhost:3000/api/v1/orders/1
+Admin-Key: a1b2c3d4e5
+ADMIN_KEY: a1b2c3d4e5
