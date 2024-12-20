@@ -108,9 +108,9 @@ namespace CargohubV2.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (_itemService.GetItemByCodeAsync(newItem.UId).Result != null)
+            if (_itemService.GetItemByCodeAsync(newItem.Code).Result != null)
             {
-                return BadRequest("Item with this UID already exists");
+                return BadRequest("Item with this Code already exists");
             }
             var createdItem = await _itemService.AddItemAsync(newItem);
             return CreatedAtAction(nameof(GetItemById), new { id = createdItem.Id }, createdItem);
