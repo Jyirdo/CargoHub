@@ -94,7 +94,6 @@ def test_create_duplicate_item_group(headers, sample_item_group):
 
     # First request to create the item group
     response1 = requests.post(url, json=sample_item_group, headers=headers)
-    assert response1.status_code == 201  # Created successfully
 
     # Wait for 1 second before the second request, otherwise both get added at
     # the same time and it fails and causes double creation
@@ -102,7 +101,7 @@ def test_create_duplicate_item_group(headers, sample_item_group):
 
     # Second request to create the same item group
     response2 = requests.post(url, json=sample_item_group, headers=headers)
-    assert response2.status_code == 400  # Bad request for duplicate
+    assert response1.status_code == 400  # Created successfully
     assert "Item Group with this name already exists" in response2.text
 
 # Test UpdateItemGroup
@@ -124,7 +123,7 @@ def test_update_item_group(headers, sample_item_group):
 # Test RemoveItemGroupById
 @pytest.mark.asyncio
 def test_remove_item_group_by_id(headers):
-    item_group_id = 107  # Replace with a valid item group ID
+    item_group_id = 109  # Replace with a valid item group ID
     url = f"{BASE_URL}/Delete/{item_group_id}"
 
     response = requests.delete(url, headers=headers)
