@@ -16,7 +16,7 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Item>> GetAllItemsAsync()
+        public async Task<List<Item>> GetAllItemsAsync(int amount)
         {
             return await _context.Items
                 .Include(i => i.ItemLine)
@@ -24,7 +24,7 @@ namespace CargohubV2.Services
                 .Include(i => i.ItemType)
                 .Include(i => i.Supplier)
                 .OrderBy(i => i.Id) // Order by Id in ascending order
-                .Take(10)
+                .Take(amount)
                 .ToListAsync();
         }
 
