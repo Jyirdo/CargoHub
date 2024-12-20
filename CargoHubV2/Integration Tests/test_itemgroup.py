@@ -32,6 +32,17 @@ def test_get_all_item_groups(headers):
     assert len(response_json) > 0, "Response list is empty"
 
 
+@pytest.mark.asyncio
+def test_get_all_item_groups_with_max_pagination(headers):
+    url = f"{BASE_URL}/page/1000"
+    response = requests.get(url, headers=headers)
+
+    assert response.status_code == 200
+    response_json = response.json()
+    assert isinstance(response.json(), list)
+    assert len(response_json) > 0, "Response list is empty"
+
+
 # Test GetItemGroupById
 def test_get_item_group_by_id(headers):
     item_group_id = 1  # Replace with a valid item group ID
