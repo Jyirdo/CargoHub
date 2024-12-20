@@ -89,6 +89,17 @@ namespace CargohubV2.Controllers
             return Ok(items);
         }
 
+        [HttpGet("ByCode/{code}")]
+        public async Task<ActionResult<IEnumerable<Item>>> GetItemsByCode(string code)
+        {
+            var items = await _itemService.GetItemByCodeAsync(code);
+            if (items == null)
+            {
+                return NoContent();
+            }
+            return Ok(items);
+        }
+
         // POST: api/Items/Add
         [HttpPost("Add")]
         public async Task<ActionResult<Item>> AddItem([FromBody] Item newItem)
@@ -97,7 +108,7 @@ namespace CargohubV2.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (_itemService.GetItemByUidAsync(newItem.UId).Result != null)
+            if (_itemService.GetItemByCodeAsync(newItem.UId).Result != null)
             {
                 return BadRequest("Item with this UID already exists");
             }

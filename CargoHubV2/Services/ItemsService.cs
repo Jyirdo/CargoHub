@@ -38,6 +38,15 @@ namespace CargohubV2.Services
                 .Include(i => i.Supplier)
                 .FirstOrDefaultAsync(i => i.UId == uid);
         }
+        public async Task<Item?> GetItemByCodeAsync(string code)
+        {
+            return await _context.Items
+                .Include(i => i.ItemLine)
+                .Include(i => i.ItemGroup)
+                .Include(i => i.ItemType)
+                .Include(i => i.Supplier)
+                .FirstOrDefaultAsync(i => i.Code == code);
+        }
         public async Task<Item?> GetItemsByItemLineAsync(int itemLineId)
         {
             return await _context.Items
