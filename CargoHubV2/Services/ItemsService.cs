@@ -16,7 +16,7 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Item>> GetAllItemsAsync(int amount)
+        public async Task<List<Item>> GetAllItemsAsync()
         {
             return await _context.Items
                 .Include(i => i.ItemLine)
@@ -24,7 +24,7 @@ namespace CargohubV2.Services
                 .Include(i => i.ItemType)
                 .Include(i => i.Supplier)
                 .OrderBy(i => i.Id) // Order by Id in ascending order
-                .Take(amount)
+                .Take(10)
                 .ToListAsync();
         }
 
@@ -37,15 +37,6 @@ namespace CargohubV2.Services
                 .Include(i => i.ItemType)
                 .Include(i => i.Supplier)
                 .FirstOrDefaultAsync(i => i.UId == uid);
-        }
-        public async Task<Item?> GetItemByCodeAsync(string code)
-        {
-            return await _context.Items
-                .Include(i => i.ItemLine)
-                .Include(i => i.ItemGroup)
-                .Include(i => i.ItemType)
-                .Include(i => i.Supplier)
-                .FirstOrDefaultAsync(i => i.Code == code);
         }
         public async Task<Item?> GetItemsByItemLineAsync(int itemLineId)
         {

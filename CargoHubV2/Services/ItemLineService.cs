@@ -15,10 +15,9 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Item_Line>> GetAllItemLinesAsync(int amount)
+        public async Task<List<Item_Line>> GetAllItemLinesAsync()
         {
-            var newAmount = amount;
-            return await _context.Items_Lines.Take(newAmount).ToListAsync();
+            return await _context.Items_Lines.Take(100).ToListAsync();
         }
 
         public async Task<Item_Line> GetItemLineByIdAsync(int id)
