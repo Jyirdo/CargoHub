@@ -18,10 +18,10 @@ namespace CargohubV2.Controllers
         }
 
         // GET: api/ItemGroups
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Item_Group>>> GetAllItemGroups()
+        [HttpGet("page/{amount}")]
+        public async Task<ActionResult<IEnumerable<Item_Group>>> GetAllItemGroups(int amount)
         {
-            var itemGroups = await _itemGroupService.GetAllItemGroupsAsync();
+            var itemGroups = await _itemGroupService.GetAllItemGroupsAsync(amount);
             return Ok(itemGroups);
         }
 
