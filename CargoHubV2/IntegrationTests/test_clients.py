@@ -1,7 +1,7 @@
 import pytest
 import requests
-
-BASE_URL = "http://localhost:5000/api/Clients"  
+import time
+BASE_URL = "http://localhost:5000/api/Clients"
 
 
 @pytest.fixture
@@ -30,7 +30,7 @@ def sample_client():
 
 @pytest.mark.asyncio
 def test_get_all_clients(headers):
-    url = f"{BASE_URL}/page/10"
+    url = f"{BASE_URL}/byAmount/10"
     response = requests.get(url, headers=headers)
 
     assert response.status_code == 200
@@ -70,7 +70,8 @@ def test_create_duplicate_client(headers, sample_client):
 
     # First request to create the client
     requests.post(url, json=sample_client, headers=headers)
-
+    # a 1 second timer until the second requst is sent
+    time.sleep(1)
     # Second request to create the same client
     response = requests.post(url, json=sample_client, headers=headers)
 
@@ -81,7 +82,7 @@ def test_create_duplicate_client(headers, sample_client):
 
 @pytest.mark.asyncio
 def test_update_client(headers, sample_client):
-    client_id = 9829  # Replace with a valid client ID
+    client_id = 9824  # Replace with a valid client ID
     url = f"{BASE_URL}/Update/{client_id}"
 
     sample_client["Name"] = "Updated Test Name"
@@ -96,7 +97,7 @@ def test_update_client(headers, sample_client):
 
 @pytest.mark.asyncio
 def test_remove_client_by_id(headers):
-    client_id = 9829  # Replace with a valid client ID
+    client_id = 9823  # Replace with a valid client ID
     url = f"{BASE_URL}/Delete/{client_id}"
 
     response = requests.delete(url, headers=headers)
