@@ -40,21 +40,45 @@ namespace CargohubV2.Controllers
         [HttpGet("{orderId}/items")]
         public async Task<ActionResult<List<OrderStock>>> GetItemsInOrder(int orderId)
         {
+            if (orderId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid order ID. It must be a positive integer." });
+            }
             var items = await _orderService.GetItemsInOrderAsync(orderId);
+            if (items == null || !items.Any())
+            {
+                return NotFound(new { Message = $"No items found for order ID {orderId}." });
+            }
             return Ok(items);
         }
 
         [HttpGet("shipment/{shipmentId}")]
         public async Task<ActionResult<List<Order>>> GetOrdersForShipment(int shipmentId)
         {
+            if (shipmentId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid shipment ID. It must be a positive integer." });
+            }
             var orders = await _orderService.GetOrdersForShipmentAsync(shipmentId);
+            if (orders == null || !orders.Any())
+            {
+                return NotFound(new { Message = $"No orders found for shipment ID {shipmentId}." });
+            }
             return Ok(orders);
         }
 
         [HttpGet("client/{clientId}")]
         public async Task<ActionResult<List<Order>>> GetOrdersForClient(string clientId)
         {
+            if (string.IsNullOrWhiteSpace(clientId))
+            {
+                return BadRequest(new { Message = "Client ID cannot be null or empty." });
+            }
             var orders = await _orderService.GetOrdersForClientAsync(clientId);
+            if (orders == null || !orders.Any())
+            {
+                return NotFound(new { Message = $"No orders found for client ID {clientId}." });
+            }
             return Ok(orders);
         }
 
