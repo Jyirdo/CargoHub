@@ -2,8 +2,7 @@ import pytest
 import requests
 import time
 
-BASE_URL = "http://localhost:5000/api/ItemGroups"  # Replace with your actual base URL
-
+BASE_URL = "http://localhost:5000/api/ItemGroups" 
 
 @pytest.fixture
 def headers():

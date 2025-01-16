@@ -19,10 +19,10 @@ namespace CargohubV2.Controllers
         }
 
         // GET: api/Clients
-        [HttpGet("page/{amount}")]
-        public async Task<ActionResult<IEnumerable<Client>>> GetAllClients(int amount)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Client>>> GetAllClients()
         {
-            var clients = await _clientsService.GetAllClientsAsync(amount);
+            var clients = await _clientsService.GetAllClientsAsync();
             return Ok(clients);
         }
 
@@ -73,23 +73,13 @@ namespace CargohubV2.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            // Check if the email already exists and belongs to a different client
-            var clientWithEmail = await _clientsService.GetClientByEmailAsync(client.ContactEmail);
-            if (clientWithEmail != null && clientWithEmail.Id != id) // Check if the email belongs to another client
-            {
-                return BadRequest("Email already used by another user");
-            }
-
             var updatedClient = await _clientsService.UpdateClientAsync(client, id);
             if (updatedClient == null)
             {
                 return NoContent();
             }
-
             return Ok(updatedClient);
         }
-
 
         // DElETE: api/Clients/Delete/{id}
         [HttpDelete("Delete/{id}")] // Route parameter

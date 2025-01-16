@@ -1,7 +1,7 @@
 import pytest
 import requests
 
-BASE_URL = "http://localhost:5000/api/Clients"  # Replace with your actual base URL
+BASE_URL = "http://localhost:5000/api/Clients"  
 
 
 @pytest.fixture
