@@ -45,6 +45,15 @@ namespace CargohubV2.Controllers
         [HttpPost("Add")]
         public async Task<IActionResult> AddShipment([FromBody] Shipment newShipment)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var existingShipment = await _shipmentService.GetShipmentByIdAsync(newShipment.Id);
+            if (existingShipment != null)
+            {
+                return BadRequest("Shipment already exists");
+            }
             var createdShipment = await _shipmentService.AddShipmentAsync(newShipment);
             return CreatedAtAction(nameof(GetShipmentById), new { shipmentId = createdShipment.Id }, createdShipment);
         }
