@@ -2,7 +2,7 @@ import pytest
 import requests
 import time
 
-BASE_URL = "http://localhost:5000/api/ItemTypes"  
+BASE_URL = "http://localhost:5000/api/ItemTypes"
 
 
 @pytest.fixture
@@ -24,7 +24,7 @@ def sample_item_type():
 
 @pytest.mark.asyncio
 def test_get_all_item_types(headers):
-    url = f"{BASE_URL}/page/10"
+    url = f"{BASE_URL}/byAmount/10"
     response = requests.get(url, headers=headers)
 
     assert response.status_code == 200
@@ -35,7 +35,7 @@ def test_get_all_item_types(headers):
 
 @pytest.mark.asyncio
 def test_get_all_item_types_with_max_pagination(headers):
-    url = f"{BASE_URL}/page/1000"
+    url = f"{BASE_URL}/byAmount/1000"
     response = requests.get(url, headers=headers)
 
     assert response.status_code == 200
@@ -47,7 +47,7 @@ def test_get_all_item_types_with_max_pagination(headers):
 
 
 def test_get_item_type_by_id(headers):
-    item_type_id = 1  # Replace with a valid item type ID
+    item_type_id = 101  # Replace with a valid item type ID
     url = f"{BASE_URL}/{item_type_id}"
 
     response = requests.get(url, headers=headers)
@@ -56,7 +56,7 @@ def test_get_item_type_by_id(headers):
     response_data = response.json()
     assert "name" in response_data, "Response JSON does not contain 'name' field"
     assert response_data[
-        "name"] == "Example Item Type", f"Expected name 'Example Item Type', got {response_data['name']}"
+        "name"] == "Test Item Type", f"Expected name 'Example Item Type', got {response_data['name']}"
 
 # Test GetItemTypeByName
 
@@ -89,7 +89,7 @@ def test_get_item_type_by_name(headers):
 def test_create_duplicate_item_type(headers, sample_item_type):
     url = f"{BASE_URL}/Add"
 
-    response1 = requests.post(url, json=sample_item_type, headers=headers)
+    requests.post(url, json=sample_item_type, headers=headers)
     time.sleep(1)  # Prevent concurrency issues
     response2 = requests.post(url, json=sample_item_type, headers=headers)
 
@@ -101,7 +101,7 @@ def test_create_duplicate_item_type(headers, sample_item_type):
 
 @pytest.mark.asyncio
 def test_update_item_type(headers, sample_item_type):
-    item_type_id = 1  # Replace with a valid item type ID
+    item_type_id = 101  # Replace with a valid item type ID
     url = f"{BASE_URL}/{item_type_id}"
 
     sample_item_type["name"] = "Updated Item Type Name"
@@ -118,7 +118,7 @@ def test_update_item_type(headers, sample_item_type):
 
 @pytest.mark.asyncio
 def test_remove_item_type_by_id(headers):
-    item_type_id = 1  # Replace with a valid item type ID
+    item_type_id = 101  # Replace with a valid item type ID
     url = f"{BASE_URL}/{item_type_id}"
 
     response = requests.delete(url, headers=headers)

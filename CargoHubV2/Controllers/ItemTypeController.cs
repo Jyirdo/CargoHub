@@ -18,10 +18,10 @@ namespace CargohubV2.Controllers
         }
 
         // GET: api/ItemTypes
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Item_Type>>> GetAllItemTypes()
+        [HttpGet("byAmount/{amount}")]
+        public async Task<ActionResult<IEnumerable<Item_Type>>> GetAllItemTypes(int amount)
         {
-            var itemTypes = await _itemTypeService.GetAllItemTypesAsync();
+            var itemTypes = await _itemTypeService.GetAllItemTypesAsync(amount);
             return Ok(itemTypes);
         }
 

@@ -16,7 +16,7 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Item>> GetAllItemsAsync()
+        public async Task<List<Item>> GetAllItemsAsync(int amount)
         {
             return await _context.Items
                 .Include(i => i.ItemLine)
