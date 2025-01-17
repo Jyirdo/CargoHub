@@ -1,7 +1,7 @@
 import pytest
 import requests
 import time
-BASE_URL = "http://localhost:5000/api/Clients"
+BASE_URL = "http://localhost:5000/api/Clients" 
 
 
 @pytest.fixture
