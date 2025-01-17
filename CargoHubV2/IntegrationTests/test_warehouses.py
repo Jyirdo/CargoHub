@@ -3,14 +3,12 @@ import requests
 
 BASE_URL = "http://localhost:5000/api/Warehouses"  
 
-# Fixture voor headers
 @pytest.fixture
 def headers():
     return {
         "Content-Type": "application/json"
     }
 
-# Fixture voor een voorbeeldmagazijn
 @pytest.fixture
 def sample_warehouse():
     return {
@@ -30,7 +28,7 @@ def sample_warehouse():
         "updated_at": "2024-01-01T12:00:00Z"
     }
 
-# Test: Get All Warehouses
+
 def test_get_all_warehouses(headers):
     url = f"{BASE_URL}"
     response = requests.get(url, headers=headers)
@@ -38,20 +36,31 @@ def test_get_all_warehouses(headers):
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
-# Test: Get Warehouse By ID
 def test_get_warehouse_by_id(headers):
-    warehouse_id = 1  # Vervang met een bestaande ID
+    
+    get_all_url = f"{BASE_URL}"
+    get_all_response = requests.get(get_all_url, headers=headers)
+    
+    if get_all_response.status_code != 200 or not get_all_response.json():
+        pytest.skip("Geen warehouses gevonden om te testen.")
+
+   
+    existing_warehouse = get_all_response.json()[0] 
+    warehouse_id = existing_warehouse["id"]
     url = f"{BASE_URL}/{warehouse_id}"
 
+   
     response = requests.get(url, headers=headers)
 
-    assert response.status_code == 200
-    if response.status_code == 200:
-        assert "name" in response.json()
+    assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+    response_data = response.json()
+    assert "name" in response_data, "Expected 'name' in response"
+    assert response_data["id"] == warehouse_id, f"Expected ID {warehouse_id}, got {response_data['id']}"
+
 
 # Test: Get Warehouses By City
 def test_get_warehouses_by_city(headers):
-    city = "Warehouse City"  # Gebruik een bestaande stad
+    city = "Warehouse City" 
     url = f"{BASE_URL}/ByCity/{city}"
 
     response = requests.get(url, headers=headers)
@@ -72,21 +81,35 @@ def test_add_new_warehouse(headers, sample_warehouse):
 
 # Test: Update Existing Warehouse
 def test_update_warehouse(headers, sample_warehouse):
-    warehouse_id = 1  # Vervang met een bestaande ID
+    warehouse_id = 5  
     url = f"{BASE_URL}/{warehouse_id}"
 
+  
     sample_warehouse["name"] = "Updated Warehouse Name"
     response = requests.put(url, json=sample_warehouse, headers=headers)
 
-    assert response.status_code == 200
-    if response.status_code == 200:
-        assert response.json()["name"] == "Updated Warehouse Name"
+   
+    if response.status_code != 200:
+        print(f"Debugging Info: {response.status_code} - {response.text}")
+        pytest.fail(f"Expected status code 200, but got {response.status_code}")
+
+    response_data = response.json()
+    print(f"Response Data: {response_data}")  
+
+    assert "name" in response_data, "Expected 'name' in response"
+    assert response_data["name"] == "Updated Warehouse Name"
+
 
 # Test: Delete Warehouse By ID
-def test_delete_warehouse_by_id(headers):
-    warehouse_id = 1  # Vervang met een bestaande ID
+def test_delete_warehouse_by_id(headers, sample_warehouse):
+    create_response = requests.post(BASE_URL, json=sample_warehouse, headers=headers)
+    assert create_response.status_code == 201, f"Failed to create warehouse: {create_response.text}"
+
+    warehouse_id = create_response.json()["id"]
     url = f"{BASE_URL}/{warehouse_id}"
 
-    response = requests.delete(url, headers=headers)
+    delete_response = requests.delete(url, headers=headers)
+    assert delete_response.status_code in [200, 204], f"Unexpected status code: {delete_response.status_code}"
 
-    assert response.status_code in [200, 204]
+    check_response = requests.get(url, headers=headers)
+    assert check_response.status_code == 404, f"Warehouse with ID {warehouse_id} still exists after deletion."
