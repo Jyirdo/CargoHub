@@ -18,11 +18,11 @@ namespace CargohubV2.Services
         }
 
         // Ophalen van alle locaties (max 100)
-        public async Task<List<Location>> GetAllLocationsAsync()
+        public async Task<List<Location>> GetAllLocationsAsync(int amount)
         {
             return await _context.Locations
                 .OrderBy(l => l.Id)
-                .Take(100)
+                .Take(amount)
                 .ToListAsync();
         }
 
