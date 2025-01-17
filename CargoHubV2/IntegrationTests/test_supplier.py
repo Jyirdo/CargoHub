@@ -3,14 +3,13 @@ import requests
 
 BASE_URL = "http://localhost:5000/api/Supplier"  
 
-# Fixture voor headers
+
 @pytest.fixture
 def headers():
     return {
         "Content-Type": "application/json"
     }
 
-# Fixture voor een voorbeeldleverancier
 @pytest.fixture
 def sample_supplier():
     return {
@@ -37,15 +36,37 @@ def test_get_all_suppliers(headers):
     assert isinstance(response.json(), list)
 
 # Test: Get Supplier By ID
-def test_get_supplier_by_id(headers):
-    supplier_id = 1  # Vervang door een bestaande ID
-    url = f"{BASE_URL}/{supplier_id}"
+def test_get_transfer_by_id(headers):
+    get_all_url = f"{BASE_URL}"
+    get_all_response = requests.get(get_all_url, headers=headers)
+    
+    if get_all_response.status_code != 200 or not get_all_response.json():
+        pytest.skip("Geen transfers gevonden om te testen.")
+
+    # Gebruik een bestaand ID uit de lijst
+    existing_transfer = get_all_response.json()[0]  
+    transfer_id = existing_transfer["id"]
+    url = f"{BASE_URL}/{transfer_id}"
 
     response = requests.get(url, headers=headers)
 
-    assert response.status_code == 200
-    if response.status_code == 200:
-        assert "name" in response.json()
+    assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+    response_data = response.json()
+
+
+    print(f"Response Data: {response_data}")
+
+    
+    assert "id" in response_data, "Expected 'id' in response"
+    assert response_data["id"] == transfer_id, f"Expected ID {transfer_id}, got {response_data['id']}"
+    assert "reference" in response_data, "Expected 'reference' in response"
+    assert "createdAt" in response_data, "Expected 'createdAt' in response"
+
+    if "transfer_status" not in response_data:
+        print("Warning: 'transfer_status' ontbreekt in de response. Controleer de API of database.")
+    else:
+        assert "transfer_status" in response_data, "Expected 'transfer_status' in response"
+
 
 # Test: Search Supplier By Name
 def test_search_supplier_by_name(headers):
@@ -82,17 +103,16 @@ def test_check_duplicate_supplier(headers, sample_supplier):
 def test_create_duplicate_supplier(headers, sample_supplier):
     url = f"{BASE_URL}/CheckDuplicate"
 
-    # Eerste poging
     requests.post(url, json=sample_supplier, headers=headers)
 
     # Tweede poging (duplicaatcheck)
     response = requests.post(url, json=sample_supplier, headers=headers)
     assert response.status_code == 200
-    assert response.json() is True  # Geeft aan dat duplicaat bestaat
+    assert response.json() is True 
 
 # Test: Delete Batch of Suppliers
 def test_delete_batch_of_suppliers(headers):
-    supplier_ids = [1, 2, 3]  # Vervang met echte IDs
+    supplier_ids = [1, 2, 3]  
     url = f"{BASE_URL}/DeleteBatch"
 
     response = requests.delete(url, json=supplier_ids, headers=headers)

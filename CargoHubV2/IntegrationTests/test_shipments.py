@@ -54,7 +54,7 @@ def test_get_all_shipments(headers):
 
 # Test GetShipmentById
 def test_get_shipment_by_id(headers):
-    shipment_id = 1  # Replace with a valid shipment ID
+    shipment_id = 1  
     url = f"{BASE_URL}/{shipment_id}"
 
     response = requests.get(url, headers=headers)
@@ -66,7 +66,7 @@ def test_get_shipment_by_id(headers):
 
 # Test GetItemsInShipment
 def test_get_items_in_shipment(headers):
-    shipment_id = 1  # Replace with a valid shipment ID
+    shipment_id = 1  
     url = f"{BASE_URL}/{shipment_id}/items"
 
     response = requests.get(url, headers=headers)
@@ -88,23 +88,37 @@ def test_add_shipment(headers, sample_shipment):
 
 
 # Test UpdateShipment
-@pytest.mark.asyncio
 def test_update_shipment(headers, sample_shipment):
-    shipment_id = 1  # Replace with a valid shipment ID
+    shipment_id = 15  
     url = f"{BASE_URL}/{shipment_id}"
 
     sample_shipment["shipment_status"] = "Shipped"
     response = requests.put(url, json=sample_shipment, headers=headers)
 
-    assert response.status_code in [200, 204, 400]
+    print(f"Request Payload: {sample_shipment}")
+    print(f"Response Status Code: {response.status_code}")
+    print(f"Response Text: {response.text}")
+
+    assert response.status_code in [200, 204], f"Unexpected status code: {response.status_code}"
+
     if response.status_code == 200:
-        assert response.json()["shipment_status"] == "Shipped"
+        try:
+            response_data = response.json()
+
+            assert "shipment_status" in response_data, "Expected 'shipment_status' in response"
+            
+            assert response_data["shipment_status"] == "Shipped", (
+                f"Expected 'shipment_status' to be 'Shipped', got {response_data['shipment_status']}"
+            )
+        except ValueError:
+            pytest.fail("Failed to decode JSON response.")
+
 
 
 # Test UpdateItemsInShipment
 @pytest.mark.asyncio
 def test_update_items_in_shipment(headers):
-    shipment_id = 1  # Replace with a valid shipment ID
+    shipment_id = 1  
     url = f"{BASE_URL}/{shipment_id}/items"
 
     updated_items = [
@@ -127,7 +141,7 @@ def test_update_items_in_shipment(headers):
 # Test RemoveShipment
 @pytest.mark.asyncio
 def test_remove_shipment(headers):
-    shipment_id = 1  # Replace with a valid shipment ID
+    shipment_id = 1 
     url = f"{BASE_URL}/{shipment_id}"
 
     response = requests.delete(url, headers=headers)

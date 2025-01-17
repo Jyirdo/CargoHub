@@ -95,5 +95,12 @@ namespace CargohubV2.Services
         {
             return await _context.Suppliers.CountAsync();
         }
+
+        public async Task<Supplier> AddSupplierAsync(Supplier supplier)
+        {
+            _context.Suppliers.Add(supplier);
+            await _context.SaveChangesAsync();
+            return supplier;
+        }
     }
 }

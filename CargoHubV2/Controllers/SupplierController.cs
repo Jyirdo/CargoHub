@@ -97,5 +97,16 @@ namespace CargohubV2.Controllers
             var count = await _supplierService.GetSupplierCountAsync();
             return Ok(count);
         }
+        [HttpPost]
+        public async Task<ActionResult<Supplier>> CreateSupplier([FromBody] Supplier supplier)
+        {
+            if (supplier == null)
+            {
+                return BadRequest(new { Message = "Supplier data is required." });
+            }
+
+            var createdSupplier = await _supplierService.AddSupplierAsync(supplier);
+            return CreatedAtAction(nameof(GetSupplierById), new { id = createdSupplier.Id }, createdSupplier);
+        }
     }
 }
