@@ -27,6 +27,7 @@ def sample_supplier():
         "updated_at": "2024-01-01T12:00:00Z"
     }
 
+
 # Test: Get All Suppliers
 def test_get_all_suppliers(headers):
     url = f"{BASE_URL}"
@@ -101,20 +102,53 @@ def test_check_duplicate_supplier(headers, sample_supplier):
 
 # Test: Create Duplicate Supplier
 def test_create_duplicate_supplier(headers, sample_supplier):
-    url = f"{BASE_URL}/CheckDuplicate"
+    create_url = f"{BASE_URL}"
+    duplicate_check_url = f"{BASE_URL}/CheckDuplicate"
+    
+    create_response = requests.post(create_url, json=sample_supplier, headers=headers)
 
-    requests.post(url, json=sample_supplier, headers=headers)
+    print(f"Create Response Status Code: {create_response.status_code}")
+    print(f"Create Response Body: {create_response.text}")
 
-    # Tweede poging (duplicaatcheck)
-    response = requests.post(url, json=sample_supplier, headers=headers)
-    assert response.status_code == 200
-    assert response.json() is True 
+    assert create_response.status_code == 201, f"Failed to create supplier: {create_response.text}"
+
+    duplicate_response = requests.post(duplicate_check_url, json=sample_supplier, headers=headers)
+
+    print(f"Duplicate Check Response Status Code: {duplicate_response.status_code}")
+    print(f"Duplicate Check Response Body: {duplicate_response.text}")
+
+    assert duplicate_response.status_code == 200, f"Unexpected status code: {duplicate_response.status_code}"
+    assert duplicate_response.json() is True, "Expected duplicate check to return True, but got False"
+
 
 # Test: Delete Batch of Suppliers
-def test_delete_batch_of_suppliers(headers):
-    supplier_ids = [1, 2, 3]  
-    url = f"{BASE_URL}/DeleteBatch"
+def test_delete_suppliers_batch(headers, sample_supplier):
+    create_url = f"{BASE_URL}"
 
-    response = requests.delete(url, json=supplier_ids, headers=headers)
+    response1 = requests.post(create_url, json=sample_supplier, headers=headers)
+    assert response1.status_code == 201, f"Expected 201, got {response1.status_code}"
+    supplier1 = response1.json()
 
-    assert response.status_code in [200, 204]
+    response2 = requests.post(create_url, json=sample_supplier, headers=headers)
+    assert response2.status_code == 201, f"Expected 201, got {response2.status_code}"
+    supplier2 = response2.json()
+
+    assert "id" in supplier1, "Expected 'id' in response1"
+    assert "id" in supplier2, "Expected 'id' in response2"
+
+ 
+    ids_to_delete = [supplier1["id"], supplier2["id"]]
+
+    delete_url = f"{BASE_URL}/DeleteBatch"
+    delete_response = requests.delete(delete_url, json=ids_to_delete, headers=headers)
+
+    assert delete_response.status_code == 204, f"Expected 204, got {delete_response.status_code}"
+
+   
+    for supplier_id in ids_to_delete:
+        get_url = f"{BASE_URL}/{supplier_id}"
+        get_response = requests.get(get_url, headers=headers)
+
+        assert get_response.status_code == 404, f"Expected 404, got {get_response.status_code} for supplier ID {supplier_id}"
+
+    print(f"Successfully deleted suppliers with IDs: {ids_to_delete}")
