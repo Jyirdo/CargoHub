@@ -19,10 +19,10 @@ namespace CargohubV2.Controllers
         }
 
         // GET: api/inventories
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Inventory>>> GetAllInventories()
+        [HttpGet("byAmount/{amount}")]
+        public async Task<ActionResult<IEnumerable<Inventory>>> GetAllInventories(int amount)
         {
-            var inventories = await _inventoriesService.GetAllInventoriesAsync();
+            var inventories = await _inventoriesService.GetAllInventoriesAsync(amount);
             return Ok(inventories);
         }
 
