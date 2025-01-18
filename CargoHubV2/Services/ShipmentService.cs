@@ -20,7 +20,7 @@ namespace CargohubV2.Services
         public async Task<List<Shipment>> GetAllShipmentsByAmountAsync(int amount)
         {
             return await _context.Shipments
-                .Include(s => s.Stocks)
+                .OrderBy(s => s.Id)
                 .Take(amount)
                 .ToListAsync();
         }

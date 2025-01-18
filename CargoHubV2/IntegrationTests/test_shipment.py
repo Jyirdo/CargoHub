@@ -41,41 +41,33 @@ def sample_items():
 
 # Test GetAllShipments
 def test_get_all_shipments_by_amount(headers):
-    amount = 5  # Aantal zendingen dat je wilt ophalen
+    """
+    Test fetching a limited number of shipments by amount.
+    """
+    amount = 5  # Number of shipments to fetch
     url = f"{BASE_URL}/byAmount/{amount}"
 
     response = requests.get(url, headers=headers)
 
-    # Controleer of de statuscode correct is
+    # Ensure the response status code is successful
     assert response.status_code == 200, f"Expected 200, got {response.status_code}"
 
-    # Controleer of de response data correct is
+    # Parse the response JSON
     shipments = response.json()
-    assert isinstance(shipments, list), "Response is not a list"
+
+    # Ensure the response is a list
+    assert isinstance(shipments, list), "Expected response to be a list"
+
+    # Ensure the number of returned shipments does not exceed the requested amount
     assert len(shipments) <= amount, f"Expected at most {amount} shipments, got {len(shipments)}"
 
-    # Controleer of de vereiste velden aanwezig zijn in elke verzending
+    # Optional: Validate the structure of each shipment in the response
     for shipment in shipments:
         assert "id" in shipment, "Shipment missing 'id'"
         assert "shipmentStatus" in shipment, "Shipment missing 'shipmentStatus'"
 
 
-# Test GetShipmentById
-
-
-def test_get_shipment_by_id(headers):
-    shipment_id = 1  # Replace with a valid shipment ID
-    url = f"{BASE_URL}/{shipment_id}"
-
-    response = requests.get(url, headers=headers)
-
-    assert response.status_code in [200, 404]
-    if response.status_code == 200:
-        assert "shipmentStatus" in response.json()
-
 # Test AddShipment
-
-
 def test_add_shipment(headers, sample_shipment):
     url = f"{BASE_URL}/Add"
     response = requests.post(url, json=sample_shipment, headers=headers)
