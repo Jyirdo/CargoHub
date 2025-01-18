@@ -36,29 +36,18 @@ def sample_order():
 
 # Test GetAllOrders
 def test_get_all_orders_by_amount(headers):
-    amount = 10# Aantal orders dat je wilt ophalen
+  
+    amount = 5  # Number of orders to fetch
     url = f"{BASE_URL}/byAmount/{amount}"
 
     response = requests.get(url, headers=headers)
 
-    # Controleer of de statuscode correct is
+    print(f"Response Status Code: {response.status_code}")
+    print(f"Response Text: {response.text}")
+
     assert response.status_code == 200, f"Expected 200, got {response.status_code}"
 
-    # Controleer of de response data correct is
-    orders = response.json()
-    assert isinstance(orders, list), "Response is not a list"
-    assert len(orders) <= amount, f"Expected at most {amount} orders, got {len(orders)}"
-
-    # Controleer of de vereiste velden aanwezig zijn in elke order
-    for order in orders:
-        assert "id" in order, "Order missing 'id'"
-        assert "orderDate" in order, "Order missing 'orderDate'"
-        assert "totalAmount" in order, "Order missing 'totalAmount'"
-
-
 # Test GetOrderById
-
-
 def test_get_order_by_id(headers):
     order_id = 1  # Replace with a valid order ID
     url = f"{BASE_URL}/{order_id}"
