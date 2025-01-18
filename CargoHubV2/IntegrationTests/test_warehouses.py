@@ -6,6 +6,7 @@ BASE_URL = "http://localhost:5000/api/Warehouses"
 @pytest.fixture
 def headers():
     return {
+        "API_KEY": "cargohub123",  
         "Content-Type": "application/json"
     }
 
@@ -75,29 +76,31 @@ def test_add_new_warehouse(headers, sample_warehouse):
 
     response = requests.post(url, json=sample_warehouse, headers=headers)
 
-    assert response.status_code == 201
+    assert response.status_code == 201, f"Expected 201, got {response.status_code}"
     if response.status_code == 201:
-        assert response.json()["name"] == sample_warehouse["name"]
+        response_data = response.json()
+        assert response_data["name"] == sample_warehouse["name"], \
+            f"Expected name {sample_warehouse['name']}, got {response_data['name']}"
 
 # Test: Update Existing Warehouse
 def test_update_warehouse(headers, sample_warehouse):
-    warehouse_id = 5  
+    
+    # First, create a new warehouse
+    create_response = requests.post(BASE_URL, json=sample_warehouse, headers=headers)
+    assert create_response.status_code == 201, f"Failed to create warehouse: {create_response.text}"
+
+    warehouse_id = create_response.json()["id"]
     url = f"{BASE_URL}/{warehouse_id}"
 
-  
+    # Update the warehouse
     sample_warehouse["name"] = "Updated Warehouse Name"
     response = requests.put(url, json=sample_warehouse, headers=headers)
 
-   
-    if response.status_code != 200:
-        print(f"Debugging Info: {response.status_code} - {response.text}")
-        pytest.fail(f"Expected status code 200, but got {response.status_code}")
-
+    assert response.status_code == 200, f"Expected 200, got {response.status_code}"
     response_data = response.json()
-    print(f"Response Data: {response_data}")  
-
     assert "name" in response_data, "Expected 'name' in response"
-    assert response_data["name"] == "Updated Warehouse Name"
+    assert response_data["name"] == "Updated Warehouse Name", \
+        f"Expected name 'Updated Warehouse Name', got {response_data['name']}"
 
 
 # Test: Delete Warehouse By ID
