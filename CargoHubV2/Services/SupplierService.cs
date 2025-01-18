@@ -18,11 +18,11 @@ namespace CargohubV2.Services
         }
 
         // Ophalen van alle leveranciers (max 100)
-        public async Task<List<Supplier>> GetAllSuppliersAsync()
+        public async Task<List<Supplier>> GetAllSuppliersAsync(int amount)
         {
             return await _context.Suppliers
                 .OrderBy(s => s.Id)
-                .Take(100)
+                .Take(amount)
                 .ToListAsync();
         }
 

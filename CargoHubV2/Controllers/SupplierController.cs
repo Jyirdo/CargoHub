@@ -19,10 +19,10 @@ namespace CargohubV2.Controllers
         }
 
         // Ophalen van alle leveranciers (max 100)
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Supplier>>> GetAllSuppliers()
+        [HttpGet("byAmount/{amount}")]
+        public async Task<ActionResult<IEnumerable<Supplier>>> GetAllSuppliers(int amount)
         {
-            var suppliers = await _supplierService.GetAllSuppliersAsync();
+            var suppliers = await _supplierService.GetAllSuppliersAsync(amount);
             return Ok(suppliers);
         }
 
