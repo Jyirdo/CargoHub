@@ -395,7 +395,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-*.sln
 bin/
 obj/
 *__pychache__/
