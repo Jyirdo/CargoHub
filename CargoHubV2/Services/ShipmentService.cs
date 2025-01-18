@@ -16,7 +16,8 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Shipment>> GetAllShipmentsAsync(int amount)
+        // Ophalen van een beperkt aantal zendingen
+        public async Task<List<Shipment>> GetAllShipmentsByAmountAsync(int amount)
         {
             return await _context.Shipments
                 .Include(s => s.Stocks)
