@@ -1,9 +1,11 @@
 import pytest
 import requests
 
-BASE_URL = "http://localhost:5000/api/Location"  
+BASE_URL = "http://localhost:5000/api/Location"
 
 # Fixture voor headers
+
+
 @pytest.fixture
 def headers():
     return {
@@ -11,6 +13,8 @@ def headers():
     }
 
 # Fixture voor een voorbeeldlocatie
+
+
 @pytest.fixture
 def sample_location():
     return {
@@ -23,7 +27,7 @@ def sample_location():
 
 
 def test_get_all_locations(headers):
-    url = f"{BASE_URL}"
+    url = f"{BASE_URL}/byAmount/10"
     response = requests.get(url, headers=headers)
 
     assert response.status_code == 200
@@ -31,25 +35,22 @@ def test_get_all_locations(headers):
 
 
 def test_get_location_by_id(headers):
-   
+
     get_all_url = f"{BASE_URL}"
     get_all_response = requests.get(get_all_url, headers=headers)
-    
+
     if get_all_response.status_code != 200 or not get_all_response.json():
         pytest.skip("Geen locaties gevonden om te testen.")
 
-    
-    existing_location = get_all_response.json()[0]  
+    existing_location = get_all_response.json()[0]
     location_id = existing_location["id"]
     url = f"{BASE_URL}/{location_id}"
 
-    
     response = requests.get(url, headers=headers)
 
     assert response.status_code == 200, f"Expected 200, got {response.status_code}"
     response_data = response.json()
 
-   
     print(f"Response Data: {response_data}")
 
     assert "id" in response_data, "Expected 'id' in response"
@@ -70,6 +71,8 @@ def test_search_location_by_name(headers):
         assert name.lower() in location["name"].lower()
 
 # Test: Search Location By Code
+
+
 def test_search_location_by_code(headers):
     code = "LOC123"
     url = f"{BASE_URL}/Search/Code/{code}"
@@ -81,8 +84,10 @@ def test_search_location_by_code(headers):
         assert response.json()["code"] == code
 
 # Test: Filter Locations By Warehouse ID
+
+
 def test_filter_locations_by_warehouse(headers):
-    warehouse_id = 1  
+    warehouse_id = 1
     url = f"{BASE_URL}/Warehouse/{warehouse_id}"
 
     response = requests.get(url, headers=headers)
@@ -92,6 +97,8 @@ def test_filter_locations_by_warehouse(headers):
         assert location["warehouse_id"] == warehouse_id
 
 # Test: Add New Location
+
+
 def test_add_new_location(headers, sample_location):
     url = f"{BASE_URL}/Add"
 
@@ -102,8 +109,10 @@ def test_add_new_location(headers, sample_location):
         assert response.json()["name"] == sample_location["name"]
 
 # Test: Update Existing Location
+
+
 def test_update_location(headers, sample_location):
-    location_id = 1  
+    location_id = 1
     url = f"{BASE_URL}/{location_id}"
 
     sample_location["name"] = "Updated Location Name"
@@ -114,8 +123,10 @@ def test_update_location(headers, sample_location):
         assert response.json()["name"] == "Updated Location Name"
 
 # Test: Delete Location By ID
+
+
 def test_delete_location_by_id(headers):
-    location_id = 1  
+    location_id = 1
     url = f"{BASE_URL}/{location_id}"
 
     response = requests.delete(url, headers=headers)
@@ -123,6 +134,8 @@ def test_delete_location_by_id(headers):
     assert response.status_code in [200, 204]
 
 # Test: Get Total Location Count
+
+
 def test_get_location_count(headers):
     url = f"{BASE_URL}/Count"
 

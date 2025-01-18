@@ -1,7 +1,7 @@
 import pytest
 import requests
 
-BASE_URL = "http://localhost:5000/api/Supplier"  
+BASE_URL = "http://localhost:5000/api/Supplier"
 
 
 @pytest.fixture
@@ -9,6 +9,7 @@ def headers():
     return {
         "Content-Type": "application/json"
     }
+
 
 @pytest.fixture
 def sample_supplier():
@@ -30,22 +31,24 @@ def sample_supplier():
 
 # Test: Get All Suppliers
 def test_get_all_suppliers(headers):
-    url = f"{BASE_URL}"
+    url = f"{BASE_URL}/byAmount/10"
     response = requests.get(url, headers=headers)
 
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
 # Test: Get Supplier By ID
+
+
 def test_get_transfer_by_id(headers):
     get_all_url = f"{BASE_URL}"
     get_all_response = requests.get(get_all_url, headers=headers)
-    
+
     if get_all_response.status_code != 200 or not get_all_response.json():
         pytest.skip("Geen transfers gevonden om te testen.")
 
     # Gebruik een bestaand ID uit de lijst
-    existing_transfer = get_all_response.json()[0]  
+    existing_transfer = get_all_response.json()[0]
     transfer_id = existing_transfer["id"]
     url = f"{BASE_URL}/{transfer_id}"
 
@@ -54,10 +57,8 @@ def test_get_transfer_by_id(headers):
     assert response.status_code == 200, f"Expected 200, got {response.status_code}"
     response_data = response.json()
 
-
     print(f"Response Data: {response_data}")
 
-    
     assert "id" in response_data, "Expected 'id' in response"
     assert response_data["id"] == transfer_id, f"Expected ID {transfer_id}, got {response_data['id']}"
     assert "reference" in response_data, "Expected 'reference' in response"
@@ -81,6 +82,8 @@ def test_search_supplier_by_name(headers):
         assert name.lower() in supplier["name"].lower()
 
 # Test: Search Supplier By City
+
+
 def test_search_supplier_by_city(headers):
     city = "Supplier City"
     url = f"{BASE_URL}/Search/City/{city}"
@@ -92,6 +95,8 @@ def test_search_supplier_by_city(headers):
         assert city.lower() in supplier["city"].lower()
 
 # Test: Check Duplicate Supplier
+
+
 def test_check_duplicate_supplier(headers, sample_supplier):
     url = f"{BASE_URL}/CheckDuplicate"
 
@@ -101,10 +106,12 @@ def test_check_duplicate_supplier(headers, sample_supplier):
     assert isinstance(response.json(), bool)
 
 # Test: Create Duplicate Supplier
+
+
 def test_create_duplicate_supplier(headers, sample_supplier):
     create_url = f"{BASE_URL}"
     duplicate_check_url = f"{BASE_URL}/CheckDuplicate"
-    
+
     create_response = requests.post(create_url, json=sample_supplier, headers=headers)
 
     print(f"Create Response Status Code: {create_response.status_code}")
@@ -136,7 +143,6 @@ def test_delete_suppliers_batch(headers, sample_supplier):
     assert "id" in supplier1, "Expected 'id' in response1"
     assert "id" in supplier2, "Expected 'id' in response2"
 
- 
     ids_to_delete = [supplier1["id"], supplier2["id"]]
 
     delete_url = f"{BASE_URL}/DeleteBatch"
@@ -144,7 +150,6 @@ def test_delete_suppliers_batch(headers, sample_supplier):
 
     assert delete_response.status_code == 204, f"Expected 204, got {delete_response.status_code}"
 
-   
     for supplier_id in ids_to_delete:
         get_url = f"{BASE_URL}/{supplier_id}"
         get_response = requests.get(get_url, headers=headers)

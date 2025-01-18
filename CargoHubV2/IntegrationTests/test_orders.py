@@ -46,7 +46,7 @@ def sample_order():
 
 # Test GetAllOrders
 def test_get_all_orders(headers):
-    url = f"{BASE_URL}"
+    url = f"{BASE_URL}/byAmount/10"
     response = requests.get(url, headers=headers)
 
     assert response.status_code == 200

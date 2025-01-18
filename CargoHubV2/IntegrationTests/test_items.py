@@ -38,7 +38,7 @@ def sample_item():
 # Test GetAllItems
 @pytest.mark.asyncio
 def test_get_all_items(headers):
-    url = f"{BASE_URL}"
+    url = f"{BASE_URL}/byAmount/10"
     response = requests.get(url, headers=headers)
 
     assert response.status_code == 200
