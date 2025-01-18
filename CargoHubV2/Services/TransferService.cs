@@ -16,9 +16,9 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Transfer>> GetAllTransfersAsync()
+        public async Task<List<Transfer>> GetAllTransfersAsync(int amount)
         {
-            return await _context.Transfers.Take(100).ToListAsync();
+            return await _context.Transfers.Take(amount).ToListAsync();
         }
 
         public async Task<Transfer> GetTransferByIdAsync(int id)

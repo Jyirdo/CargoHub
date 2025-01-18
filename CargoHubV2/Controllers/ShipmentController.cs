@@ -17,10 +17,10 @@ namespace CargohubV2.Controllers
             _shipmentService = shipmentService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<Shipment>>> GetAllShipments()
+        [HttpGet("byAmount/{amount}")]
+        public async Task<ActionResult<List<Shipment>>> GetAllShipments(int amount)
         {
-            var shipments = await _shipmentService.GetAllShipmentsAsync();
+            var shipments = await _shipmentService.GetAllShipmentsAsync(amount);
             return Ok(shipments);
         }
 

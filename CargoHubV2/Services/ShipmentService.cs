@@ -16,10 +16,11 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Shipment>> GetAllShipmentsAsync()
+        public async Task<List<Shipment>> GetAllShipmentsAsync(int amount)
         {
             return await _context.Shipments
                 .Include(s => s.Stocks)
+                .Take(amount)
                 .ToListAsync();
         }
 

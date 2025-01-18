@@ -18,10 +18,10 @@ namespace CargohubV2.Controllers
         }
 
         // Get all transfers
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Transfer>>> GetAllTransfers()
+        [HttpGet("byAmount/{amount}")]
+        public async Task<ActionResult<IEnumerable<Transfer>>> GetAllTransfers(int amount)
         {
-            var transfers = await _transferService.GetAllTransfersAsync();
+            var transfers = await _transferService.GetAllTransfersAsync(amount);
             return Ok(transfers);
         }
 
