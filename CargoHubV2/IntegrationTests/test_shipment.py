@@ -10,6 +10,7 @@ def headers():
         "Content-Type": "application/json"
     }
 
+
 @pytest.fixture
 def sample_shipment():
     return {
@@ -29,6 +30,7 @@ def sample_shipment():
         "totalPackageCount": 10,
         "totalPackageWeight": 100.0
     }
+
 
 @pytest.fixture
 def sample_items():
@@ -59,6 +61,8 @@ def test_get_all_shipments_by_amount(headers):
 
 
 # Test GetShipmentById
+
+
 def test_get_shipment_by_id(headers):
     shipment_id = 1  # Replace with a valid shipment ID
     url = f"{BASE_URL}/{shipment_id}"
@@ -70,6 +74,8 @@ def test_get_shipment_by_id(headers):
         assert "shipmentStatus" in response.json()
 
 # Test AddShipment
+
+
 def test_add_shipment(headers, sample_shipment):
     url = f"{BASE_URL}/Add"
     response = requests.post(url, json=sample_shipment, headers=headers)
@@ -88,6 +94,8 @@ def test_update_shipment(headers, sample_shipment):
     shipment_id = shipment["id"]
 
 # Test UpdateItemsInShipment
+
+
 @pytest.mark.asyncio
 def test_update_items_in_shipment(headers):
     shipment_id = 1  
@@ -130,6 +138,8 @@ def test_update_items_in_shipment(headers):
                 assert "quantity" in item, "Response item missing 'quantity'"
 
 # Test RemoveShipment
+
+
 @pytest.mark.asyncio
 def test_remove_shipment(headers):
     shipment_id = 1  # Replace with a valid shipment ID
@@ -143,6 +153,8 @@ def test_remove_shipment(headers):
         assert get_response.status_code == 404
 
 # Test GetItemsInShipment
+
+
 def test_get_items_in_shipment(headers):
     shipment_id = 1  # Replace with a valid shipment ID
     url = f"{BASE_URL}/{shipment_id}/items"

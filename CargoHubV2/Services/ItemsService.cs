@@ -24,7 +24,7 @@ namespace CargohubV2.Services
                 .Include(i => i.ItemType)
                 .Include(i => i.Supplier)
                 .OrderBy(i => i.Id) // Order by Id in ascending order
-                .Take(10)
+                .Take(amount)
                 .ToListAsync();
         }
 

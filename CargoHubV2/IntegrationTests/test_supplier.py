@@ -1,7 +1,7 @@
 import pytest
 import requests
 
-BASE_URL = "http://localhost:5000/api/Supplier"  
+BASE_URL = "http://localhost:5000/api/Supplier"
 
 
 @pytest.fixture
@@ -10,6 +10,7 @@ def headers():
         "API_KEY": "cargohub123",  
         "Content-Type": "application/json"
     }
+
 
 @pytest.fixture
 def sample_supplier():
@@ -83,6 +84,8 @@ def test_search_supplier_by_name(headers):
         assert name.lower() in supplier["name"].lower()
 
 # Test: Search Supplier By City
+
+
 def test_search_supplier_by_city(headers):
     city = "Supplier City"
     url = f"{BASE_URL}/Search/City/{city}"
@@ -94,6 +97,8 @@ def test_search_supplier_by_city(headers):
         assert city.lower() in supplier["city"].lower()
 
 # Test: Check Duplicate Supplier
+
+
 def test_check_duplicate_supplier(headers, sample_supplier):
     url = f"{BASE_URL}/CheckDuplicate"
 
@@ -103,10 +108,12 @@ def test_check_duplicate_supplier(headers, sample_supplier):
     assert isinstance(response.json(), bool)
 
 # Test: Create Duplicate Supplier
+
+
 def test_create_duplicate_supplier(headers, sample_supplier):
     create_url = f"{BASE_URL}"
     duplicate_check_url = f"{BASE_URL}/CheckDuplicate"
-    
+
     create_response = requests.post(create_url, json=sample_supplier, headers=headers)
 
     print(f"Create Response Status Code: {create_response.status_code}")
@@ -138,7 +145,6 @@ def test_delete_suppliers_batch(headers, sample_supplier):
     assert "id" in supplier1, "Expected 'id' in response1"
     assert "id" in supplier2, "Expected 'id' in response2"
 
- 
     ids_to_delete = [supplier1["id"], supplier2["id"]]
 
     delete_url = f"{BASE_URL}/DeleteBatch"
@@ -146,7 +152,6 @@ def test_delete_suppliers_batch(headers, sample_supplier):
 
     assert delete_response.status_code == 204, f"Expected 204, got {delete_response.status_code}"
 
-   
     for supplier_id in ids_to_delete:
         get_url = f"{BASE_URL}/{supplier_id}"
         get_response = requests.get(get_url, headers=headers)

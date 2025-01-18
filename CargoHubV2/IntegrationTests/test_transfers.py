@@ -1,7 +1,8 @@
 import pytest
 import requests
 
-BASE_URL = "http://localhost:5000/api/Transfers" 
+BASE_URL = "http://localhost:5000/api/Transfers"
+
 
 @pytest.fixture
 def headers():
@@ -9,6 +10,7 @@ def headers():
         "API_KEY": "cargohub123",
         "Content-Type": "application/json"
     }
+
 
 @pytest.fixture
 def sample_transfer():
@@ -22,22 +24,25 @@ def sample_transfer():
         "items": []
     }
 
+
 def test_get_all_transfers(headers):
-    url = f"{BASE_URL}"
+    url = f"{BASE_URL}/byAmount/10"
     response = requests.get(url, headers=headers)
 
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
 # Test: Get Transfer By ID
+
+
 def test_get_transfer_by_id(headers):
     get_all_url = f"{BASE_URL}"
     get_all_response = requests.get(get_all_url, headers=headers)
-    
+
     if get_all_response.status_code != 200 or not get_all_response.json():
         pytest.skip("Geen transfers gevonden om te testen.")
 
-    existing_transfer = get_all_response.json()[0] 
+    existing_transfer = get_all_response.json()[0]
     transfer_id = existing_transfer["id"]
     url = f"{BASE_URL}/{transfer_id}"
 
@@ -61,12 +66,12 @@ def test_get_transfer_by_id(headers):
 
 # Test: Get Transfer Status By ID
 def test_get_transfer_status_by_id(headers, sample_transfer):
-  
-    sample_transfer["transferStatus"] = "Pending" 
+
+    sample_transfer["transferStatus"] = "Pending"
     create_response = requests.post(BASE_URL, json=sample_transfer, headers=headers)
     assert create_response.status_code == 201, f"Failed to create transfer: {create_response.text}"
     created_transfer = create_response.json()
-    transfer_id = created_transfer["id"]  
+    transfer_id = created_transfer["id"]
 
     try:
         url = f"{BASE_URL}/Status/{transfer_id}"
@@ -77,9 +82,9 @@ def test_get_transfer_status_by_id(headers, sample_transfer):
             pytest.fail(f"Expected status code 200, but got {response.status_code}")
 
         response_data = response.json()
-        print(f"Response Data: {response_data}") 
+        print(f"Response Data: {response_data}")
         assert "transferStatus" in response_data, "Expected 'transferStatus' in response"
-    
+
     finally:
 
         delete_url = f"{BASE_URL}/{transfer_id}"
@@ -89,7 +94,7 @@ def test_get_transfer_status_by_id(headers, sample_transfer):
 
 # Test: Get Transfers By Status
 def test_get_transfers_by_status(headers, sample_transfer):
-    sample_transfer["transferStatus"] = "Pending"  
+    sample_transfer["transferStatus"] = "Pending"
     create_response = requests.post(BASE_URL, json=sample_transfer, headers=headers)
     assert create_response.status_code == 201, f"Failed to create transfer: {create_response.text}"
 
@@ -129,12 +134,14 @@ def test_add_new_transfer(headers, sample_transfer):
         assert response.json()["reference"] == sample_transfer["reference"]
 
 # Test: Update Existing Transfer
+
+
 def test_update_transfer(headers, sample_transfer):
     sample_transfer["transferStatus"] = "Pending"
     create_response = requests.post(BASE_URL, json=sample_transfer, headers=headers)
     assert create_response.status_code == 201, f"Failed to create transfer: {create_response.text}"
     created_transfer = create_response.json()
-    transfer_id = created_transfer["id"]  
+    transfer_id = created_transfer["id"]
 
     try:
         url = f"{BASE_URL}/{transfer_id}"
@@ -146,11 +153,12 @@ def test_update_transfer(headers, sample_transfer):
             pytest.fail(f"Expected status code 200, but got {update_response.status_code}")
 
         response_data = update_response.json()
-        print(f"Response Data: {response_data}")  
+        print(f"Response Data: {response_data}")
 
         assert "transferStatus" in response_data, "Expected 'transferStatus' in response"
-        assert response_data["transferStatus"] == "Completed", f"Expected 'transferStatus' to be 'Completed', got {response_data['transferStatus']}"
-    
+        assert response_data[
+            "transferStatus"] == "Completed", f"Expected 'transferStatus' to be 'Completed', got {response_data['transferStatus']}"
+
     finally:
         delete_url = f"{BASE_URL}/{transfer_id}"
         delete_response = requests.delete(delete_url, headers=headers)
@@ -174,7 +182,7 @@ def test_delete_transfer_by_id(headers, sample_transfer):
 
 # Test: Delete Transfers By Status
 def test_delete_transfers_by_status(headers, sample_transfer):
-    sample_transfer["transferStatus"] = "Pending"  
+    sample_transfer["transferStatus"] = "Pending"
     create_response = requests.post(BASE_URL, json=sample_transfer, headers=headers)
     assert create_response.status_code == 201, f"Failed to create transfer: {create_response.text}"
 

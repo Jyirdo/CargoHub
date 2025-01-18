@@ -3,12 +3,14 @@ import requests
 
 BASE_URL = "http://localhost:5000/api/Orders"  # Replace with your actual base URL
 
+
 @pytest.fixture
 def headers():
     return {
         "API_KEY": "cargohub123",  
         "Content-Type": "application/json"
     }
+
 
 @pytest.fixture
 def sample_order():
@@ -55,6 +57,8 @@ def test_get_all_orders_by_amount(headers):
 
 
 # Test GetOrderById
+
+
 def test_get_order_by_id(headers):
     order_id = 1  # Replace with a valid order ID
     url = f"{BASE_URL}/{order_id}"
@@ -66,6 +70,8 @@ def test_get_order_by_id(headers):
         assert "reference" in response.json()
 
 # Test AddOrder
+
+
 def test_add_order(headers, sample_order):
     url = f"{BASE_URL}/Add"
     response = requests.post(url, json=sample_order, headers=headers)
@@ -75,6 +81,8 @@ def test_add_order(headers, sample_order):
     assert created_order["reference"] == sample_order["reference"]
 
 # Test UpdateOrder
+
+
 @pytest.mark.asyncio
 def test_update_order(headers, sample_order):
     order_id = 15
@@ -89,6 +97,8 @@ def test_update_order(headers, sample_order):
         assert updated_order["reference"] == "UpdatedTestOrder123"
 
 # Test DeleteOrder
+
+
 @pytest.mark.asyncio
 def test_delete_order(headers):
     order_id = 1  # Replace with a valid order ID
@@ -102,6 +112,8 @@ def test_delete_order(headers):
         assert get_response.status_code == 204
 
 # Test GetOrdersForShipment
+
+
 def test_get_orders_for_shipment(headers):
     shipment_id = 1  # Replace with a valid shipment ID
     url = f"{BASE_URL}/shipment/{shipment_id}"
@@ -112,6 +124,8 @@ def test_get_orders_for_shipment(headers):
     assert isinstance(response.json(), list)
 
 # Test GetOrdersForClient
+
+
 def test_get_orders_for_client(headers):
     client_id = "Client1"  # Replace with a valid client ID
     url = f"{BASE_URL}/client/{client_id}"

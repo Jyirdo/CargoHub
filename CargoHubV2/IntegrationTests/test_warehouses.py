@@ -1,14 +1,16 @@
 import pytest
 import requests
 
-BASE_URL = "http://localhost:5000/api/Warehouses"  
+BASE_URL = "http://localhost:5000/api/Warehouses"
+
 
 @pytest.fixture
 def headers():
     return {
-        "API_KEY": "cargohub123",  
+        "API_KEY": "cargohub123",
         "Content-Type": "application/json"
     }
+
 
 @pytest.fixture
 def sample_warehouse():
@@ -31,26 +33,25 @@ def sample_warehouse():
 
 
 def test_get_all_warehouses(headers):
-    url = f"{BASE_URL}"
+    url = f"{BASE_URL}/byAmount/10"
     response = requests.get(url, headers=headers)
 
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
+
 def test_get_warehouse_by_id(headers):
-    
+
     get_all_url = f"{BASE_URL}"
     get_all_response = requests.get(get_all_url, headers=headers)
-    
+
     if get_all_response.status_code != 200 or not get_all_response.json():
         pytest.skip("Geen warehouses gevonden om te testen.")
 
-   
-    existing_warehouse = get_all_response.json()[0] 
+    existing_warehouse = get_all_response.json()[0]
     warehouse_id = existing_warehouse["id"]
     url = f"{BASE_URL}/{warehouse_id}"
 
-   
     response = requests.get(url, headers=headers)
 
     assert response.status_code == 200, f"Expected 200, got {response.status_code}"
@@ -61,7 +62,7 @@ def test_get_warehouse_by_id(headers):
 
 # Test: Get Warehouses By City
 def test_get_warehouses_by_city(headers):
-    city = "Warehouse City" 
+    city = "Warehouse City"
     url = f"{BASE_URL}/ByCity/{city}"
 
     response = requests.get(url, headers=headers)
@@ -71,6 +72,8 @@ def test_get_warehouses_by_city(headers):
         assert warehouse["city"] == city
 
 # Test: Add New Warehouse
+
+
 def test_add_new_warehouse(headers, sample_warehouse):
     url = f"{BASE_URL}"
 
@@ -83,8 +86,10 @@ def test_add_new_warehouse(headers, sample_warehouse):
             f"Expected name {sample_warehouse['name']}, got {response_data['name']}"
 
 # Test: Update Existing Warehouse
+
+
 def test_update_warehouse(headers, sample_warehouse):
-    
+
     # First, create a new warehouse
     create_response = requests.post(BASE_URL, json=sample_warehouse, headers=headers)
     assert create_response.status_code == 201, f"Failed to create warehouse: {create_response.text}"
