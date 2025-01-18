@@ -6,6 +6,7 @@ BASE_URL = "http://localhost:5000/api/Orders"  # Replace with your actual base U
 @pytest.fixture
 def headers():
     return {
+        "API_KEY": "cargohub123",  
         "Content-Type": "application/json"
     }
 
@@ -32,13 +33,26 @@ def sample_order():
     }
 
 # Test GetAllOrders
-@pytest.mark.asyncio
-def test_get_all_orders(headers):
-    url = f"{BASE_URL}"
+def test_get_all_orders_by_amount(headers):
+    amount = 10# Aantal orders dat je wilt ophalen
+    url = f"{BASE_URL}/byAmount/{amount}"
+
     response = requests.get(url, headers=headers)
 
-    assert response.status_code == 200
-    assert isinstance(response.json(), list)
+    # Controleer of de statuscode correct is
+    assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+
+    # Controleer of de response data correct is
+    orders = response.json()
+    assert isinstance(orders, list), "Response is not a list"
+    assert len(orders) <= amount, f"Expected at most {amount} orders, got {len(orders)}"
+
+    # Controleer of de vereiste velden aanwezig zijn in elke order
+    for order in orders:
+        assert "id" in order, "Order missing 'id'"
+        assert "orderDate" in order, "Order missing 'orderDate'"
+        assert "totalAmount" in order, "Order missing 'totalAmount'"
+
 
 # Test GetOrderById
 def test_get_order_by_id(headers):
@@ -63,7 +77,7 @@ def test_add_order(headers, sample_order):
 # Test UpdateOrder
 @pytest.mark.asyncio
 def test_update_order(headers, sample_order):
-    order_id = 1  # Replace with a valid order ID
+    order_id = 15
     url = f"{BASE_URL}/Update/{order_id}"
 
     sample_order["reference"] = "UpdatedTestOrder123"
