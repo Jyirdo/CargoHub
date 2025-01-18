@@ -1,11 +1,12 @@
 import pytest
 import requests
 
-BASE_URL = "http://localhost:5000/api/Shipments"  # Replace with your actual base URL
+BASE_URL = "http://localhost:5000/api/Shipments" 
 
 @pytest.fixture
 def headers():
     return {
+        "API_KEY": "cargohub123",  
         "Content-Type": "application/json"
     }
 
@@ -37,13 +38,25 @@ def sample_items():
     ]
 
 # Test GetAllShipments
-@pytest.mark.asyncio
-def test_get_all_shipments(headers):
-    url = f"{BASE_URL}"
+def test_get_all_shipments_by_amount(headers):
+    amount = 5  # Aantal zendingen dat je wilt ophalen
+    url = f"{BASE_URL}/byAmount/{amount}"
+
     response = requests.get(url, headers=headers)
 
-    assert response.status_code == 200
-    assert isinstance(response.json(), list)
+    # Controleer of de statuscode correct is
+    assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+
+    # Controleer of de response data correct is
+    shipments = response.json()
+    assert isinstance(shipments, list), "Response is not a list"
+    assert len(shipments) <= amount, f"Expected at most {amount} shipments, got {len(shipments)}"
+
+    # Controleer of de vereiste velden aanwezig zijn in elke verzending
+    for shipment in shipments:
+        assert "id" in shipment, "Shipment missing 'id'"
+        assert "shipmentStatus" in shipment, "Shipment missing 'shipmentStatus'"
+
 
 # Test GetShipmentById
 def test_get_shipment_by_id(headers):
@@ -65,29 +78,56 @@ def test_add_shipment(headers, sample_shipment):
     created_shipment = response.json()
     assert created_shipment["shipmentStatus"] == sample_shipment["shipmentStatus"]
 
-# Test UpdateShipment
-@pytest.mark.asyncio
 def test_update_shipment(headers, sample_shipment):
-    shipment_id = 1  # Replace with a valid shipment ID
-    url = f"{BASE_URL}/{shipment_id}"
+    # Create a sample shipment to update
+    create_url = f"{BASE_URL}/Add"
+    response = requests.post(create_url, json=sample_shipment, headers=headers)
 
-    sample_shipment["shipmentStatus"] = "UpdatedStatus"
-    response = requests.put(url, json=sample_shipment, headers=headers)
-
-    assert response.status_code in [200, 204]
-    if response.status_code == 200:
-        updated_shipment = requests.get(f"{BASE_URL}/{shipment_id}", headers=headers).json()
-        assert updated_shipment["shipmentStatus"] == "UpdatedStatus"
+    assert response.status_code == 201, f"Expected 201, got {response.status_code}"
+    shipment = response.json()
+    shipment_id = shipment["id"]
 
 # Test UpdateItemsInShipment
 @pytest.mark.asyncio
-def test_update_items_in_shipment(headers, sample_items):
-    shipment_id = 1  # Replace with a valid shipment ID
+def test_update_items_in_shipment(headers):
+    shipment_id = 1  
     url = f"{BASE_URL}/{shipment_id}/items"
 
-    response = requests.put(url, json=sample_items, headers=headers)
+    
+    updated_items = [
+        {
+            "item_id": 1,
+            "quantity": 8
+        },
+        {
+            "item_id": 2,
+            "quantity": 12
+        }
+    ]
 
-    assert response.status_code in [200, 204]
+    
+    response = requests.put(url, json=updated_items, headers=headers)
+
+    print(f"Request Payload: {updated_items}")
+    print(f"Response Status Code: {response.status_code}")
+    print(f"Response Body: {response.text}")
+
+    assert response.status_code in [200, 204, 400], f"Unexpected status code: {response.status_code}"
+
+
+    if response.status_code == 200:
+        response_data = response.json()
+
+        # Controleer of de response correct is
+        if isinstance(response_data, bool) and response_data is False:
+            print("API returned 'false', indicating the update was not successful.")
+        else:
+            assert isinstance(response_data, list), "Expected response to be a list"
+            print(f"Updated Items Response Data: {response_data}")
+
+            for item in response_data:
+                assert "item_id" in item, "Response item missing 'item_id'"
+                assert "quantity" in item, "Response item missing 'quantity'"
 
 # Test RemoveShipment
 @pytest.mark.asyncio

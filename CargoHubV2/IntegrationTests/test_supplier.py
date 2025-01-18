@@ -7,6 +7,7 @@ BASE_URL = "http://localhost:5000/api/Supplier"
 @pytest.fixture
 def headers():
     return {
+        "API_KEY": "cargohub123",  
         "Content-Type": "application/json"
     }
 
@@ -30,43 +31,44 @@ def sample_supplier():
 
 # Test: Get All Suppliers
 def test_get_all_suppliers(headers):
-    url = f"{BASE_URL}"
-    response = requests.get(url, headers=headers)
-
-    assert response.status_code == 200
-    assert isinstance(response.json(), list)
-
-# Test: Get Supplier By ID
-def test_get_transfer_by_id(headers):
-    get_all_url = f"{BASE_URL}"
-    get_all_response = requests.get(get_all_url, headers=headers)
-    
-    if get_all_response.status_code != 200 or not get_all_response.json():
-        pytest.skip("Geen transfers gevonden om te testen.")
-
-    # Gebruik een bestaand ID uit de lijst
-    existing_transfer = get_all_response.json()[0]  
-    transfer_id = existing_transfer["id"]
-    url = f"{BASE_URL}/{transfer_id}"
+    amount = 10  
+    url = f"{BASE_URL}/byAmount/{amount}"
 
     response = requests.get(url, headers=headers)
 
     assert response.status_code == 200, f"Expected 200, got {response.status_code}"
-    response_data = response.json()
+    assert isinstance(response.json(), list), "Expected response to be a list"
+    assert len(response.json()) <= amount, f"Expected up to {amount} suppliers, got {len(response.json())}"
+
+    for supplier in response.json():
+        assert "id" in supplier, "Expected 'id' field in supplier data"
+        assert "name" in supplier, "Expected 'name' field in supplier data"
+
+    print(f"Successfully fetched up to {amount} suppliers")
 
 
-    print(f"Response Data: {response_data}")
+# Test: Get Supplier By ID
+def test_get_supplier_by_id(headers, sample_supplier):
+    # Step 1: Create a new supplier
+    create_url = f"{BASE_URL}"
+    create_response = requests.post(create_url, json=sample_supplier, headers=headers)
 
-    
-    assert "id" in response_data, "Expected 'id' in response"
-    assert response_data["id"] == transfer_id, f"Expected ID {transfer_id}, got {response_data['id']}"
-    assert "reference" in response_data, "Expected 'reference' in response"
-    assert "createdAt" in response_data, "Expected 'createdAt' in response"
+    assert create_response.status_code == 201, f"Expected 201, got {create_response.status_code}"
+    created_supplier = create_response.json()
+    supplier_id = created_supplier["id"]
 
-    if "transfer_status" not in response_data:
-        print("Warning: 'transfer_status' ontbreekt in de response. Controleer de API of database.")
-    else:
-        assert "transfer_status" in response_data, "Expected 'transfer_status' in response"
+
+    get_url = f"{BASE_URL}/{supplier_id}"
+    get_response = requests.get(get_url, headers=headers)
+
+    assert get_response.status_code == 200, f"Expected 200, got {get_response.status_code}"
+    fetched_supplier = get_response.json()
+
+    assert fetched_supplier["id"] == supplier_id, "Fetched supplier ID does not match the created supplier ID"
+    assert fetched_supplier["name"] == sample_supplier["name"], "Fetched supplier name does not match"
+
+    print(f"Successfully fetched supplier with ID {supplier_id}")
+
 
 
 # Test: Search Supplier By Name

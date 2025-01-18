@@ -7,6 +7,7 @@ BASE_URL = "http://localhost:5000/api/Location"
 @pytest.fixture
 def headers():
     return {
+        "API_KEY": "cargohub123", 
         "Content-Type": "application/json"
     }
 
@@ -115,7 +116,7 @@ def test_update_location(headers, sample_location):
 
 # Test: Delete Location By ID
 def test_delete_location_by_id(headers):
-    location_id = 1  
+    location_id = 15 
     url = f"{BASE_URL}/{location_id}"
 
     response = requests.delete(url, headers=headers)

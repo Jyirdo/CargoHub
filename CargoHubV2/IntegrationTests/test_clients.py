@@ -7,6 +7,7 @@ BASE_URL = "http://localhost:5000/api/Clients"
 @pytest.fixture
 def headers():
     return {
+        "API_KEY": "cargohub123", 
         "Content-Type": "application/json"
     }
 
