@@ -48,9 +48,8 @@ jobs:
 
     - name: Start CargoHub Web Application
       run: |
-        nohup dotnet run --project ./CargoHubV2/CargohubV2.csproj &
-        sleep 10s
-        curl http://localhost:5000/api/
+        dotnet run --project ./CargoHubV2/CargohubV2.csproj --urls http://0.0.0.0:5000 &
+        sleep 10
 
     - name: Run Integration Tests
       run: pytest ./CargoHubTest/IntegrationTests
