@@ -25,6 +25,14 @@ namespace CargohubV2.Services
                 .ToListAsync();
         }
 
+        public async Task<List<Shipment>> GetShipmentsAsync(int limit = 10, int offset = 0)
+        {
+            return await _context.Shipments
+                .Skip(offset)
+                .Take(limit)
+                .ToListAsync();
+        }
+
         public async Task<Shipment?> GetShipmentByIdAsync(int shipmentId)
         {
             return await _context.Shipments
