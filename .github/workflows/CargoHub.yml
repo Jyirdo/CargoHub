@@ -44,8 +44,9 @@ jobs:
 
     - name: Start CargoHub web application
       run: |
-        nohup dotnet run --project CargoHubV2 & 
+        nohup dotnet run --project CargoHubV2 > app.log 2>&1 &
         sleep 10
+        cat app.log
         curl http://localhost:5000/api/
 
     - name: Test IntegrationTests
