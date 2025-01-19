@@ -255,4 +255,57 @@
             context.SaveChanges();
         }
     }
+
+    public class DataValidator
+    {
+        public static void ValidateDataTypes(Dictionary<string, object> data)
+        {
+            if (!data.ContainsKey("total_package_weight") || !(data["total_package_weight"] is double))
+            {
+                throw new ArgumentException("total_package_weight moet een decimaal zijn.");
+            }
+
+            if (!data.ContainsKey("carrier_code") || !(data["carrier_code"] is string))
+            {
+                throw new ArgumentException("carrier_code moet een string zijn.");
+            }
+        }
+
+        public static void ValidateRequiredFields(Dictionary<string, object> data)
+        {
+            var requiredFields = new List<string> { "order_id", "shipment_status" };
+
+            foreach (var field in requiredFields)
+            {
+                if (!data.ContainsKey(field))
+                {
+                    throw new ArgumentException($"{field} is a required field.");
+                }
+            }
+        }
+
+        public static void ValidateSupplierData(Dictionary<string, object> data)
+        {
+            var requiredFields = new List<string> { "code", "name", "address", "city", "country" };
+
+            foreach (var field in requiredFields)
+            {
+                if (!data.ContainsKey(field))
+                {
+                    throw new ArgumentException($"{field} is a required field.");
+                }
+            }
+        }
+
+        public static void ValidateUpdateData(Dictionary<string, object> existingData, Dictionary<string, object> newData)
+        {
+            foreach (var key in newData.Keys)
+            {
+                if (!existingData.ContainsKey(key))
+                {
+                    throw new KeyNotFoundException($"{key} is not a valid key to update.");
+                }
+            }
+        }
+    }
 }
