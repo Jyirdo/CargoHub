@@ -7,6 +7,7 @@ BASE_URL = "http://localhost:5000/api/Orders"
 @pytest.fixture
 def headers():
     return {
+        "API_KEY": "cargohub123",
         "Content-Type": "application/json"
     }
 
@@ -46,7 +47,7 @@ def sample_order():
 
 # Test GetAllOrders
 def test_get_all_orders(headers):
-    url = f"{BASE_URL}"
+    url = f"{BASE_URL}/byAmount/10"
     response = requests.get(url, headers=headers)
 
     assert response.status_code == 200
@@ -55,7 +56,7 @@ def test_get_all_orders(headers):
 
 # Test GetOrderById
 def test_get_order_by_id(headers):
-    order_id = 1  # Replace with a valid order ID
+    order_id = 20  # Replace with a valid order ID
     url = f"{BASE_URL}/{order_id}"
 
     response = requests.get(url, headers=headers)

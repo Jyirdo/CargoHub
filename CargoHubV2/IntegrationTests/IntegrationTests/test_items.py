@@ -102,7 +102,7 @@ def test_get_items_by_supplier(headers):
 
     assert response.status_code in [200, 404]
     if response.status_code == 200:
-        assert isinstance(response.json(), list)
+        assert isinstance(response.json(), dict)
 
 
 # Test AddItem
