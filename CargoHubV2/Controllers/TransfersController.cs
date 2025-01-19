@@ -83,7 +83,7 @@ namespace CargohubV2.Controllers
             var deleted = await _transferService.DeleteTransferByIdAsync(id);
             if (!deleted) return NotFound($"Transfer with ID {id} not found.");
 
-            return NoContent();
+            return Ok("Transfer deleted successfully");
         }
 
         // Delete transfers by status

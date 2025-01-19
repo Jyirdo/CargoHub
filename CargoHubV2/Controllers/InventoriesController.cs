@@ -85,8 +85,7 @@ namespace CargohubV2.Controllers
             {
                 return NotFound(new { Message = $"Inventory with ID {id} not found." });
             }
-
-            return NoContent();
+            return Ok("Inventory deleted successfully");
         }
     }
 }

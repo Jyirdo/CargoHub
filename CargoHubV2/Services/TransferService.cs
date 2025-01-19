@@ -63,7 +63,7 @@ namespace CargohubV2.Services
             var transfer = await _context.Transfers.FindAsync(id);
             if (transfer == null) return false;
 
-            _context.Transfers.Remove(transfer);
+            transfer.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

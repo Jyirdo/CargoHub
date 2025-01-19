@@ -63,7 +63,7 @@ namespace CargohubV2.Services
             var warehouse = await _context.Warehouses.FindAsync(id);
             if (warehouse == null) return false;
 
-            _context.Warehouses.Remove(warehouse);
+            warehouse.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

@@ -25,6 +25,8 @@ namespace CargohubV2.Models
         [JsonConverter(typeof(FlexibleDateTimeConverter))]
         public DateTime UpdatedAt { get; set; }
 
+        public bool IsDeleted { get; set; } = false;
+
 
     }
 }

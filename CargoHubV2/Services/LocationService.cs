@@ -96,7 +96,7 @@ namespace CargohubV2.Services
                 return false;
             }
 
-            _context.Locations.Remove(location);
+            location.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

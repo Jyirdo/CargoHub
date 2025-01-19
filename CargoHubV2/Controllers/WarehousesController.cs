@@ -65,7 +65,7 @@ namespace CargohubV2.Controllers
             var deleted = await _warehouseService.DeleteWarehouseByIdAsync(id);
             if (!deleted) return NotFound($"Warehouse with ID {id} not found.");
 
-            return NoContent();
+            return Ok("Warehouse deleted successfully");
         }
     }
 }

@@ -105,7 +105,7 @@ namespace CargohubV2.Controllers
             {
                 return NotFound(new { Message = $"Location with ID {id} not found." });
             }
-            return NoContent();
+            return Ok("Location deleted successfully");
         }
 
         // Ophalen van totaal aantal locaties

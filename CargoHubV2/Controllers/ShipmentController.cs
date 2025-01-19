@@ -91,7 +91,7 @@ namespace CargohubV2.Controllers
             {
                 return NoContent();
             }
-            return Ok(shipment);
+            return Ok("Shipment deleted successfully");
         }
     }
 }

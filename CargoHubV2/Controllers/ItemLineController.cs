@@ -97,7 +97,7 @@ namespace CargohubV2.Controllers
                 return NotFound(new { Message = $"Item line with ID {id} not found." });
             }
 
-            return Ok("Item group deleted successfully");
+            return Ok("Item line deleted successfully");
         }
     }
 }

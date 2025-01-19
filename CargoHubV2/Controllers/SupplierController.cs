@@ -87,7 +87,7 @@ namespace CargohubV2.Controllers
             {
                 return NotFound(new { Message = "Some suppliers were not found." });
             }
-            return NoContent();
+            return Ok("Suppliers deleted successfully");
         }
 
         // Ophalen van totaal aantal leveranciers

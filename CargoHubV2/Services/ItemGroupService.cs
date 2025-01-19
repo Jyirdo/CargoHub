@@ -73,7 +73,7 @@ namespace CargohubV2.Services
             if (itemGroup == null)
                 return false;
 
-            _context.Items_Groups.Remove(itemGroup);
+            itemGroup.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

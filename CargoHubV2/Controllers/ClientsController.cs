@@ -94,7 +94,7 @@ namespace CargohubV2.Controllers
             {
                 return NoContent();
             }
-            return Ok(client);
+            return Ok("Client deleted successfully");
         }
 
         [HttpDelete("Delete/Email/{email}")] // Route parameter
@@ -109,7 +109,7 @@ namespace CargohubV2.Controllers
             {
                 return NoContent();
             }
-            return Ok(client);
+            return Ok("Client deleted successfully");
         }
 
     }

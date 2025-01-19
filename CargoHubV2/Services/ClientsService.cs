@@ -93,7 +93,7 @@ namespace CargohubV2.Services
                 return null;
             }
 
-            _context.Clients.Remove(client);
+            client.IsDeleted = true;
             await _context.SaveChangesAsync();
             return client;
         }
@@ -106,7 +106,7 @@ namespace CargohubV2.Services
                 return null;
             }
 
-            _context.Clients.Remove(client);
+            client.IsDeleted = true;
             await _context.SaveChangesAsync();
             return client;
         }

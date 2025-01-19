@@ -133,7 +133,7 @@ namespace CargohubV2.Controllers
                 return NotFound(new { Message = $"Item with ID {id} not found." });
             }
 
-            return NoContent();
+            return Ok("Item deleted successfully");
         }
     }
 }

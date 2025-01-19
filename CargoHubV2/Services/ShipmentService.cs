@@ -90,7 +90,7 @@ namespace CargohubV2.Services
                 return false;
             }
 
-            _context.Shipments.Remove(shipment);
+            shipment.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

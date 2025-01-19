@@ -85,7 +85,10 @@ namespace CargohubV2.Services
                 return false; // Niet alle opgegeven leveranciers zijn gevonden
             }
 
-            _context.Suppliers.RemoveRange(suppliers);
+            foreach (var supplier in suppliers)
+            {
+                supplier.IsDeleted = true;
+            }
             await _context.SaveChangesAsync();
             return true;
         }

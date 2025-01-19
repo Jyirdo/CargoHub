@@ -105,7 +105,7 @@ namespace CargohubV2.Services
                 return false;
             }
 
-            _context.Orders.Remove(order);
+            order.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

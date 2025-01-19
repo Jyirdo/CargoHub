@@ -103,7 +103,7 @@ namespace CargohubV2.Services
                 return false;
             }
 
-            _context.Inventories.Remove(inventory);
+            inventory.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }
