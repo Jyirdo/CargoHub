@@ -43,7 +43,7 @@ jobs:
 
     - name: Start CargoHub Web Application
       run: |
-        nohup dotnet run --project CargoHubV2 > app.log 2>&1 &
+        nohup dotnet run --project CargoHubV2/CargoHubV2.csproj > app.log 2>&1 &
         echo "Waiting for application to start..."
         for i in {1..30}; do
           if curl -s http://localhost:5000/api/ > /dev/null; then
