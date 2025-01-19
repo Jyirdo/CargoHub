@@ -8,7 +8,7 @@ BASE_URL = "http://localhost:5000/api/ItemTypes"
 @pytest.fixture
 def headers():
     return {
-        "API_KEY": "cargohub123", 
+        "API_KEY": "cargohub123",
         "Content-Type": "application/json"
     }
 
@@ -48,7 +48,7 @@ def test_get_all_item_types_with_max_pagination(headers):
 
 
 def test_get_item_type_by_id(headers):
-    item_type_id = 101  # Replace with a valid item type ID
+    item_type_id = 60  # Replace with a valid item type ID
     url = f"{BASE_URL}/{item_type_id}"
 
     response = requests.get(url, headers=headers)
@@ -57,7 +57,7 @@ def test_get_item_type_by_id(headers):
     response_data = response.json()
     assert "name" in response_data, "Response JSON does not contain 'name' field"
     assert response_data[
-        "name"] == "Test Item Type", f"Expected name 'Example Item Type', got {response_data['name']}"
+        "name"] == "Pen Holder", f"Expected name 'Pen Holder', got {response_data['name']}"
 
 # Test GetItemTypeByName
 
