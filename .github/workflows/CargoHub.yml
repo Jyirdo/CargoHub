@@ -41,6 +41,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
 
+    - name: List Directory Contents
+      run: ls -R
+
     - name: Start CargoHub Web Application
       run: |
         nohup dotnet run --project CargoHubV2/CargoHubV2.csproj > app.log 2>&1 &
