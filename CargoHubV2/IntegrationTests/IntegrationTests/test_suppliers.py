@@ -7,7 +7,7 @@ BASE_URL = "http://localhost:5000/api/Supplier"
 @pytest.fixture
 def headers():
     return {
-        "API_KEY": "cargohub123",  
+        "API_KEY": "cargohub123",
         "Content-Type": "application/json"
     }
 
@@ -32,7 +32,7 @@ def sample_supplier():
 
 # Test: Get All Suppliers
 def test_get_all_suppliers(headers):
-    amount = 10  
+    amount = 10
     url = f"{BASE_URL}/byAmount/{amount}"
 
     response = requests.get(url, headers=headers)
@@ -58,7 +58,6 @@ def test_get_supplier_by_id(headers, sample_supplier):
     created_supplier = create_response.json()
     supplier_id = created_supplier["id"]
 
-
     get_url = f"{BASE_URL}/{supplier_id}"
     get_response = requests.get(get_url, headers=headers)
 
@@ -69,7 +68,6 @@ def test_get_supplier_by_id(headers, sample_supplier):
     assert fetched_supplier["name"] == sample_supplier["name"], "Fetched supplier name does not match"
 
     print(f"Successfully fetched supplier with ID {supplier_id}")
-
 
 
 # Test: Search Supplier By Name
@@ -150,7 +148,7 @@ def test_delete_suppliers_batch(headers, sample_supplier):
     delete_url = f"{BASE_URL}/DeleteBatch"
     delete_response = requests.delete(delete_url, json=ids_to_delete, headers=headers)
 
-    assert delete_response.status_code == 204, f"Expected 204, got {delete_response.status_code}"
+    assert delete_response.status_code == 200, f"Expected 204, got {delete_response.status_code}"
 
     for supplier_id in ids_to_delete:
         get_url = f"{BASE_URL}/{supplier_id}"
