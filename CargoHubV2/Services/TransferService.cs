@@ -16,9 +16,9 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Transfer>> GetAllTransfersAsync()
+        public async Task<List<Transfer>> GetAllTransfersAsync(int amount)
         {
-            return await _context.Transfers.Take(100).ToListAsync();
+            return await _context.Transfers.Take(amount).ToListAsync();
         }
 
         public async Task<Transfer> GetTransferByIdAsync(int id)
@@ -63,7 +63,7 @@ namespace CargohubV2.Services
             var transfer = await _context.Transfers.FindAsync(id);
             if (transfer == null) return false;
 
-            _context.Transfers.Remove(transfer);
+            transfer.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

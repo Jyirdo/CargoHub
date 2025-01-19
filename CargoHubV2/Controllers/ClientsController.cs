@@ -19,10 +19,10 @@ namespace CargohubV2.Controllers
         }
 
         // GET: api/Clients
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Client>>> GetAllClients()
+        [HttpGet("byAmount/{amount}")]
+        public async Task<ActionResult<IEnumerable<Client>>> GetAllClients(int amount)
         {
-            var clients = await _clientsService.GetAllClientsAsync();
+            var clients = await _clientsService.GetAllClientsAsync(amount);
             return Ok(clients);
         }
 
@@ -94,7 +94,7 @@ namespace CargohubV2.Controllers
             {
                 return NoContent();
             }
-            return Ok(client);
+            return Ok("Client deleted successfully");
         }
 
         [HttpDelete("Delete/Email/{email}")] // Route parameter
@@ -109,7 +109,7 @@ namespace CargohubV2.Controllers
             {
                 return NoContent();
             }
-            return Ok(client);
+            return Ok("Client deleted successfully");
         }
 
     }

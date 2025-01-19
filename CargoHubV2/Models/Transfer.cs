@@ -31,5 +31,7 @@ namespace CargohubV2.Models
 
         [JsonProperty("items")]
         public List<TransferStock>? Stocks { get; set; }
+        public bool IsDeleted { get; set; } = false;
+
     }
 }

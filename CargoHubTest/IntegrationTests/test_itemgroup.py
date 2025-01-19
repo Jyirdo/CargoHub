@@ -2,11 +2,13 @@ import pytest
 import requests
 import time
 
-BASE_URL = "http://localhost:5000/api/ItemGroups" 
+BASE_URL = "http://localhost:5000/api/ItemGroups"
+
 
 @pytest.fixture
 def headers():
     return {
+        "API_KEY": "cargohub123", 
         "Content-Type": "application/json"
     }
 
@@ -22,7 +24,7 @@ def sample_item_group():
 # Test GetAllItemGroups
 @pytest.mark.asyncio
 def test_get_all_item_groups(headers):
-    url = f"{BASE_URL}/page/10"
+    url = f"{BASE_URL}/byAmount/10"
     response = requests.get(url, headers=headers)
 
     assert response.status_code == 200
@@ -33,7 +35,7 @@ def test_get_all_item_groups(headers):
 
 @pytest.mark.asyncio
 def test_get_all_item_groups_with_max_pagination(headers):
-    url = f"{BASE_URL}/page/1000"
+    url = f"{BASE_URL}/byAmount/1000"
     response = requests.get(url, headers=headers)
 
     assert response.status_code == 200
@@ -111,18 +113,18 @@ def test_update_item_group(headers, sample_item_group):
     item_group_id = 1  # Replace with a valid item group ID
     url = f"{BASE_URL}/{item_group_id}"
 
-    sample_item_group["name"] = "Updated Item Group Name"
+    sample_item_group["name"] = "Electronics"
     response = requests.put(url, json=sample_item_group, headers=headers)
 
     assert response.status_code in [200, 204]
     if response.status_code == 200:
-        assert response.json()["name"] == "Updated Item Group Name"
+        assert response.json()["name"] == "Electronics"
 
 
 # Test RemoveItemGroupById
 @pytest.mark.asyncio
 def test_remove_item_group_by_id(headers):
-    item_group_id = 109  # Replace with a valid item group ID
+    item_group_id = 110  # Replace with a valid item group ID
     url = f"{BASE_URL}/Delete/{item_group_id}"
 
     response = requests.delete(url, headers=headers)

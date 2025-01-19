@@ -18,11 +18,11 @@ namespace CargohubV2.Services
         }
 
         // Ophalen van alle leveranciers (max 100)
-        public async Task<List<Supplier>> GetAllSuppliersAsync()
+        public async Task<List<Supplier>> GetAllSuppliersAsync(int amount)
         {
             return await _context.Suppliers
                 .OrderBy(s => s.Id)
-                .Take(100)
+                .Take(amount)
                 .ToListAsync();
         }
 
@@ -85,7 +85,10 @@ namespace CargohubV2.Services
                 return false; // Niet alle opgegeven leveranciers zijn gevonden
             }
 
-            _context.Suppliers.RemoveRange(suppliers);
+            foreach (var supplier in suppliers)
+            {
+                supplier.IsDeleted = true;
+            }
             await _context.SaveChangesAsync();
             return true;
         }
@@ -94,6 +97,13 @@ namespace CargohubV2.Services
         public async Task<int> GetSupplierCountAsync()
         {
             return await _context.Suppliers.CountAsync();
+        }
+
+        public async Task<Supplier> AddSupplierAsync(Supplier supplier)
+        {
+            _context.Suppliers.Add(supplier);
+            await _context.SaveChangesAsync();
+            return supplier;
         }
     }
 }

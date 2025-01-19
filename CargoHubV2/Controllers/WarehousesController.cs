@@ -17,10 +17,10 @@ namespace CargohubV2.Controllers
             _warehouseService = warehouseService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Warehouse>>> GetAllWarehouses()
+        [HttpGet("byAmount/{amount}")]
+        public async Task<ActionResult<IEnumerable<Warehouse>>> GetAllWarehouses(int amount)
         {
-            var warehouses = await _warehouseService.GetAllWarehousesAsync();
+            var warehouses = await _warehouseService.GetAllWarehousesAsync(amount);
             return Ok(warehouses);
         }
 
@@ -65,7 +65,7 @@ namespace CargohubV2.Controllers
             var deleted = await _warehouseService.DeleteWarehouseByIdAsync(id);
             if (!deleted) return NotFound($"Warehouse with ID {id} not found.");
 
-            return NoContent();
+            return Ok("Warehouse deleted successfully");
         }
     }
 }

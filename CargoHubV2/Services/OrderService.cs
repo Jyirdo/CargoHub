@@ -16,10 +16,11 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Order>> GetAllOrdersAsync()
+        public async Task<List<Order>> GetAllOrdersAsync(int amount)
         {
             return await _context.Orders
-                .Include(o => o.Stocks)
+                .OrderBy(o => o.Id)
+                .Take(amount)
                 .ToListAsync();
         }
 
@@ -104,7 +105,7 @@ namespace CargohubV2.Services
                 return false;
             }
 
-            _context.Orders.Remove(order);
+            order.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

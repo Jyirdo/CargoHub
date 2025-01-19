@@ -16,10 +16,12 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Shipment>> GetAllShipmentsAsync()
+        // Ophalen van een beperkt aantal zendingen
+        public async Task<List<Shipment>> GetAllShipmentsByAmountAsync(int amount)
         {
             return await _context.Shipments
-                .Include(s => s.Stocks)
+                .OrderBy(s => s.Id)
+                .Take(amount)
                 .ToListAsync();
         }
 
@@ -65,7 +67,7 @@ namespace CargohubV2.Services
                 return false;
             }
 
-            //update database
+            // Update velden in de database
             existingShipment.OrderId = updatedShipment.OrderId;
             existingShipment.SourceId = updatedShipment.SourceId;
             existingShipment.OrderDate = updatedShipment.OrderDate;
@@ -96,7 +98,7 @@ namespace CargohubV2.Services
                 return false;
             }
 
-            _context.Shipments.Remove(shipment);
+            shipment.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

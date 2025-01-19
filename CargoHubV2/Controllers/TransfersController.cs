@@ -18,10 +18,10 @@ namespace CargohubV2.Controllers
         }
 
         // Get all transfers
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Transfer>>> GetAllTransfers()
+        [HttpGet("byAmount/{amount}")]
+        public async Task<ActionResult<IEnumerable<Transfer>>> GetAllTransfers(int amount)
         {
-            var transfers = await _transferService.GetAllTransfersAsync();
+            var transfers = await _transferService.GetAllTransfersAsync(amount);
             return Ok(transfers);
         }
 
@@ -83,7 +83,7 @@ namespace CargohubV2.Controllers
             var deleted = await _transferService.DeleteTransferByIdAsync(id);
             if (!deleted) return NotFound($"Transfer with ID {id} not found.");
 
-            return NoContent();
+            return Ok("Transfer deleted successfully");
         }
 
         // Delete transfers by status

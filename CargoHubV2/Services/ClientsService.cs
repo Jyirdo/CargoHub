@@ -16,9 +16,9 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Client>> GetAllClientsAsync()
+        public async Task<List<Client>> GetAllClientsAsync(int amount)
         {
-            return await _context.Clients.Take(100).ToListAsync();
+            return await _context.Clients.Take(amount).ToListAsync();
         }
 
         public async Task<Client> GetClientByIdAsync(int id)
@@ -93,7 +93,7 @@ namespace CargohubV2.Services
                 return null;
             }
 
-            _context.Clients.Remove(client);
+            client.IsDeleted = true;
             await _context.SaveChangesAsync();
             return client;
         }
@@ -106,7 +106,7 @@ namespace CargohubV2.Services
                 return null;
             }
 
-            _context.Clients.Remove(client);
+            client.IsDeleted = true;
             await _context.SaveChangesAsync();
             return client;
         }

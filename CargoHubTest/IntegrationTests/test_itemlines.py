@@ -2,12 +2,13 @@ import pytest
 import requests
 import time
 
-BASE_URL = "http://localhost:5000/api/ItemLines"  
+BASE_URL = "http://localhost:5000/api/ItemLines"
 
 
 @pytest.fixture
 def headers():
     return {
+        "API_KEY": "cargohub123", 
         "Content-Type": "application/json"
     }
 
@@ -23,7 +24,7 @@ def sample_item_line():
 # Test GetAllItemLines
 @pytest.mark.asyncio
 def test_get_all_item_lines(headers):
-    url = f"{BASE_URL}/page/10"
+    url = f"{BASE_URL}/byAmount/10"
     response = requests.get(url, headers=headers)
 
     assert response.status_code == 200
@@ -34,7 +35,7 @@ def test_get_all_item_lines(headers):
 
 @pytest.mark.asyncio
 def test_get_all_item_lines_with_max_pagination(headers):
-    url = f"{BASE_URL}/page/1000"
+    url = f"{BASE_URL}/byAmount/1000"
     response = requests.get(url, headers=headers)
 
     assert response.status_code == 200
@@ -91,7 +92,7 @@ def test_create_duplicate_item_line(headers, sample_item_line):
     url = f"{BASE_URL}/Add"
 
     # First request to create the item line
-    response1 = requests.post(url, json=sample_item_line, headers=headers)
+    requests.post(url, json=sample_item_line, headers=headers)
 
     # Wait for 1 second before the second request to ensure no concurrency issue
     time.sleep(1)
@@ -105,7 +106,7 @@ def test_create_duplicate_item_line(headers, sample_item_line):
 # Test UpdateItemLine
 @pytest.mark.asyncio
 def test_update_item_line(headers, sample_item_line):
-    item_line_id = 99  # Replace with a valid item line ID
+    item_line_id = 103  # Replace with a valid item line ID
     url = f"{BASE_URL}/{item_line_id}"
 
     sample_item_line["name"] = "Updated Item Line Name"
@@ -121,7 +122,7 @@ def test_update_item_line(headers, sample_item_line):
 # Test RemoveItemLineById
 @pytest.mark.asyncio
 def test_remove_item_line_by_id(headers):
-    item_line_id = 99  # Replace with a valid item line ID
+    item_line_id = 102  # Replace with a valid item line ID
     url = f"{BASE_URL}/Delete/{item_line_id}"
 
     response = requests.delete(url, headers=headers)

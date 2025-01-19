@@ -36,6 +36,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseMiddleware<ApiKeyMiddleware>();
+
 app.MapControllers();
 
 app.Run();
@@ -48,5 +50,40 @@ void SeedData1(IHost app)
     {
         var services = scope.ServiceProvider;
         DataLoader.ImportData(services.GetRequiredService<CargoHubDbContext>());
+    }
+}
+
+public class ApiKeyMiddleware
+{
+    private readonly RequestDelegate _next;
+    private const string ApiKeyHeaderName = "API_KEY";
+    private const string ValidApiKey = "cargohub123"; // Replace with your actual API key
+
+    public ApiKeyMiddleware(RequestDelegate next)
+    {
+        _next = next;
+    }
+
+    public async Task InvokeAsync(HttpContext context)
+    {
+        if (!context.Request.Headers.TryGetValue(ApiKeyHeaderName, out var extractedApiKey))
+        {
+            if (context.Request.Method != HttpMethods.Get)
+            {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsync("API Key is required for non-GET methods.");
+                Console.WriteLine($"Unauthorized access attempt to {context.Request.Path}.");
+                return;
+            }
+        }
+        else if (extractedApiKey != ValidApiKey)
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            await context.Response.WriteAsync("Invalid API Key.");
+            Console.WriteLine($"Forbidden access attempt to {context.Request.Path} with API Key: {extractedApiKey}");
+            return;
+        }
+
+        await _next(context);
     }
 }

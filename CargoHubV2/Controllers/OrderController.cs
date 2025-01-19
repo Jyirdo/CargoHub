@@ -18,10 +18,11 @@ namespace CargohubV2.Controllers
         }
 
         // GET: api/Orders
-        [HttpGet]
-        public async Task<ActionResult<List<Order>>> GetAllOrders()
+        [HttpGet("byAmount/{amount}")]
+
+        public async Task<ActionResult<IEnumerable<Order>>> GetAllOrders(int amount)
         {
-            var orders = await _orderService.GetAllOrdersAsync();
+            var orders = await _orderService.GetAllOrdersAsync(amount);
             return Ok(orders);
         }
 
@@ -104,7 +105,7 @@ namespace CargohubV2.Controllers
             {
                 return NoContent();
             }
-            return Ok(orders);
+            return Ok("Order deleted successfully");
         }
     }
 }

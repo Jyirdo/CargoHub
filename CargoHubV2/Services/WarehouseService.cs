@@ -16,9 +16,9 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Warehouse>> GetAllWarehousesAsync()
+        public async Task<List<Warehouse>> GetAllWarehousesAsync(int amount)
         {
-            return await _context.Warehouses.Take(100).ToListAsync();
+            return await _context.Warehouses.Take(amount).ToListAsync();
         }
 
         public async Task<Warehouse> GetWarehouseByIdAsync(int id)
@@ -63,7 +63,7 @@ namespace CargohubV2.Services
             var warehouse = await _context.Warehouses.FindAsync(id);
             if (warehouse == null) return false;
 
-            _context.Warehouses.Remove(warehouse);
+            warehouse.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

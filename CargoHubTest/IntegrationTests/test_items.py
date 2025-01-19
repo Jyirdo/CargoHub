@@ -7,6 +7,7 @@ BASE_URL = "http://localhost:5000/api/Items"
 @pytest.fixture
 def headers():
     return {
+        "API_KEY": "cargohub123",
         "Content-Type": "application/json"
     }
 
@@ -14,31 +15,30 @@ def headers():
 @pytest.fixture
 def sample_item():
     return {
-        "uid": "test-uid",
-        "code": "TESTCODE123",
-        "description": "Test Item Description",
-        "short_description": "Test Short Desc",
-        "upc_code": "123456789012",
-        "model_number": "TST-123",
-        "commodity_code": "98765",
-        "item_line": 1,
-        "item_group": 1,
-        "item_type": 1,
-        "unit_purchase_quantity": 10,
-        "unit_order_quantity": 5,
-        "pack_order_quantity": 2,
-        "supplier_id": 1,
-        "supplier_code": "SUP123",
-        "supplier_part_number": "SUP-PART-123",
-        "created_at": "2023-01-01T00:00:00Z",
-        "updated_at": "2023-01-01T00:00:00Z"
+        "uid": "P011721",
+        "code": "sjQ23408K",
+        "description": "Face-to-face clear-thinking complexity",
+        "short_description": "must",
+        "upc_code": "6523540947122",
+        "model_number": "63-OFFTq0T",
+        "commodity_code": "oTo304",
+        "item_line": 11,
+        "item_group": 73,
+        "item_type": 14,
+        "unit_purchase_quantity": 47,
+        "unit_order_quantity": 13,
+        "pack_order_quantity": 11,
+        "supplier_id": 34,
+        "supplier_code": "SUP423",
+        "supplier_part_number": "E-86805-uTM"
     }
 
-
 # Test GetAllItems
+
+
 @pytest.mark.asyncio
 def test_get_all_items(headers):
-    url = f"{BASE_URL}"
+    url = f"{BASE_URL}/byAmount/10"
     response = requests.get(url, headers=headers)
 
     assert response.status_code == 200
@@ -66,7 +66,7 @@ def test_get_items_by_item_line(headers):
 
     assert response.status_code in [200, 404]
     if response.status_code == 200:
-        assert isinstance(response.json(), list)
+        assert isinstance(response.json(), dict)
 
 
 # Test GetItemsByItemGroup
@@ -78,7 +78,7 @@ def test_get_items_by_item_group(headers):
 
     assert response.status_code in [200, 404]
     if response.status_code == 200:
-        assert isinstance(response.json(), list)
+        assert isinstance(response.json(), dict)
 
 
 # Test GetItemsByItemType
@@ -90,7 +90,7 @@ def test_get_items_by_item_type(headers):
 
     assert response.status_code in [200, 404]
     if response.status_code == 200:
-        assert isinstance(response.json(), list)
+        assert isinstance(response.json(), dict)
 
 
 # Test GetItemsBySupplier
@@ -106,17 +106,25 @@ def test_get_items_by_supplier(headers):
 
 
 # Test AddItem
+
 def test_add_item(headers, sample_item):
     url = f"{BASE_URL}/Add"
 
+    # Make the request
     response = requests.post(url, json=sample_item, headers=headers)
 
-    assert response.status_code in [201, 400]
-    if response.status_code == 400:
-        assert "Item with this UID already exists" in response.text
+    # Log response for debugging
+    print(f"Response Status: {response.status_code}")
+    print(f"Response Text: {response.text}")
 
+    # Assert response
+    assert response.status_code in [201, 400], f"Unexpected status code: {response.status_code}"
+    if response.status_code == 400:
+        assert "Item with this UID already exists" in response.text, f"Unexpected error: {response.text}"
 
 # Test UpdateItem
+
+
 @pytest.mark.asyncio
 def test_update_item(headers, sample_item):
     item_id = 1  # Replace with a valid item ID

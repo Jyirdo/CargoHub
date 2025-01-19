@@ -19,10 +19,10 @@ namespace CargohubV2.Controllers
         }
 
         // Ophalen van alle leveranciers (max 100)
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Supplier>>> GetAllSuppliers()
+        [HttpGet("byAmount/{amount}")]
+        public async Task<ActionResult<IEnumerable<Supplier>>> GetAllSuppliers(int amount)
         {
-            var suppliers = await _supplierService.GetAllSuppliersAsync();
+            var suppliers = await _supplierService.GetAllSuppliersAsync(amount);
             return Ok(suppliers);
         }
 
@@ -87,7 +87,7 @@ namespace CargohubV2.Controllers
             {
                 return NotFound(new { Message = "Some suppliers were not found." });
             }
-            return NoContent();
+            return Ok("Suppliers deleted successfully");
         }
 
         // Ophalen van totaal aantal leveranciers
@@ -96,6 +96,17 @@ namespace CargohubV2.Controllers
         {
             var count = await _supplierService.GetSupplierCountAsync();
             return Ok(count);
+        }
+        [HttpPost]
+        public async Task<ActionResult<Supplier>> CreateSupplier([FromBody] Supplier supplier)
+        {
+            if (supplier == null)
+            {
+                return BadRequest(new { Message = "Supplier data is required." });
+            }
+
+            var createdSupplier = await _supplierService.AddSupplierAsync(supplier);
+            return CreatedAtAction(nameof(GetSupplierById), new { id = createdSupplier.Id }, createdSupplier);
         }
     }
 }

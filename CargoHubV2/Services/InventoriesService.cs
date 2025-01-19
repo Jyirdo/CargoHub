@@ -16,7 +16,7 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Inventory>> GetAllInventoriesAsync()
+        public async Task<List<Inventory>> GetAllInventoriesAsync(int amount)
         {
             return await _context.Inventories
                 .Include(i => i.Description)
@@ -24,7 +24,7 @@ namespace CargohubV2.Services
                 .Include(i => i.TotalOnHand)
                 .Include(i => i.TotalOrdered)
                 .OrderBy(i => i.Id) // Order by Id in ascending order
-                .Take(10)
+                .Take(amount)
                 .ToListAsync();
         }
 
@@ -103,7 +103,7 @@ namespace CargohubV2.Services
                 return false;
             }
 
-            _context.Inventories.Remove(inventory);
+            inventory.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

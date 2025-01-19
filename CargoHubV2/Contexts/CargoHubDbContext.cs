@@ -18,6 +18,22 @@ namespace CargohubV2.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            // Global query filter for soft delete
+            modelBuilder.Entity<Client>().HasQueryFilter(c => !c.IsDeleted);
+            modelBuilder.Entity<Location>().HasQueryFilter(l => !l.IsDeleted);
+            modelBuilder.Entity<Inventory>().HasQueryFilter(i => !i.IsDeleted);
+            modelBuilder.Entity<Transfer>().HasQueryFilter(t => !t.IsDeleted);
+            modelBuilder.Entity<Item>().HasQueryFilter(it => !it.IsDeleted);
+            modelBuilder.Entity<Warehouse>().HasQueryFilter(w => !w.IsDeleted);
+            modelBuilder.Entity<Supplier>().HasQueryFilter(su => !su.IsDeleted);
+            modelBuilder.Entity<Item_Group>().HasQueryFilter(ig => !ig.IsDeleted);
+            modelBuilder.Entity<Item_Line>().HasQueryFilter(il => !il.IsDeleted);
+            modelBuilder.Entity<Item_Type>().HasQueryFilter(it => !it.IsDeleted);
+            modelBuilder.Entity<Order>().HasQueryFilter(o => !o.IsDeleted);
+            modelBuilder.Entity<Shipment>().HasQueryFilter(sh => !sh.IsDeleted);
+
+
             // Configure one-to-many relationship between Order and StockOfItems
             modelBuilder.Entity<Warehouse>()
                 .OwnsOne(w => w.Contact);
@@ -43,7 +59,7 @@ namespace CargohubV2.Contexts
         public DbSet<Item_Type> Items_Types { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Shipment> Shipments { get; set; }
-        
+
 
     }
 }

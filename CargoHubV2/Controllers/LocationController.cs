@@ -19,10 +19,10 @@ namespace CargohubV2.Controllers
         }
 
         // Ophalen van alle locaties (max 100)
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Location>>> GetAllLocations()
+        [HttpGet("byAmount/{amount}")]
+        public async Task<ActionResult<IEnumerable<Location>>> GetAllLocations(int amount)
         {
-            var locations = await _locationService.GetAllLocationsAsync();
+            var locations = await _locationService.GetAllLocationsAsync(amount);
             return Ok(locations);
         }
 
@@ -105,7 +105,7 @@ namespace CargohubV2.Controllers
             {
                 return NotFound(new { Message = $"Location with ID {id} not found." });
             }
-            return NoContent();
+            return Ok("Location deleted successfully");
         }
 
         // Ophalen van totaal aantal locaties
