@@ -39,28 +39,18 @@ jobs:
     - name: Install Python Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest
+        pip install pytest
 
-    - name: List Directory Contents
-      run: ls -R
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
 
     - name: Start CargoHub Web Application
       run: |
-        nohup dotnet run --project CargoHubV2/CargoHubV2.csproj > app.log 2>&1 &
-        echo "Waiting for application to start..."
-        for i in {1..30}; do
-          if curl -s http://localhost:5000/api/ > /dev/null; then
-            echo "Application is up and running!"
-            break
-          fi
-          sleep 2
-        done
+        nohup dotnet run --project ./CargoHubV2/CargohubV2.csproj &
+        sleep 10s
         curl http://localhost:5000/api/
-      working-directory: CargoHubV2
-
-    - name: Display Application Logs
-      if: failure()
-      run: cat CargoHubV2/app.log
 
     - name: Run Integration Tests
       run: pytest ./CargoHubTest/IntegrationTests

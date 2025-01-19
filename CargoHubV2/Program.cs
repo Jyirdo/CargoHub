@@ -32,8 +32,6 @@ if (args.Length > 0 && args[0] == "seed")
     SeedData1(app);
 }
 
-app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.UseMiddleware<ApiKeyMiddleware>();
@@ -57,7 +55,7 @@ public class ApiKeyMiddleware
 {
     private readonly RequestDelegate _next;
     private const string ApiKeyHeaderName = "API_KEY";
-    private const string ValidApiKey = "cargohub123"; // Replace with your actual API key
+    private const string ValidApiKey = "cargohub123";
 
     public ApiKeyMiddleware(RequestDelegate next)
     {
