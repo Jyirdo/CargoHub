@@ -23,16 +23,28 @@ jobs:
       working-directory: CargoHubV2
 
   test: 
-    runs-on: ubuntu-latest
     needs: build
-
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Restore dependencies
-        run: |
-          dotnet restore
-        working-directory: CargoHubV2
+    - uses: actions/checkout@v3
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+          dotnet-version: '8.0.x'
 
-      - name: Run UnitTests
-        run: dotnet test
-        working-directory: CargoHubTest
+    - name: Restore dependencies
+      run: |
+        dotnet restore
+      working-directory: CargoHubV2
+
+    - name: Test UnitTests
+      run: pytest .\CargoHubTest\UnitTests
+
+    - name: Start CargoHub web application
+      run: |
+        nohup dotnet run --project CargoHubV2 & 
+        sleep 10
+        curl http://localhost:5000/api/
+
+    - name: Test IntegrationTests
+      run: pytest .\CargoHubTest\IntegrationTests
