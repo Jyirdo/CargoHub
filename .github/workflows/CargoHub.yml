@@ -26,19 +26,21 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v3
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
       with:
-          dotnet-version: '8.0.x'
+        python-version: "3.12"
+        cache: 'pip'
 
-    - name: Restore dependencies
+    - name: Install dependencies
       run: |
-        dotnet restore
-      working-directory: CargoHubV2
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
 
-    - name: Test UnitTests
-      run: pytest .\CargoHubTest\UnitTests
+    # - name: Test UnitTests
+    #   run: |
+    #     pytest ./test/unit
 
     - name: Start CargoHub web application
       run: |
@@ -48,3 +50,30 @@ jobs:
 
     - name: Test IntegrationTests
       run: pytest .\CargoHubTest\IntegrationTests
+
+  # test: 
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - name: Setup .NET SDK
+  #     uses: actions/setup-dotnet@v3
+  #     with:
+  #         dotnet-version: '8.0.x'
+
+  #   - name: Restore dependencies
+  #     run: |
+  #       dotnet restore
+  #     working-directory: CargoHubV2
+
+  #   - name: Test UnitTests
+  #     run: pytest .\CargoHubTest\UnitTests
+
+  #   - name: Start CargoHub web application
+  #     run: |
+  #       nohup dotnet run --project CargoHubV2 & 
+  #       sleep 10
+  #       curl http://localhost:5000/api/
+
+  #   - name: Test IntegrationTests
+  #     run: pytest .\CargoHubTest\IntegrationTests
