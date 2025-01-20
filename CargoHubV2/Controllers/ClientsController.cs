@@ -30,6 +30,10 @@ namespace CargohubV2.Controllers
         [HttpGet("{id}")] // Route parameter
         public async Task<ActionResult<Client>> GetClientById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid client ID. It must be a positive integer." });
+            }
             var client = await _clientsService.GetClientByIdAsync(id);
             if (client == null)
             {
@@ -69,6 +73,10 @@ namespace CargohubV2.Controllers
         [HttpPut("Update/{id}")] // Route parameter
         public async Task<IActionResult> UpdateClient(int id, [FromBody] Client client)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid client ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -85,6 +93,10 @@ namespace CargohubV2.Controllers
         [HttpDelete("Delete/{id}")] // Route parameter
         public async Task<IActionResult> RemoveClientById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid client ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

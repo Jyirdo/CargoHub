@@ -30,6 +30,10 @@ namespace CargohubV2.Controllers
         [HttpGet("{orderId}")]
         public async Task<ActionResult<Order>> GetOrderById(int orderId)
         {
+            if (orderId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid order ID. It must be a positive integer." });
+            }
             var order = await _orderService.GetOrderByIdAsync(orderId);
             if (order == null)
             {
@@ -41,6 +45,10 @@ namespace CargohubV2.Controllers
         [HttpGet("{orderId}/items")]
         public async Task<ActionResult<List<OrderStock>>> GetItemsInOrder(int orderId)
         {
+            if (orderId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid order ID. It must be a positive integer." });
+            }
             var items = await _orderService.GetItemsInOrderAsync(orderId);
             return Ok(items);
         }
@@ -48,6 +56,10 @@ namespace CargohubV2.Controllers
         [HttpGet("shipment/{shipmentId}")]
         public async Task<ActionResult<List<Order>>> GetOrdersForShipment(int shipmentId)
         {
+            if (shipmentId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid shipment ID. It must be a positive integer." });
+            }
             var orders = await _orderService.GetOrdersForShipmentAsync(shipmentId);
             return Ok(orders);
         }
@@ -79,6 +91,10 @@ namespace CargohubV2.Controllers
         [HttpPut("Update/{orderId}")] // Route parameter
         public async Task<IActionResult> UpdateOrder(int orderId, [FromBody] Order updatedOrder)
         {
+            if (orderId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid order ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -96,6 +112,10 @@ namespace CargohubV2.Controllers
         [HttpDelete("Delete/{orderId}")]
         public async Task<IActionResult> DeleteOrder(int orderId)
         {
+            if (orderId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid order ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

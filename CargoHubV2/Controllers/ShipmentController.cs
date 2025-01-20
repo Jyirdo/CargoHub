@@ -27,6 +27,10 @@ namespace CargohubV2.Controllers
         [HttpGet("{shipmentId}")]
         public async Task<ActionResult<Shipment>> GetShipmentById(int shipmentId)
         {
+            if (shipmentId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid shipment ID. It must be a positive integer." });
+            }
             var shipment = await _shipmentService.GetShipmentByIdAsync(shipmentId);
             if (shipment == null)
             {
@@ -38,6 +42,10 @@ namespace CargohubV2.Controllers
         [HttpGet("{shipmentId}/items")]
         public async Task<ActionResult<List<ShipmentStock>>> GetItemsInShipment(int shipmentId)
         {
+            if (shipmentId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid shipment ID. It must be a positive integer." });
+            }
             var items = await _shipmentService.GetItemsInShipmentAsync(shipmentId);
             return Ok(items);
         }
@@ -52,6 +60,10 @@ namespace CargohubV2.Controllers
         [HttpPut("{shipmentId}")]
         public async Task<IActionResult> UpdateShipment(int shipmentId, [FromBody] Shipment updatedShipment)
         {
+            if (shipmentId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid shipment ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -67,6 +79,10 @@ namespace CargohubV2.Controllers
         [HttpPut("{shipmentId}/items")]
         public async Task<IActionResult> UpdateItemsInShipment(int shipmentId, [FromBody] List<ShipmentStock> updatedItems)
         {
+            if (shipmentId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid shipment ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -82,6 +98,10 @@ namespace CargohubV2.Controllers
         [HttpDelete("{shipmentId}")]
         public async Task<IActionResult> RemoveShipment(int shipmentId)
         {
+            if (shipmentId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid shipment ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

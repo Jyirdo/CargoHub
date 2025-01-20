@@ -30,6 +30,10 @@ namespace CargohubV2.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Location>> GetLocationById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid location ID. It must be a positive integer." });
+            }
             var location = await _locationService.GetLocationByIdAsync(id);
             if (location == null)
             {
@@ -62,6 +66,10 @@ namespace CargohubV2.Controllers
         [HttpGet("Warehouse/{warehouseId}")]
         public async Task<ActionResult<IEnumerable<Location>>> GetLocationsByWarehouseId(int warehouseId)
         {
+            if (warehouseId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid Warehouse ID. It must be a positive integer." });
+            }
             var locations = await _locationService.GetLocationsByWarehouseIdAsync(warehouseId);
             return Ok(locations);
         }
@@ -83,6 +91,10 @@ namespace CargohubV2.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateLocation(int id, [FromBody] Location updatedLocation)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid location ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -100,6 +112,10 @@ namespace CargohubV2.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLocationById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid location ID. It must be a positive integer." });
+            }
             var deleted = await _locationService.DeleteLocationByIdAsync(id);
             if (!deleted)
             {

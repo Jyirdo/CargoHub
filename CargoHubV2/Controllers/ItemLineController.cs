@@ -29,6 +29,11 @@ namespace CargohubV2.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Item_Line>> GetItemLineById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid itemline ID. It must be a positive integer." });
+            }
+
             var itemLine = await _itemLineService.GetItemLineByIdAsync(id);
 
             if (itemLine == null)
@@ -72,6 +77,10 @@ namespace CargohubV2.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateItemLine(int id, [FromBody] Item_Line ItemLine)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid itemline ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -90,6 +99,11 @@ namespace CargohubV2.Controllers
         [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> DeleteItemLine(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid itemline ID. It must be a positive integer." });
+            }
+
             var success = await _itemLineService.DeleteItemLineAsync(id);
 
             if (!success)

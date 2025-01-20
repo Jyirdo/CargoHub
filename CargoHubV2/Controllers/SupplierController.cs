@@ -30,6 +30,10 @@ namespace CargohubV2.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Supplier>> GetSupplierById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid supplier ID. It must be a positive integer." });
+            }
             var supplier = await _supplierService.GetSupplierByIdAsync(id);
             if (supplier == null)
             {

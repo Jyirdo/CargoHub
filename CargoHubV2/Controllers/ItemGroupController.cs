@@ -29,6 +29,11 @@ namespace CargohubV2.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Item_Group>> GetItemGroupById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid itemgroup ID. It must be a positive integer." });
+            }
+
             var itemGroup = await _itemGroupService.GetItemGroupByIdAsync(id);
 
             if (itemGroup == null)
@@ -75,6 +80,11 @@ namespace CargohubV2.Controllers
         [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> DeleteItemGroup(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid itemgroup ID. It must be a positive integer." });
+            }
+
             var success = await _itemGroupService.RemoveItemGroupAsync(id);
 
             if (!success)
@@ -89,6 +99,10 @@ namespace CargohubV2.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateItemGroup(int id, [FromBody] Item_Group ItemGroup)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid itemgroup ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
