@@ -22,6 +22,10 @@ namespace CargohubV2.Controllers
 
         public async Task<ActionResult<IEnumerable<Order>>> GetAllOrders(int amount)
         {
+            if (amount <= 0)
+            {
+                return BadRequest(new { Message = "Invalid amount. It must be a positive integer." });
+            }
             var orders = await _orderService.GetAllOrdersAsync(amount);
             return Ok(orders);
         }

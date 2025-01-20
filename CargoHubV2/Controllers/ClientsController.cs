@@ -22,6 +22,10 @@ namespace CargohubV2.Controllers
         [HttpGet("byAmount/{amount}")]
         public async Task<ActionResult<IEnumerable<Client>>> GetAllClients(int amount)
         {
+            if (amount <= 0)
+            {
+                return BadRequest(new { Message = "Invalid amount. It must be a positive integer." });
+            }
             var clients = await _clientsService.GetAllClientsAsync(amount);
             return Ok(clients);
         }
