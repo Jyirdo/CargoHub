@@ -18,7 +18,7 @@ namespace CargohubV2.Services
         }
 
         // Ophalen van alle locaties (max 100)
-        public async Task<List<Location>> GetAllLocationsAsync(int amount)
+        public virtual async Task<List<Location>> GetAllLocationsAsync(int amount)
         {
             return await _context.Locations
                 .OrderBy(l => l.Id)
@@ -27,13 +27,13 @@ namespace CargohubV2.Services
         }
 
         // Ophalen van een locatie via ID
-        public async Task<Location> GetLocationByIdAsync(int id)
+        public virtual async Task<Location?> GetLocationByIdAsync(int id)
         {
             return await _context.Locations.FirstOrDefaultAsync(l => l.Id == id);
         }
 
         // Zoeken op naam (like filter)
-        public async Task<List<Location>> SearchLocationsByNameAsync(string name)
+        public virtual async Task<List<Location>> SearchLocationsByNameAsync(string name)
         {
             return await _context.Locations
                 .Where(l => EF.Functions.ILike(l.Name, $"%{name}%"))
@@ -41,13 +41,13 @@ namespace CargohubV2.Services
         }
 
         // Zoeken op code (exacte match)
-        public async Task<Location> SearchLocationByCodeAsync(string code)
+        public virtual async Task<Location?> SearchLocationByCodeAsync(string code)
         {
             return await _context.Locations.FirstOrDefaultAsync(l => l.Code == code);
         }
 
         // Filteren op magazijn ID
-        public async Task<List<Location>> GetLocationsByWarehouseIdAsync(int warehouseId)
+        public virtual async Task<List<Location>> GetLocationsByWarehouseIdAsync(int warehouseId)
         {
             return await _context.Locations
                 .Where(l => l.WarehouseId == warehouseId)
@@ -55,7 +55,7 @@ namespace CargohubV2.Services
         }
 
         // Voeg een nieuwe locatie toe
-        public async Task<Location> AddLocationAsync(Location location)
+        public virtual async Task<Location> AddLocationAsync(Location location)
         {
             DateTime now = DateTime.UtcNow;
 
@@ -68,7 +68,7 @@ namespace CargohubV2.Services
         }
 
         // Update een bestaande locatie
-        public async Task<Location?> UpdateLocationAsync(int id, Location updatedLocation)
+        public virtual async Task<Location?> UpdateLocationAsync(int id, Location updatedLocation)
         {
             var existingLocation = await _context.Locations.FirstOrDefaultAsync(l => l.Id == id);
 
@@ -87,7 +87,7 @@ namespace CargohubV2.Services
         }
 
         // Verwijder een locatie via ID
-        public async Task<bool> DeleteLocationByIdAsync(int id)
+        public virtual async Task<bool> DeleteLocationByIdAsync(int id)
         {
             var location = await _context.Locations.FirstOrDefaultAsync(l => l.Id == id);
 
@@ -102,7 +102,7 @@ namespace CargohubV2.Services
         }
 
         // Ophalen van totaal aantal locaties
-        public async Task<int> GetLocationCountAsync()
+        public virtual async Task<int> GetLocationCountAsync()
         {
             return await _context.Locations.CountAsync();
         }
