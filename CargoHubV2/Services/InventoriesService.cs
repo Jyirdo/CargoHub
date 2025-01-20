@@ -19,11 +19,7 @@ namespace CargohubV2.Services
         public async Task<List<Inventory>> GetAllInventoriesAsync(int amount)
         {
             return await _context.Inventories
-                .Include(i => i.Description)
-                .Include(i => i.Locations)
-                .Include(i => i.TotalOnHand)
-                .Include(i => i.TotalOrdered)
-                .OrderBy(i => i.Id) // Order by Id in ascending order
+                .OrderBy(i => i.Id)
                 .Take(amount)
                 .ToListAsync();
         }
@@ -31,10 +27,6 @@ namespace CargohubV2.Services
         public async Task<Inventory?> GetInventoriesByIdAsync(int id)
         {
             return await _context.Inventories
-                .Include(i => i.Description)
-                .Include(i => i.Locations)
-                .Include(i => i.TotalOnHand)
-                .Include(i => i.TotalOrdered)
                 .FirstOrDefaultAsync(i => i.Id == id);
         }
 
