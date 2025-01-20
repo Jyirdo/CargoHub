@@ -15,22 +15,22 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Item_Type>> GetAllItemTypesAsync(int amount)
+        public virtual async Task<List<Item_Type>> GetAllItemTypesAsync(int amount)
         {
             return await _context.Items_Types.Take(amount).ToListAsync();
         }
 
-        public async Task<Item_Type> GetItemTypeByIdAsync(int id)
+        public virtual async Task<Item_Type?> GetItemTypeByIdAsync(int id)
         {
             return await _context.Items_Types.FirstOrDefaultAsync(it => it.Id == id);
         }
 
-        public async Task<Item_Type> GetItemTypeByNameAsync(string name)
+        public virtual async Task<Item_Type?> GetItemTypeByNameAsync(string name)
         {
             return await _context.Items_Types.FirstOrDefaultAsync(it => it.Name == name);
         }
 
-        public async Task<Item_Type> AddItemTypeAsync(Item_Type newItemType)
+        public virtual async Task<Item_Type> AddItemTypeAsync(Item_Type newItemType)
         {
             DateTime CreatedAt = DateTime.UtcNow;
             DateTime UpdatedAt = DateTime.UtcNow;
@@ -43,7 +43,7 @@ namespace CargohubV2.Services
             return newItemType;
         }
 
-        public async Task<Item_Type> UpdateItemTypeAsync(int id, Item_Type updatedItemType)
+        public virtual async Task<Item_Type?> UpdateItemTypeAsync(int id, Item_Type updatedItemType)
         {
             var existingItemType = await _context.Items_Types.FindAsync(id);
 
@@ -63,7 +63,7 @@ namespace CargohubV2.Services
             return updatedItemType;
         }
 
-        public async Task<bool> DeleteItemTypeAsync(int id)
+        public virtual async Task<bool> DeleteItemTypeAsync(int id)
         {
             var itemType = await _context.Items_Types.FindAsync(id);
 

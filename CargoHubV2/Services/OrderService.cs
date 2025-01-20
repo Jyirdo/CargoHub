@@ -16,7 +16,7 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Order>> GetAllOrdersAsync(int amount)
+        public virtual async Task<List<Order>> GetAllOrdersAsync(int amount)
         {
             return await _context.Orders
                 .OrderBy(o => o.Id)
@@ -24,33 +24,33 @@ namespace CargohubV2.Services
                 .ToListAsync();
         }
 
-        public async Task<Order?> GetOrderByIdAsync(int orderId)
+        public virtual async Task<Order?> GetOrderByIdAsync(int orderId)
         {
             return await _context.Orders
                 .FirstOrDefaultAsync(o => o.Id == orderId);
         }
 
-        public async Task<List<OrderStock>> GetItemsInOrderAsync(int orderId)
+        public virtual async Task<List<OrderStock>> GetItemsInOrderAsync(int orderId)
         {
             var order = await GetOrderByIdAsync(orderId);
             return order?.Stocks ?? new List<OrderStock>();
         }
 
-        public async Task<List<Order>> GetOrdersForShipmentAsync(int shipmentId)
+        public virtual async Task<List<Order>> GetOrdersForShipmentAsync(int shipmentId)
         {
             return await _context.Orders
                 .Where(o => o.ShipmentId == shipmentId)
                 .ToListAsync();
         }
 
-        public async Task<List<Order>> GetOrdersForClientAsync(string clientId)
+        public virtual async Task<List<Order>> GetOrdersForClientAsync(string clientId)
         {
             return await _context.Orders
                 .Where(o => o.ShipTo == clientId || o.BillTo == clientId)
                 .ToListAsync();
         }
 
-        public async Task<Order> AddOrderAsync(Order newOrder)
+        public virtual async Task<Order> AddOrderAsync(Order newOrder)
         {
             newOrder.CreatedAt = DateTime.UtcNow;
             newOrder.UpdatedAt = DateTime.UtcNow;
@@ -60,7 +60,7 @@ namespace CargohubV2.Services
             return newOrder;
         }
 
-        public async Task<bool> UpdateOrderAsync(int orderId, Order updatedOrder)
+        public virtual async Task<bool> UpdateOrderAsync(int orderId, Order updatedOrder)
         {
             var existingOrder = await _context.Orders
                 .Include(o => o.Stocks)
@@ -95,7 +95,7 @@ namespace CargohubV2.Services
             return true;
         }
 
-        public async Task<bool> DeleteOrderAsync(int orderId)
+        public virtual async Task<bool> DeleteOrderAsync(int orderId)
         {
             var order = await _context.Orders.FindAsync(orderId);
 

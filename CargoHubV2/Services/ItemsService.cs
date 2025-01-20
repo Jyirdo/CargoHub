@@ -16,7 +16,7 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Item>> GetAllItemsAsync(int amount)
+        public virtual async Task<List<Item>> GetAllItemsAsync(int amount)
         {
             return await _context.Items
                 .Include(i => i.ItemLine)
@@ -29,7 +29,7 @@ namespace CargohubV2.Services
         }
 
 
-        public async Task<Item?> GetItemByUidAsync(string uid)
+        public virtual async Task<Item?> GetItemByUidAsync(string uid)
         {
             return await _context.Items
                 .Include(i => i.ItemLine)
@@ -38,7 +38,7 @@ namespace CargohubV2.Services
                 .Include(i => i.Supplier)
                 .FirstOrDefaultAsync(i => i.UId == uid);
         }
-        public async Task<Item?> GetItemsByItemLineAsync(int itemLineId)
+        public virtual async Task<Item?> GetItemsByItemLineAsync(int itemLineId)
         {
             return await _context.Items
                 .Include(i => i.ItemLine)
@@ -49,7 +49,7 @@ namespace CargohubV2.Services
             // .ToListAsync();
         }
 
-        public async Task<Item?> GetItemsByItemGroupAsync(int itemGroupId)
+        public virtual async Task<Item?> GetItemsByItemGroupAsync(int itemGroupId)
         {
             return await _context.Items
                 .Include(i => i.ItemGroup)
@@ -60,7 +60,7 @@ namespace CargohubV2.Services
             // .ToListAsync();
         }
 
-        public async Task<Item?> GetItemsByItemTypeAsync(int itemTypeId)
+        public virtual async Task<Item?> GetItemsByItemTypeAsync(int itemTypeId)
         {
             return await _context.Items
             .Include(i => i.ItemType)
@@ -70,14 +70,14 @@ namespace CargohubV2.Services
             // .ToListAsync();
         }
 
-        public async Task<Item?> GetItemsBySupplierAsync(int supplierId)
+        public virtual async Task<Item?> GetItemsBySupplierAsync(int supplierId)
         {
             return await _context.Items
                 .Include(i => i.Supplier)
                 .FirstOrDefaultAsync(i => i.Supplier.Id == supplierId);
         }
 
-        public async Task<(string message, Item? returnedItem)> AddItemAsync(Item item)
+        public virtual async Task<(string message, Item? returnedItem)> AddItemAsync(Item item)
         {
             await _context.Items.AddAsync(item);
             await _context.SaveChangesAsync();
@@ -85,7 +85,7 @@ namespace CargohubV2.Services
             return ("", item);
         }
 
-        public async Task<bool> UpdateItemAsync(int id, Item updatedItem)
+        public virtual async Task<bool> UpdateItemAsync(int id, Item updatedItem)
         {
             var existingItem = await _context.Items.FindAsync(id);
 
@@ -117,7 +117,7 @@ namespace CargohubV2.Services
             return true;
         }
 
-        public async Task<bool> RemoveItemAsync(int id)
+        public virtual async Task<bool> RemoveItemAsync(int id)
         {
             var item = await _context.Items.FindAsync(id);
 
@@ -131,12 +131,11 @@ namespace CargohubV2.Services
             return true;
         }
 
-
-        private string GenerateUniqueCode()
-        {
-            var random = new Random();
-            const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Range(0, 9).Select(_ => chars[random.Next(chars.Length)]).ToArray());
-        }
+        // private string GenerateUniqueCode()
+        // {
+        //     var random = new Random();
+        //     const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        //     return new string(Enumerable.Range(0, 9).Select(_ => chars[random.Next(chars.Length)]).ToArray());
+        // }
     }
 }
