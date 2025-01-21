@@ -1,4 +1,4 @@
-name: CargoHub application
+name: CargoHub Application
 
 on:
   push:
@@ -7,32 +7,64 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
       with:
-          dotnet-version: '8.0.x'
-
-    - name: Restore dependencies
+        dotnet-version: '8.0.x'
+    
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+        cache: 'pip'
+    
+    - name: Install Python Dependencies
       run: |
-        dotnet restore
+        python -m pip install --upgrade pip
+        pip install pytest requests
+
+    - name: Restore Dependencies
+      run: dotnet restore
       working-directory: CargoHubV2
 
-    - name: Build CargoHubV2
+    - name: Build Project
       run: dotnet build --no-restore
       working-directory: CargoHubV2
 
-  test: 
-    runs-on: ubuntu-latest
+  test:
     needs: build
-
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Restore dependencies
-        run: |
-          dotnet restore
-        working-directory: CargoHubV2
+    - name: Checkout Code
+      uses: actions/checkout@v3
 
-      - name: Run UnitTests
-        run: dotnet test
-        working-directory: CargoHubTest
+    - name: Start CargoHub Web Application
+      run: |
+        nohup dotnet run > output.log &
+      working-directory: CargoHubV2
+    
+    - name: Wait for ASP.NET application to start (health check)
+      run: |
+        echo "Waiting for ASP.NET application to start..."
+
+        for i in {1..120}; do  # Retry every 5 seconds, up to 20 times (10 minutes total)
+          if curl -s http://localhost:5000/api/ | grep "Healthy"; then
+            echo "ASP.NET application is healthyt!"
+            break
+          fi
+          echo "Still waiting for ASP.NET application... (Attempt $i)"
+          sleep 5
+        done
+
+        if ! curl -s http://localhost:5000/api/ | grep "Healthy"; then
+          echo "Error: ASP.NET application is not healthy!"
+          cat output.log
+          exit 1
+        fi
+
+    - name: Run Integration Tests
+      run: pytest
+      working-directory: CargoHubTest 
