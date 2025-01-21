@@ -109,20 +109,6 @@ namespace CargohubV2.Controllers
             return Ok(items);
         }
 
-        // POST: api/Items/Add
-
-        [HttpPost("Add")]
-        public async Task<IActionResult> AddItem([FromBody] Item newItem)
-        {
-            var result = await _itemService.AddItemAsync(newItem);
-            if (result.returnedItem == null)
-            {
-                return BadRequest(result.message);
-            }
-            return Ok(result.returnedItem);
-        }
-
-
         // PUT: api/Items/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateItem(int id, [FromBody] Item updatedItem)

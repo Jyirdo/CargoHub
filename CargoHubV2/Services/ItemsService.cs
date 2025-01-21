@@ -77,14 +77,6 @@ namespace CargohubV2.Services
                 .FirstOrDefaultAsync(i => i.Supplier.Id == supplierId);
         }
 
-        public virtual async Task<(string message, Item? returnedItem)> AddItemAsync(Item item)
-        {
-            await _context.Items.AddAsync(item);
-            await _context.SaveChangesAsync();
-
-            return ("", item);
-        }
-
         public virtual async Task<bool> UpdateItemAsync(int id, Item updatedItem)
         {
             var existingItem = await _context.Items.FindAsync(id);
