@@ -79,14 +79,18 @@ namespace CargohubV2.Services
             // Start building the CSV content
             var stringBuilder = new StringBuilder();
 
+            // Add CSV header
+            stringBuilder.AppendLine("Order ID, Warehouse ID, Order Price");
+
             // Loop through the orders and format the output
             foreach (var order in ordersInWarehouse)
             {
-                stringBuilder.AppendLine($"Order ID: {order.Id}, Warehouse ID: {order.WarehouseId}, Order price: {order.TotalAmount}");
+                stringBuilder.AppendLine($"{order.Id}, {order.WarehouseId}, {order.TotalAmount}");
             }
 
             return stringBuilder.ToString();
         }
+
 
         // Generate CSV for Locations
         public string GenerateCsvForLocations(int warehouseId)
@@ -143,14 +147,15 @@ namespace CargohubV2.Services
 
             // Sum up the total amounts of these orders
             var totalRevenue = ordersInRange.Sum(o => o.TotalAmount);
+            var totalRevenuerounded = Math.Round(totalRevenue, 2);
 
             // Log the result for debugging purposes
-            Console.WriteLine($"Total revenue between {startDate} and {endDate}: {totalRevenue}");
+            Console.WriteLine($"Total revenue between {startDate} and {endDate}: {totalRevenuerounded}");
 
             // Return the result in the DTO
             return new revenewResultOrders
             {
-                TotalRevenewInBetweenDates = totalRevenue
+                TotalRevenewInBetweenDates = totalRevenuerounded
             };
         }
 
