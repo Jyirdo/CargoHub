@@ -16,22 +16,22 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Warehouse>> GetAllWarehousesAsync(int amount)
+        public virtual async Task<List<Warehouse>> GetAllWarehousesAsync(int amount)
         {
             return await _context.Warehouses.Take(amount).ToListAsync();
         }
 
-        public async Task<Warehouse> GetWarehouseByIdAsync(int id)
+        public virtual async Task<Warehouse?> GetWarehouseByIdAsync(int id)
         {
             return await _context.Warehouses.FirstOrDefaultAsync(w => w.Id == id);
         }
 
-        public async Task<List<Warehouse>> GetWarehousesByCityAsync(string city)
+        public virtual async Task<List<Warehouse>> GetWarehousesByCityAsync(string city)
         {
             return await _context.Warehouses.Where(w => w.City == city).ToListAsync();
         }
 
-        public async Task<Warehouse> AddWarehouseAsync(Warehouse warehouse)
+        public virtual async Task<Warehouse> AddWarehouseAsync(Warehouse warehouse)
         {
             warehouse.CreatedAt = DateTime.UtcNow;
             warehouse.UpdatedAt = DateTime.UtcNow;
@@ -42,7 +42,7 @@ namespace CargohubV2.Services
             return warehouse;
         }
 
-        public async Task<Warehouse> UpdateWarehouseAsync(int id, Warehouse warehouse)
+        public virtual async Task<Warehouse?> UpdateWarehouseAsync(int id, Warehouse warehouse)
         {
             var existingWarehouse = await _context.Warehouses.FindAsync(id);
             if (existingWarehouse == null) return null;
@@ -58,7 +58,7 @@ namespace CargohubV2.Services
             return existingWarehouse;
         }
 
-        public async Task<bool> DeleteWarehouseByIdAsync(int id)
+        public virtual async Task<bool> DeleteWarehouseByIdAsync(int id)
         {
             var warehouse = await _context.Warehouses.FindAsync(id);
             if (warehouse == null) return false;

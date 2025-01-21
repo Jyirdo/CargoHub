@@ -15,23 +15,23 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Item_Group>> GetAllItemGroupsAsync(int amount)
+        public virtual async Task<List<Item_Group>> GetAllItemGroupsAsync(int amount)
         {
             return await _context.Items_Groups.Take(amount).ToListAsync();
         }
 
 
-        public async Task<Item_Group> GetItemGroupByIdAsync(int id)
+        public virtual async Task<Item_Group?> GetItemGroupByIdAsync(int id)
         {
             return await _context.Items_Groups.FirstOrDefaultAsync(ig => ig.Id == id);
         }
 
-        public async Task<Item_Group> GetItemGroupByNameAsync(string name)
+        public virtual async Task<Item_Group?> GetItemGroupByNameAsync(string name)
         {
             return await _context.Items_Groups.FirstOrDefaultAsync(ig => ig.Name == name);
         }
 
-        public async Task<Item_Group> AddItemGroupAsync(Item_Group itemGroup)
+        public virtual async Task<Item_Group> AddItemGroupAsync(Item_Group itemGroup)
         {
             DateTime CreatedAt = DateTime.UtcNow;
             DateTime UpdatedAt = DateTime.UtcNow;
@@ -44,7 +44,7 @@ namespace CargohubV2.Services
             return itemGroup;
         }
 
-        public async Task<Item_Group> UpdateItemGroupAsync(int id, Item_Group updatedItemGroup)
+        public virtual async Task<Item_Group?> UpdateItemGroupAsync(int id, Item_Group updatedItemGroup)
         {
             var existingItemGroup = await _context.Items_Groups.FindAsync(id);
 
@@ -66,7 +66,7 @@ namespace CargohubV2.Services
         }
 
 
-        public async Task<bool> RemoveItemGroupAsync(int id)
+        public virtual async Task<bool> RemoveItemGroupAsync(int id)
         {
             var itemGroup = await _context.Items_Groups.FindAsync(id);
 

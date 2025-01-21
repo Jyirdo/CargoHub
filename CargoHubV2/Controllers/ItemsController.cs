@@ -109,19 +109,13 @@ namespace CargohubV2.Controllers
             return Ok(items);
         }
 
-        // POST: api/Items/Add
-
-        [HttpPost("Add")]
-        public async Task<IActionResult> AddItem([FromBody] Item newItem)
+        // POST: api/Items/PopulateWeightInKg
+        [HttpPost("PopulateWeightInKg")]
+        public async Task<IActionResult> PopulateWeightInKg()
         {
-            var result = await _itemService.AddItemAsync(newItem);
-            if (result.returnedItem == null)
-            {
-                return BadRequest(result.message);
-            }
-            return Ok(result.returnedItem);
+            await _itemService.PopulateWeightInKgAsync();
+            return Ok("WeightInKg column populated with random values.");
         }
-
 
         // PUT: api/Items/{id}
         [HttpPut("{id}")]

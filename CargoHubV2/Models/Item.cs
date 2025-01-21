@@ -69,6 +69,10 @@ namespace CargohubV2.Models
         [JsonProperty("updated_at")]
         [JsonConverter(typeof(FlexibleDateTimeConverter))]
         public DateTime UpdatedAt { get; set; }
+
+        [JsonProperty("weight_in_kg")]
+        public int WeightInKg { get; set; }
+
         public bool IsDeleted { get; set; } = false;
 
     }
