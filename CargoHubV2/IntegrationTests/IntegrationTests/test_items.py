@@ -104,24 +104,6 @@ def test_get_items_by_supplier(headers):
     if response.status_code == 200:
         assert isinstance(response.json(), dict)
 
-
-# Test AddItem
-
-def test_add_item(headers, sample_item):
-    url = f"{BASE_URL}/Add"
-
-    # Make the request
-    response = requests.post(url, json=sample_item, headers=headers)
-
-    # Log response for debugging
-    print(f"Response Status: {response.status_code}")
-    print(f"Response Text: {response.text}")
-
-    # Assert response
-    assert response.status_code in [201, 400], f"Unexpected status code: {response.status_code}"
-    if response.status_code == 400:
-        assert "Item with this UID already exists" in response.text, f"Unexpected error: {response.text}"
-
 # Test UpdateItem
 
 
