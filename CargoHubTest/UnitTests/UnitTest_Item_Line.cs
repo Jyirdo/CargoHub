@@ -127,11 +127,9 @@ namespace CargohubV2.Tests
             var result = Xunit.Assert.IsType<ActionResult<Item_Line>>(actionResult);
             var badRequestResult = Xunit.Assert.IsType<BadRequestObjectResult>(result.Result);
 
-            // Inspecteer de ModelState-fouten in BadRequestObjectResult
             var modelStateErrors = (badRequestResult.Value as SerializableError)?.Values;
             Xunit.Assert.NotNull(modelStateErrors);
 
-            // Controleer of het foutbericht voor 'Name' aanwezig is
             var errorMessages = new List<string>();
             foreach (var error in modelStateErrors)
             {
