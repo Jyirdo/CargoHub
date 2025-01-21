@@ -115,5 +115,18 @@ namespace CargohubV2.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public virtual async Task PopulateWeightInKgAsync()
+        {
+            var random = new Random();
+
+            var items = await _context.Items.ToListAsync();
+            foreach (var item in items)
+            {
+                item.WeightInKg = random.Next(1, 100);
+            }
+
+            await _context.SaveChangesAsync();
+        }
     }
 }
