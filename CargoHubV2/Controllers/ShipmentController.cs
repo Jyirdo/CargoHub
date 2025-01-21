@@ -2,6 +2,7 @@ using CargohubV2.Models;
 using CargohubV2.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CargohubV2.Controllers
@@ -88,7 +89,7 @@ namespace CargohubV2.Controllers
             var UpdatedShipment = await _shipmentService.UpdateShipmentAsync(shipmentId, updatedShipment);
             if (UpdatedShipment == null)
             {
-                return NoContent();
+                return NotFound(new { Message = $"Shipment with ID {shipmentId} not found." });
             }
             return Ok(UpdatedShipment);
         }
@@ -104,12 +105,12 @@ namespace CargohubV2.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var UpdatedShipment = await _shipmentService.UpdateItemsInShipmentAsync(shipmentId, updatedItems);
-            if (UpdatedShipment == null)
+            var updatedItemsList = await _shipmentService.UpdateItemsInShipmentAsync(shipmentId, updatedItems);
+            if (updatedItemsList == null)
             {
-                return NoContent();
+                return NotFound(new { Message = $"Shipment with ID {shipmentId} not found." });
             }
-            return Ok(UpdatedShipment);
+            return Ok(updatedItemsList);
         }
 
         [HttpDelete("{shipmentId}")]
@@ -122,7 +123,7 @@ namespace CargohubV2.Controllers
             var deleted = await _shipmentService.RemoveShipmentAsync(shipmentId);
             if (!deleted)
             {
-                return NotFound(new { Message = $"Shipment with ID {shipmentId} not found." }); // Controleer deze regel!
+                return NotFound(new { Message = $"Shipment with ID {shipmentId} not found." });
             }
             return Ok("Shipment deleted successfully");
         }
