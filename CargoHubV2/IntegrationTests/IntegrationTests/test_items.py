@@ -66,7 +66,11 @@ def test_get_items_by_item_line(headers):
 
     assert response.status_code in [200, 404]
     if response.status_code == 200:
-        assert isinstance(response.json(), dict)
+        # Controleer of de respons een lijst is
+        assert isinstance(response.json(), list)
+        # Optioneel: Controleer of de eerste entry een dictionary is
+        if response.json():
+            assert isinstance(response.json()[0], dict)
 
 
 # Test GetItemsByItemGroup
@@ -78,7 +82,11 @@ def test_get_items_by_item_group(headers):
 
     assert response.status_code in [200, 404]
     if response.status_code == 200:
-        assert isinstance(response.json(), dict)
+        # Controleer of de respons een lijst is
+        assert isinstance(response.json(), list)
+        # Optioneel: Controleer of de eerste entry een dictionary is
+        if response.json():
+            assert isinstance(response.json()[0], dict)
 
 
 # Test GetItemsByItemType
@@ -90,7 +98,11 @@ def test_get_items_by_item_type(headers):
 
     assert response.status_code in [200, 404]
     if response.status_code == 200:
-        assert isinstance(response.json(), dict)
+        # Controleer of de respons een lijst is
+        assert isinstance(response.json(), list)
+        # Optioneel: Controleer of de eerste entry een dictionary is
+        if response.json():
+            assert isinstance(response.json()[0], dict)
 
 
 # Test GetItemsBySupplier
@@ -102,7 +114,11 @@ def test_get_items_by_supplier(headers):
 
     assert response.status_code in [200, 404]
     if response.status_code == 200:
-        assert isinstance(response.json(), dict)
+        # Controleer of de respons een lijst is
+        assert isinstance(response.json(), list)
+        # Optioneel: Controleer of de eerste entry een dictionary is
+        if response.json():
+            assert isinstance(response.json()[0], dict)
 
 # Test UpdateItem
 

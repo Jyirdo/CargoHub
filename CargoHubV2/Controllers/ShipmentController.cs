@@ -106,14 +106,10 @@ namespace CargohubV2.Controllers
             {
                 return BadRequest(new { Message = "Invalid shipment ID. It must be a positive integer." });
             }
-            if (!ModelState.IsValid)
+            var deleted = await _shipmentService.RemoveShipmentAsync(shipmentId);
+            if (!deleted)
             {
-                return BadRequest(ModelState);
-            }
-            var shipment = await _shipmentService.RemoveShipmentAsync(shipmentId);
-            if (shipment == null)
-            {
-                return NoContent();
+                return NotFound(new { Message = $"Shipment with ID {shipmentId} not found." }); // Controleer deze regel!
             }
             return Ok("Shipment deleted successfully");
         }

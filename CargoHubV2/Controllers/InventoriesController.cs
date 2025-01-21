@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CargohubV2.Models;
 using CargohubV2.Services;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace CargohubV2.Controllers
 {
@@ -57,10 +56,14 @@ namespace CargohubV2.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (_inventoriesService.AddInventoryAsync(newInventory).Result != null)
+
+            // Controleer of een inventory met hetzelfde ID al bestaat
+            var existingInventory = await _inventoriesService.GetInventoriesByIdAsync(newInventory.Id);
+            if (existingInventory != null)
             {
-                return BadRequest("Inventory with this ID already exists");
+                return BadRequest(new { Message = "Inventory with this ID already exists." });
             }
+
             var createdInventory = await _inventoriesService.AddInventoryAsync(newInventory);
             return CreatedAtAction(nameof(GetInventoryById), new { id = createdInventory.Id }, createdInventory);
         }
@@ -104,7 +107,7 @@ namespace CargohubV2.Controllers
             {
                 return NotFound(new { Message = $"Inventory with ID {id} not found." });
             }
-            return Ok("Inventory deleted successfully");
+            return Ok(new { Message = "Inventory deleted successfully" });
         }
     }
 }
