@@ -50,7 +50,6 @@ def test_get_all_suppliers(headers):
 
 # Test: Get Supplier By ID
 def test_get_supplier_by_id(headers, sample_supplier):
-    # Step 1: Create a new supplier
     create_url = f"{BASE_URL}"
     create_response = requests.post(create_url, json=sample_supplier, headers=headers)
 
@@ -82,8 +81,6 @@ def test_search_supplier_by_name(headers):
         assert name.lower() in supplier["name"].lower()
 
 # Test: Search Supplier By City
-
-
 def test_search_supplier_by_city(headers):
     city = "Supplier City"
     url = f"{BASE_URL}/Search/City/{city}"
@@ -95,8 +92,6 @@ def test_search_supplier_by_city(headers):
         assert city.lower() in supplier["city"].lower()
 
 # Test: Check Duplicate Supplier
-
-
 def test_check_duplicate_supplier(headers, sample_supplier):
     url = f"{BASE_URL}/CheckDuplicate"
 
@@ -106,8 +101,6 @@ def test_check_duplicate_supplier(headers, sample_supplier):
     assert isinstance(response.json(), bool)
 
 # Test: Create Duplicate Supplier
-
-
 def test_create_duplicate_supplier(headers, sample_supplier):
     create_url = f"{BASE_URL}"
     duplicate_check_url = f"{BASE_URL}/CheckDuplicate"

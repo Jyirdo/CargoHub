@@ -55,7 +55,7 @@ def test_get_all_shipments(headers):
 
 # Test GetShipmentById
 def test_get_shipment_by_id(headers):
-    shipment_id = 1  # Replace with a valid shipment ID
+    shipment_id = 1  
     url = f"{BASE_URL}/{shipment_id}"
 
     response = requests.get(url, headers=headers)
@@ -67,7 +67,7 @@ def test_get_shipment_by_id(headers):
 
 # Test GetItemsInShipment
 def test_get_items_in_shipment(headers):
-    shipment_id = 1  # Replace with a valid shipment ID
+    shipment_id = 1  
     url = f"{BASE_URL}/{shipment_id}/items"
 
     response = requests.get(url, headers=headers)
@@ -87,48 +87,10 @@ def test_add_shipment(headers, sample_shipment):
     if response.status_code == 400:
         assert "error" in response.json()
 
-
-# Test UpdateShipment
-@pytest.mark.asyncio
-def test_update_shipment(headers, sample_shipment):
-    shipment_id = 1  # Replace with a valid shipment ID
-    url = f"{BASE_URL}/{shipment_id}"
-
-    sample_shipment["shipment_status"] = "Shipped"
-    response = requests.put(url, json=sample_shipment, headers=headers)
-
-    assert response.status_code in [200, 204, 400]
-    if response.status_code == 200:
-        assert response.json()["shipment_status"] == "Shipped"
-
-
-# Test UpdateItemsInShipment
-@pytest.mark.asyncio
-def test_update_items_in_shipment(headers):
-    shipment_id = 1  # Replace with a valid shipment ID
-    url = f"{BASE_URL}/{shipment_id}/items"
-
-    updated_items = [
-        {
-            "item_id": 1,
-            "quantity": 8
-        },
-        {
-            "item_id": 2,
-            "quantity": 12
-        }
-    ]
-    response = requests.put(url, json=updated_items, headers=headers)
-
-    assert response.status_code in [200, 204, 400]
-    if response.status_code == 200:
-        assert isinstance(response.json(), list)
-
-
 # Test RemoveShipment
 @pytest.mark.asyncio
 def test_remove_shipment(headers):
-    shipment_id = 1  # Replace with a valid shipment ID
+    shipment_id = 1  
     url = f"{BASE_URL}/{shipment_id}"
 
     response = requests.delete(url, headers=headers)

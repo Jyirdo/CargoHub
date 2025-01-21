@@ -56,7 +56,7 @@ def test_get_all_orders(headers):
 
 # Test GetOrderById
 def test_get_order_by_id(headers):
-    order_id = 20  # Replace with a valid order ID
+    order_id = 20  
     url = f"{BASE_URL}/{order_id}"
 
     response = requests.get(url, headers=headers)
@@ -65,10 +65,11 @@ def test_get_order_by_id(headers):
     if response.status_code == 200:
         assert "order_status" in response.json()
 
+def test_get_items_in_order(headers, sample_order):
+    create_response = requests.post(f"{BASE_URL}/Add", json=sample_order, headers=headers)
+    assert create_response.status_code == 201, f"Failed to create order: {create_response.text}"
 
-# Test GetItemsInOrder
-def test_get_items_in_order(headers):
-    order_id = 1  # Replace with a valid order ID
+    order_id = create_response.json()["id"]
     url = f"{BASE_URL}/{order_id}/items"
 
     response = requests.get(url, headers=headers)
@@ -78,9 +79,10 @@ def test_get_items_in_order(headers):
         assert isinstance(response.json(), list)
 
 
+
 # Test GetOrdersForShipment
 def test_get_orders_for_shipment(headers):
-    shipment_id = 1  # Replace with a valid shipment ID
+    shipment_id = 15 
     url = f"{BASE_URL}/shipment/{shipment_id}"
 
     response = requests.get(url, headers=headers)
@@ -91,7 +93,7 @@ def test_get_orders_for_shipment(headers):
 
 # Test GetOrdersForClient
 def test_get_orders_for_client(headers):
-    client_id = "12345"  # Replace with a valid client ID
+    client_id = "12"  
     url = f"{BASE_URL}/client/{client_id}"
 
     response = requests.get(url, headers=headers)
@@ -111,9 +113,11 @@ def test_add_order(headers, sample_order):
         assert "error" in response.json()
 
 
-# Test UpdateOrder
 def test_update_order(headers, sample_order):
-    order_id = 1  # Replace with a valid order ID
+    create_response = requests.post(f"{BASE_URL}/Add", json=sample_order, headers=headers)
+    assert create_response.status_code == 201, f"Failed to create order: {create_response.text}"
+
+    order_id = create_response.json()["id"]
     url = f"{BASE_URL}/Update/{order_id}"
 
     sample_order["order_status"] = "Shipped"
@@ -124,7 +128,7 @@ def test_update_order(headers, sample_order):
 
 # Test DeleteOrder
 def test_delete_order(headers):
-    order_id = 1  # Replace with a valid order ID
+    order_id = 1  
     url = f"{BASE_URL}/Delete/{order_id}"
 
     response = requests.delete(url, headers=headers)
