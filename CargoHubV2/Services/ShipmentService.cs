@@ -36,7 +36,6 @@ namespace CargohubV2.Services
         public virtual async Task<Shipment?> GetShipmentByIdAsync(int shipmentId)
         {
             return await _context.Shipments
-                .Include(s => s.Stocks)
                 .FirstOrDefaultAsync(s => s.Id == shipmentId);
         }
 
