@@ -17,27 +17,20 @@ namespace CargohubV2.Controllers
             _orderService = orderService;
         }
 
-        [HttpGet()]
-        public async Task<ActionResult<IEnumerable<Order>>> GetAll()
-        {
-            var orders = await _orderService.GetAllAsync();
-            return Ok(orders);
-        }
-
         // GET: api/Orders
         [HttpGet("byAmount/{amount}")]
-
         public async Task<ActionResult<IEnumerable<Order>>> GetAllOrders(int amount)
         {
             if (amount <= 0)
             {
                 return BadRequest(new { Message = "Invalid amount. It must be a positive integer." });
             }
+
             var orders = await _orderService.GetAllOrdersAsync(amount);
             return Ok(orders);
         }
 
-        // GET: api/Orders/{id}
+        // GET: api/Orders/{orderId}
         [HttpGet("{orderId}")]
         public async Task<ActionResult<Order>> GetOrderById(int orderId)
         {
@@ -45,56 +38,67 @@ namespace CargohubV2.Controllers
             {
                 return BadRequest(new { Message = "Invalid order ID. It must be a positive integer." });
             }
+
             var order = await _orderService.GetOrderByIdAsync(orderId);
             if (order == null)
             {
-                return NoContent();
+                return NotFound(new { Message = $"Order with ID {orderId} not found." });
             }
+
             return Ok(order);
         }
 
+        // GET: api/Orders/{orderId}/items
         [HttpGet("{orderId}/items")]
-        public async Task<ActionResult<List<OrderStock>>> GetItemsInOrder(int orderId)
+        public async Task<ActionResult<IEnumerable<OrderStock>>> GetItemsInOrder(int orderId)
         {
             if (orderId <= 0)
             {
                 return BadRequest(new { Message = "Invalid order ID. It must be a positive integer." });
             }
+
             var items = await _orderService.GetItemsInOrderAsync(orderId);
-            if (items == null || !items.Any())
+            if (items == null || items.Count == 0)
             {
                 return NotFound(new { Message = $"No items found for order ID {orderId}." });
             }
+
             return Ok(items);
         }
 
+        // GET: api/Orders/shipment/{shipmentId}
         [HttpGet("shipment/{shipmentId}")]
-        public async Task<ActionResult<List<Order>>> GetOrdersForShipment(int shipmentId)
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrdersForShipment(int shipmentId)
         {
             if (shipmentId <= 0)
             {
                 return BadRequest(new { Message = "Invalid shipment ID. It must be a positive integer." });
             }
+
             var orders = await _orderService.GetOrdersForShipmentAsync(shipmentId);
-            if (orders == null || !orders.Any())
+            if (orders == null || orders.Count == 0)
             {
                 return NotFound(new { Message = $"No orders found for shipment ID {shipmentId}." });
             }
+
             return Ok(orders);
         }
 
+        // GET: api/Orders/client/{clientId}
         [HttpGet("client/{clientId}")]
-        public async Task<ActionResult<List<Order>>> GetOrdersForClient(string clientId)
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrdersForClient(string clientId)
         {
             if (string.IsNullOrWhiteSpace(clientId))
             {
                 return BadRequest(new { Message = "Client ID cannot be null or empty." });
             }
+
             var orders = await _orderService.GetOrdersForClientAsync(clientId);
-            if (orders == null || !orders.Any())
+            if (orders == null || orders.Count == 0)
             {
                 return NotFound(new { Message = $"No orders found for client ID {clientId}." });
             }
+
             return Ok(orders);
         }
 
@@ -106,36 +110,41 @@ namespace CargohubV2.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (_orderService.GetOrderByIdAsync(newOrder.Id).Result != null)
+
+            var existingOrder = await _orderService.GetOrderByIdAsync(newOrder.Id);
+            if (existingOrder != null)
             {
-                return BadRequest("Order already exists");
+                return BadRequest(new { Message = "Order with the same ID already exists." });
             }
+
             var createdOrder = await _orderService.AddOrderAsync(newOrder);
             return CreatedAtAction(nameof(GetOrderById), new { orderId = createdOrder.Id }, createdOrder);
         }
 
-        //PUT: api/Clients/Update/{id}
-        [HttpPut("Update/{orderId}")] // Route parameter
+        // PUT: api/Orders/Update/{orderId}
+        [HttpPut("Update/{orderId}")]
         public async Task<IActionResult> UpdateOrder(int orderId, [FromBody] Order updatedOrder)
         {
             if (orderId <= 0)
             {
                 return BadRequest(new { Message = "Invalid order ID. It must be a positive integer." });
             }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var orders = await _orderService.UpdateOrderAsync(orderId, updatedOrder);
-            if (!orders)
+
+            var success = await _orderService.UpdateOrderAsync(orderId, updatedOrder);
+            if (!success)
             {
-                return NotFound();
+                return NotFound(new { Message = $"Order with ID {orderId} not found." });
             }
+
             return NoContent();
         }
 
-
-        // DELETE: api/Orders/Delete/{id}        
+        // DELETE: api/Orders/Delete/{orderId}
         [HttpDelete("Delete/{orderId}")]
         public async Task<IActionResult> DeleteOrder(int orderId)
         {
@@ -143,16 +152,14 @@ namespace CargohubV2.Controllers
             {
                 return BadRequest(new { Message = "Invalid order ID. It must be a positive integer." });
             }
-            if (!ModelState.IsValid)
+
+            var success = await _orderService.DeleteOrderAsync(orderId);
+            if (!success)
             {
-                return BadRequest(ModelState);
+                return NotFound(new { Message = $"Order with ID {orderId} not found." });
             }
-            var orders = await _orderService.DeleteOrderAsync(orderId);
-            if (orders == null)
-            {
-                return NoContent();
-            }
-            return Ok("Order deleted successfully");
+
+            return Ok(new { Message = "Order deleted successfully." });
         }
     }
 }
