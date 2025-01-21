@@ -22,6 +22,7 @@ builder.Services.AddScoped<LocationService>();
 builder.Services.AddScoped<InventoriesService>();
 builder.Services.AddScoped<ShipmentService>();
 builder.Services.AddScoped<OrderService>();
+builder.Services.AddScoped<ReportingService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
