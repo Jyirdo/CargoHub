@@ -16,11 +16,20 @@ namespace CargohubV2.Services
             _context = context;
         }
 
+        // Ophalen van een beperkt aantal zendingen
         public virtual async Task<List<Shipment>> GetAllShipmentsByAmountAsync(int amount)
         {
             return await _context.Shipments
                 .OrderBy(s => s.Id)
                 .Take(amount)
+                .ToListAsync();
+        }
+
+        public virtual async Task<List<Shipment>> GetShipmentsAsync(int limit = 10, int offset = 0)
+        {
+            return await _context.Shipments
+                .Skip(offset)
+                .Take(limit)
                 .ToListAsync();
         }
 
@@ -46,7 +55,7 @@ namespace CargohubV2.Services
             return newShipment;
         }
 
-        public virtual async Task<Shipment?> UpdateShipmentAsync(int shipmentId, Shipment updatedShipment)
+        public virtual async Task<bool> UpdateShipmentAsync(int shipmentId, Shipment updatedShipment)
         {
             var existingShipment = await _context.Shipments
                 .Include(s => s.Stocks)
@@ -54,9 +63,10 @@ namespace CargohubV2.Services
 
             if (existingShipment == null)
             {
-                return null;
+                return false;
             }
 
+            // Update velden in de database
             existingShipment.OrderId = updatedShipment.OrderId;
             existingShipment.SourceId = updatedShipment.SourceId;
             existingShipment.OrderDate = updatedShipment.OrderDate;
@@ -75,7 +85,7 @@ namespace CargohubV2.Services
             existingShipment.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
-            return existingShipment;
+            return true;
         }
 
         public virtual async Task<bool> RemoveShipmentAsync(int shipmentId)
@@ -92,13 +102,13 @@ namespace CargohubV2.Services
             return true;
         }
 
-        public virtual async Task<List<ShipmentStock>?> UpdateItemsInShipmentAsync(int shipmentId, List<ShipmentStock> updatedItems)
+        public virtual async Task<bool> UpdateItemsInShipmentAsync(int shipmentId, List<ShipmentStock> updatedItems)
         {
             var shipment = await GetShipmentByIdAsync(shipmentId);
 
             if (shipment == null)
             {
-                return null;
+                return false;
             }
 
             shipment.Stocks.Clear();
@@ -106,7 +116,7 @@ namespace CargohubV2.Services
             shipment.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
-            return shipment.Stocks;
+            return true;
         }
     }
 }
