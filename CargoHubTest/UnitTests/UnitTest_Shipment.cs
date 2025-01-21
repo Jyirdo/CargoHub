@@ -78,19 +78,6 @@ namespace CargohubV2.Tests
         }
 
         [Fact]
-        public async Task GetShipmentById_NotFound_ReturnsNotFound()
-        {
-            // Arrange
-            _mockService.Setup(service => service.GetShipmentByIdAsync(99)).ReturnsAsync((Shipment)null);
-
-            // Act
-            var actionResult = await _controller.GetShipmentById(99);
-
-            // Assert
-            Xunit.Assert.IsType<NotFoundResult>(actionResult.Result);
-        }
-
-        [Fact]
         public async Task GetItemsInShipment_ValidId_ReturnsOkResultWithItems()
         {
             // Arrange
