@@ -16,12 +16,12 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Client>> GetAllClientsAsync()
+        public virtual async Task<List<Client>> GetAllClientsAsync(int amount)
         {
-            return await _context.Clients.Take(100).ToListAsync();
+            return await _context.Clients.Take(amount).ToListAsync();
         }
 
-        public async Task<Client> GetClientByIdAsync(int id)
+        public virtual async Task<Client?> GetClientByIdAsync(int id)
         {
             var possibleClient = await _context.Clients.FirstOrDefaultAsync(c => c.Id == id);
             if (possibleClient != null)
@@ -31,7 +31,7 @@ namespace CargohubV2.Services
             return null;
         }
 
-        public async Task<Client> GetClientByEmailAsync(string email)
+        public virtual async Task<Client?> GetClientByEmailAsync(string email)
         {
             var possibleClient = await _context.Clients.FirstOrDefaultAsync(c => c.ContactEmail == email);
             if (possibleClient != null)
@@ -41,7 +41,7 @@ namespace CargohubV2.Services
             return null;
         }
 
-        public async Task<Client> CreateClientAsync(Client client)
+        public virtual async Task<Client> CreateClientAsync(Client client)
         {
             DateTime CreatedAt = DateTime.UtcNow;
             DateTime UpdatedAt = DateTime.UtcNow;
@@ -56,7 +56,7 @@ namespace CargohubV2.Services
             return client;
         }
 
-        public async Task<Client> UpdateClientAsync(Client client, int id)
+        public virtual async Task<Client?> UpdateClientAsync(Client client, int id)
         {
             var existingClient = await _context.Clients.FirstOrDefaultAsync(c => c.Id == id);
 
@@ -84,7 +84,7 @@ namespace CargohubV2.Services
             return existingClient;
         }
 
-        public async Task<Client> RemoveClientByIdAsync(int id)
+        public virtual async Task<Client?> RemoveClientByIdAsync(int id)
         {
             var client = await _context.Clients.FirstOrDefaultAsync(c => c.Id == id);
 
@@ -93,11 +93,11 @@ namespace CargohubV2.Services
                 return null;
             }
 
-            _context.Clients.Remove(client);
+            client.IsDeleted = true;
             await _context.SaveChangesAsync();
             return client;
         }
-        public async Task<Client> RemoveClientByEmailAsync(string email)
+        public virtual async Task<Client?> RemoveClientByEmailAsync(string email)
         {
             var client = await _context.Clients.FirstOrDefaultAsync(c => c.ContactEmail == email);
 
@@ -106,7 +106,7 @@ namespace CargohubV2.Services
                 return null;
             }
 
-            _context.Clients.Remove(client);
+            client.IsDeleted = true;
             await _context.SaveChangesAsync();
             return client;
         }

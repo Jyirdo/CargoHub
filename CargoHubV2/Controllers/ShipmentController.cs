@@ -17,20 +17,28 @@ namespace CargohubV2.Controllers
             _shipmentService = shipmentService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<Shipment>>> GetAllShipments()
+        [HttpGet("byAmount/{amount}")]
+        public async Task<ActionResult<IEnumerable<Shipment>>> GetAllShipmentsByAmount(int amount)
         {
-            var shipments = await _shipmentService.GetAllShipmentsAsync();
+            if (amount <= 0)
+            {
+                return BadRequest(new { Message = "Invalid amount. It must be a positive integer." });
+            }
+            var shipments = await _shipmentService.GetAllShipmentsByAmountAsync(amount);
             return Ok(shipments);
         }
 
         [HttpGet("{shipmentId}")]
         public async Task<ActionResult<Shipment>> GetShipmentById(int shipmentId)
         {
+            if (shipmentId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid shipment ID. It must be a positive integer." });
+            }
             var shipment = await _shipmentService.GetShipmentByIdAsync(shipmentId);
             if (shipment == null)
             {
-                return NotFound();
+                return NotFound(new { Message = $"Shipment with ID {shipmentId} not found." });
             }
             return Ok(shipment);
         }
@@ -38,13 +46,30 @@ namespace CargohubV2.Controllers
         [HttpGet("{shipmentId}/items")]
         public async Task<ActionResult<List<ShipmentStock>>> GetItemsInShipment(int shipmentId)
         {
+            if (shipmentId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid shipment ID. It must be a positive integer." });
+            }
             var items = await _shipmentService.GetItemsInShipmentAsync(shipmentId);
+            if (items == null || !items.Any())
+            {
+                return NotFound(new { Message = $"No items found for shipment ID {shipmentId}." });
+            }
             return Ok(items);
         }
 
         [HttpPost("Add")]
         public async Task<IActionResult> AddShipment([FromBody] Shipment newShipment)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var existingShipment = await _shipmentService.GetShipmentByIdAsync(newShipment.Id);
+            if (existingShipment != null)
+            {
+                return BadRequest("Shipment already exists");
+            }
             var createdShipment = await _shipmentService.AddShipmentAsync(newShipment);
             return CreatedAtAction(nameof(GetShipmentById), new { shipmentId = createdShipment.Id }, createdShipment);
         }
@@ -52,6 +77,10 @@ namespace CargohubV2.Controllers
         [HttpPut("{shipmentId}")]
         public async Task<IActionResult> UpdateShipment(int shipmentId, [FromBody] Shipment updatedShipment)
         {
+            if (shipmentId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid shipment ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -67,6 +96,10 @@ namespace CargohubV2.Controllers
         [HttpPut("{shipmentId}/items")]
         public async Task<IActionResult> UpdateItemsInShipment(int shipmentId, [FromBody] List<ShipmentStock> updatedItems)
         {
+            if (shipmentId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid shipment ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -82,16 +115,16 @@ namespace CargohubV2.Controllers
         [HttpDelete("{shipmentId}")]
         public async Task<IActionResult> RemoveShipment(int shipmentId)
         {
-            if (!ModelState.IsValid)
+            if (shipmentId <= 0)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new { Message = "Invalid shipment ID. It must be a positive integer." });
             }
-            var shipment = await _shipmentService.RemoveShipmentAsync(shipmentId);
-            if (shipment == null)
+            var deleted = await _shipmentService.RemoveShipmentAsync(shipmentId);
+            if (!deleted)
             {
-                return NoContent();
+                return NotFound(new { Message = $"Shipment with ID {shipmentId} not found." }); // Controleer deze regel!
             }
-            return Ok(shipment);
+            return Ok("Shipment deleted successfully");
         }
     }
 }

@@ -19,10 +19,14 @@ namespace CargohubV2.Controllers
         }
 
         // Ophalen van alle locaties (max 100)
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Location>>> GetAllLocations()
+        [HttpGet("byAmount/{amount}")]
+        public async Task<ActionResult<IEnumerable<Location>>> GetAllLocations(int amount)
         {
-            var locations = await _locationService.GetAllLocationsAsync();
+            if (amount <= 0)
+            {
+                return BadRequest(new { Message = "Invalid amount. It must be a positive integer." });
+            }
+            var locations = await _locationService.GetAllLocationsAsync(amount);
             return Ok(locations);
         }
 
@@ -30,6 +34,10 @@ namespace CargohubV2.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Location>> GetLocationById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid location ID. It must be a positive integer." });
+            }
             var location = await _locationService.GetLocationByIdAsync(id);
             if (location == null)
             {
@@ -62,6 +70,10 @@ namespace CargohubV2.Controllers
         [HttpGet("Warehouse/{warehouseId}")]
         public async Task<ActionResult<IEnumerable<Location>>> GetLocationsByWarehouseId(int warehouseId)
         {
+            if (warehouseId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid Warehouse ID. It must be a positive integer." });
+            }
             var locations = await _locationService.GetLocationsByWarehouseIdAsync(warehouseId);
             return Ok(locations);
         }
@@ -83,6 +95,10 @@ namespace CargohubV2.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateLocation(int id, [FromBody] Location updatedLocation)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid location ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -100,12 +116,16 @@ namespace CargohubV2.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLocationById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid location ID. It must be a positive integer." });
+            }
             var deleted = await _locationService.DeleteLocationByIdAsync(id);
             if (!deleted)
             {
                 return NotFound(new { Message = $"Location with ID {id} not found." });
             }
-            return NoContent();
+            return Ok("Location deleted successfully");
         }
 
         // Ophalen van totaal aantal locaties

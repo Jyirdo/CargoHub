@@ -17,11 +17,23 @@ namespace CargohubV2.Controllers
             _orderService = orderService;
         }
 
-        // GET: api/Orders
-        [HttpGet]
-        public async Task<ActionResult<List<Order>>> GetAllOrders()
+        [HttpGet()]
+        public async Task<ActionResult<IEnumerable<Order>>> GetAll()
         {
-            var orders = await _orderService.GetAllOrdersAsync();
+            var orders = await _orderService.GetAllAsync();
+            return Ok(orders);
+        }
+
+        // GET: api/Orders
+        [HttpGet("byAmount/{amount}")]
+
+        public async Task<ActionResult<IEnumerable<Order>>> GetAllOrders(int amount)
+        {
+            if (amount <= 0)
+            {
+                return BadRequest(new { Message = "Invalid amount. It must be a positive integer." });
+            }
+            var orders = await _orderService.GetAllOrdersAsync(amount);
             return Ok(orders);
         }
 
@@ -29,6 +41,10 @@ namespace CargohubV2.Controllers
         [HttpGet("{orderId}")]
         public async Task<ActionResult<Order>> GetOrderById(int orderId)
         {
+            if (orderId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid order ID. It must be a positive integer." });
+            }
             var order = await _orderService.GetOrderByIdAsync(orderId);
             if (order == null)
             {
@@ -40,21 +56,45 @@ namespace CargohubV2.Controllers
         [HttpGet("{orderId}/items")]
         public async Task<ActionResult<List<OrderStock>>> GetItemsInOrder(int orderId)
         {
+            if (orderId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid order ID. It must be a positive integer." });
+            }
             var items = await _orderService.GetItemsInOrderAsync(orderId);
+            if (items == null || !items.Any())
+            {
+                return NotFound(new { Message = $"No items found for order ID {orderId}." });
+            }
             return Ok(items);
         }
 
         [HttpGet("shipment/{shipmentId}")]
         public async Task<ActionResult<List<Order>>> GetOrdersForShipment(int shipmentId)
         {
+            if (shipmentId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid shipment ID. It must be a positive integer." });
+            }
             var orders = await _orderService.GetOrdersForShipmentAsync(shipmentId);
+            if (orders == null || !orders.Any())
+            {
+                return NotFound(new { Message = $"No orders found for shipment ID {shipmentId}." });
+            }
             return Ok(orders);
         }
 
         [HttpGet("client/{clientId}")]
         public async Task<ActionResult<List<Order>>> GetOrdersForClient(string clientId)
         {
+            if (string.IsNullOrWhiteSpace(clientId))
+            {
+                return BadRequest(new { Message = "Client ID cannot be null or empty." });
+            }
             var orders = await _orderService.GetOrdersForClientAsync(clientId);
+            if (orders == null || !orders.Any())
+            {
+                return NotFound(new { Message = $"No orders found for client ID {clientId}." });
+            }
             return Ok(orders);
         }
 
@@ -78,6 +118,10 @@ namespace CargohubV2.Controllers
         [HttpPut("Update/{orderId}")] // Route parameter
         public async Task<IActionResult> UpdateOrder(int orderId, [FromBody] Order updatedOrder)
         {
+            if (orderId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid order ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -95,6 +139,10 @@ namespace CargohubV2.Controllers
         [HttpDelete("Delete/{orderId}")]
         public async Task<IActionResult> DeleteOrder(int orderId)
         {
+            if (orderId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid order ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -104,7 +152,7 @@ namespace CargohubV2.Controllers
             {
                 return NoContent();
             }
-            return Ok(orders);
+            return Ok("Order deleted successfully");
         }
     }
 }

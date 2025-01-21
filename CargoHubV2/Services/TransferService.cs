@@ -16,22 +16,22 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Transfer>> GetAllTransfersAsync()
+        public virtual async Task<List<Transfer>> GetAllTransfersAsync(int amount)
         {
-            return await _context.Transfers.Take(100).ToListAsync();
+            return await _context.Transfers.Take(amount).ToListAsync();
         }
 
-        public async Task<Transfer> GetTransferByIdAsync(int id)
+        public virtual async Task<Transfer?> GetTransferByIdAsync(int id)
         {
             return await _context.Transfers.FirstOrDefaultAsync(t => t.Id == id);
         }
 
-        public async Task<List<Transfer>> GetTransfersByStatusAsync(string status)
+        public virtual async Task<List<Transfer>> GetTransfersByStatusAsync(string status)
         {
             return await _context.Transfers.Where(t => t.TransferStatus == status).ToListAsync();
         }
 
-        public async Task<Transfer> AddTransferAsync(Transfer transfer)
+        public virtual async Task<Transfer> AddTransferAsync(Transfer transfer)
         {
             transfer.CreatedAt = DateTime.UtcNow;
             transfer.UpdatedAt = DateTime.UtcNow;
@@ -42,7 +42,7 @@ namespace CargohubV2.Services
             return transfer;
         }
 
-        public async Task<Transfer> UpdateTransferAsync(int id, Transfer transfer)
+        public virtual async Task<Transfer?> UpdateTransferAsync(int id, Transfer transfer)
         {
             var existingTransfer = await _context.Transfers.FindAsync(id);
             if (existingTransfer == null) return null;
@@ -58,17 +58,17 @@ namespace CargohubV2.Services
             return existingTransfer;
         }
 
-        public async Task<bool> DeleteTransferByIdAsync(int id)
+        public virtual async Task<bool> DeleteTransferByIdAsync(int id)
         {
             var transfer = await _context.Transfers.FindAsync(id);
             if (transfer == null) return false;
 
-            _context.Transfers.Remove(transfer);
+            transfer.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> DeleteTransfersByStatusAsync(string status)
+        public virtual async Task<bool> DeleteTransfersByStatusAsync(string status)
         {
             var transfers = await _context.Transfers.Where(t => t.TransferStatus == status).ToListAsync();
             if (!transfers.Any()) return false;
@@ -77,8 +77,5 @@ namespace CargohubV2.Services
             await _context.SaveChangesAsync();
             return true;
         }
-
-
-
     }
 }

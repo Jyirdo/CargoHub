@@ -18,10 +18,14 @@ namespace CargohubV2.Controllers
         }
 
         // GET: api/ItemLines
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Item_Line>>> GetAllItemLines()
+        [HttpGet("byAmount/{amount}")]
+        public async Task<ActionResult<IEnumerable<Item_Line>>> GetAllItemLines(int amount)
         {
-            var itemLines = await _itemLineService.GetAllItemLinesAsync();
+            if (amount <= 0)
+            {
+                return BadRequest(new { Message = "Invalid amount. It must be a positive integer." });
+            }
+            var itemLines = await _itemLineService.GetAllItemLinesAsync(amount);
             return Ok(itemLines);
         }
 
@@ -29,6 +33,11 @@ namespace CargohubV2.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Item_Line>> GetItemLineById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid itemline ID. It must be a positive integer." });
+            }
+
             var itemLine = await _itemLineService.GetItemLineByIdAsync(id);
 
             if (itemLine == null)
@@ -72,6 +81,10 @@ namespace CargohubV2.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateItemLine(int id, [FromBody] Item_Line ItemLine)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid itemline ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -90,6 +103,11 @@ namespace CargohubV2.Controllers
         [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> DeleteItemLine(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid itemline ID. It must be a positive integer." });
+            }
+
             var success = await _itemLineService.DeleteItemLineAsync(id);
 
             if (!success)
@@ -97,7 +115,7 @@ namespace CargohubV2.Controllers
                 return NotFound(new { Message = $"Item line with ID {id} not found." });
             }
 
-            return Ok("Item group deleted successfully");
+            return Ok("Item line deleted successfully");
         }
     }
 }

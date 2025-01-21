@@ -16,27 +16,36 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Shipment>> GetAllShipmentsAsync()
+        // Ophalen van een beperkt aantal zendingen
+        public virtual async Task<List<Shipment>> GetAllShipmentsByAmountAsync(int amount)
         {
             return await _context.Shipments
-                .Include(s => s.Stocks)
+                .OrderBy(s => s.Id)
+                .Take(amount)
                 .ToListAsync();
         }
 
-        public async Task<Shipment?> GetShipmentByIdAsync(int shipmentId)
+        public virtual async Task<List<Shipment>> GetShipmentsAsync(int limit = 10, int offset = 0)
         {
             return await _context.Shipments
-                .Include(s => s.Stocks)
+                .Skip(offset)
+                .Take(limit)
+                .ToListAsync();
+        }
+
+        public virtual async Task<Shipment?> GetShipmentByIdAsync(int shipmentId)
+        {
+            return await _context.Shipments
                 .FirstOrDefaultAsync(s => s.Id == shipmentId);
         }
 
-        public async Task<List<ShipmentStock>> GetItemsInShipmentAsync(int shipmentId)
+        public virtual async Task<List<ShipmentStock>> GetItemsInShipmentAsync(int shipmentId)
         {
             var shipment = await GetShipmentByIdAsync(shipmentId);
             return shipment?.Stocks ?? new List<ShipmentStock>();
         }
 
-        public async Task<Shipment> AddShipmentAsync(Shipment newShipment)
+        public virtual async Task<Shipment> AddShipmentAsync(Shipment newShipment)
         {
             newShipment.CreatedAt = DateTime.UtcNow;
             newShipment.UpdatedAt = DateTime.UtcNow;
@@ -46,7 +55,7 @@ namespace CargohubV2.Services
             return newShipment;
         }
 
-        public async Task<bool> UpdateShipmentAsync(int shipmentId, Shipment updatedShipment)
+        public virtual async Task<bool> UpdateShipmentAsync(int shipmentId, Shipment updatedShipment)
         {
             var existingShipment = await _context.Shipments
                 .Include(s => s.Stocks)
@@ -57,7 +66,7 @@ namespace CargohubV2.Services
                 return false;
             }
 
-            //update database
+            // Update velden in de database
             existingShipment.OrderId = updatedShipment.OrderId;
             existingShipment.SourceId = updatedShipment.SourceId;
             existingShipment.OrderDate = updatedShipment.OrderDate;
@@ -79,7 +88,7 @@ namespace CargohubV2.Services
             return true;
         }
 
-        public async Task<bool> RemoveShipmentAsync(int shipmentId)
+        public virtual async Task<bool> RemoveShipmentAsync(int shipmentId)
         {
             var shipment = await _context.Shipments.FindAsync(shipmentId);
 
@@ -88,12 +97,12 @@ namespace CargohubV2.Services
                 return false;
             }
 
-            _context.Shipments.Remove(shipment);
+            shipment.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> UpdateItemsInShipmentAsync(int shipmentId, List<ShipmentStock> updatedItems)
+        public virtual async Task<bool> UpdateItemsInShipmentAsync(int shipmentId, List<ShipmentStock> updatedItems)
         {
             var shipment = await GetShipmentByIdAsync(shipmentId);
 
