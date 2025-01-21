@@ -73,5 +73,45 @@ namespace CargohubV2.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        // GET: api/reports/warehouse/{warehouseId}/locations/download
+        [HttpGet("warehouse/{warehouseId}/locations/download")]
+        public IActionResult DownloadLocations(int warehouseId)
+        {
+            try
+            {
+                // Generate the CSV for the given warehouse ID
+                var csvContent = _reportingService.GenerateCsvForLocations(warehouseId);
+
+                // Convert to byte array
+                var byteArray = System.Text.Encoding.UTF8.GetBytes(csvContent);
+
+                // Return as a downloadable file
+                return File(byteArray, "text/csv", $"Warehouse{warehouseId}_Locations.csv");
+            }
+            catch (Exception ex)
+            {
+                // Handle any errors
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        // GET: api/reports/revenue
+        [HttpGet("revenue")]
+        public ActionResult<revenewResultOrders> GetRevenueBetweenDates([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        {
+            try
+            {
+                // Call the service to get revenue data
+                var revenue = _reportingService.GetRevenueBetweenDates(startDate, endDate);
+
+                // Return the result
+                return Ok(revenue);
+            }
+            catch (Exception ex)
+            {
+                // Handle errors
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }
