@@ -15,22 +15,22 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Item_Line>> GetAllItemLinesAsync(int amount)
+        public virtual async Task<List<Item_Line>> GetAllItemLinesAsync(int amount)
         {
             return await _context.Items_Lines.Take(amount).ToListAsync();
         }
 
-        public async Task<Item_Line> GetItemLineByIdAsync(int id)
+        public virtual async Task<Item_Line?> GetItemLineByIdAsync(int id)
         {
             return await _context.Items_Lines.FirstOrDefaultAsync(il => il.Id == id);
         }
 
-        public async Task<Item_Line> GetItemLineByNameAsync(string name)
+        public virtual async Task<Item_Line?> GetItemLineByNameAsync(string name)
         {
             return await _context.Items_Lines.FirstOrDefaultAsync(il => il.Name == name);
         }
 
-        public async Task<Item_Line> AddItemLineAsync(Item_Line newItemLine)
+        public virtual async Task<Item_Line> AddItemLineAsync(Item_Line newItemLine)
         {
 
             DateTime CreatedAt = DateTime.UtcNow;
@@ -44,7 +44,7 @@ namespace CargohubV2.Services
             return newItemLine;
         }
 
-        public async Task<Item_Line> UpdateItemLineAsync(int id, Item_Line updatedItemLine)
+        public virtual async Task<Item_Line?> UpdateItemLineAsync(int id, Item_Line updatedItemLine)
         {
             var existingItemLine = await _context.Items_Lines.FindAsync(id);
 
@@ -64,7 +64,7 @@ namespace CargohubV2.Services
             return updatedItemLine;
         }
 
-        public async Task<bool> DeleteItemLineAsync(int id)
+        public virtual async Task<bool> DeleteItemLineAsync(int id)
         {
             var itemLine = await _context.Items_Lines.FindAsync(id);
 

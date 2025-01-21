@@ -22,9 +22,37 @@ builder.Services.AddScoped<LocationService>();
 builder.Services.AddScoped<InventoriesService>();
 builder.Services.AddScoped<ShipmentService>();
 builder.Services.AddScoped<OrderService>();
+builder.Services.AddScoped<ReportingService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v2", new() { Title = "CargoHub API V2", Version = "v1" });
+
+    c.AddSecurityDefinition("ApiKey", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Description = "API Key needed for full access",
+        Name = "API_KEY",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+    });
+
+    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "ApiKey"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 var app = builder.Build();
 if (args.Length > 0 && args[0] == "seed")
@@ -33,9 +61,15 @@ if (args.Length > 0 && args[0] == "seed")
 }
 
 app.UseAuthorization();
-
 app.UseMiddleware<ApiKeyMiddleware>();
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v2/swagger.json", "CargoHub API V2");
+    c.RoutePrefix = string.Empty;
+});
 
+app.MapSwagger();
 app.MapControllers();
 
 app.Run();
@@ -64,8 +98,10 @@ public class ApiKeyMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
+        // Check if the API_KEY header is provided
         if (!context.Request.Headers.TryGetValue(ApiKeyHeaderName, out var extractedApiKey))
         {
+            // Default to Employee behavior (GET only)
             if (context.Request.Method != HttpMethods.Get)
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -73,15 +109,24 @@ public class ApiKeyMiddleware
                 Console.WriteLine($"Unauthorized access attempt to {context.Request.Path}.");
                 return;
             }
+
+            context.Items["ApiProfile"] = "Employee";
         }
         else if (extractedApiKey != ValidApiKey)
         {
+            // Invalid API Key
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
             await context.Response.WriteAsync("Invalid API Key.");
             Console.WriteLine($"Forbidden access attempt to {context.Request.Path} with API Key: {extractedApiKey}");
             return;
         }
+        else
+        {
+            // Full access granted
+            context.Items["ApiProfile"] = "Developer";
+        }
 
+        // Proceed to the next middleware
         await _next(context);
     }
 }

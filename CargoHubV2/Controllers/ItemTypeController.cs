@@ -21,6 +21,10 @@ namespace CargohubV2.Controllers
         [HttpGet("byAmount/{amount}")]
         public async Task<ActionResult<IEnumerable<Item_Type>>> GetAllItemTypes(int amount)
         {
+            if (amount <= 0)
+            {
+                return BadRequest(new { Message = "Invalid amount. It must be a positive integer." });
+            }
             var itemTypes = await _itemTypeService.GetAllItemTypesAsync(amount);
             return Ok(itemTypes);
         }
@@ -29,6 +33,11 @@ namespace CargohubV2.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Item_Type>> GetItemTypeById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid itemtype ID. It must be a positive integer." });
+            }
+
             var itemType = await _itemTypeService.GetItemTypeByIdAsync(id);
 
             if (itemType == null)
@@ -71,6 +80,11 @@ namespace CargohubV2.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateItemType(int id, [FromBody] Item_Type itemType)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid itemtype ID. It must be a positive integer." });
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -88,6 +102,11 @@ namespace CargohubV2.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteItemType(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid itemtype ID. It must be a positive integer." });
+            }
+
             var success = await _itemTypeService.DeleteItemTypeAsync(id);
 
             if (!success)

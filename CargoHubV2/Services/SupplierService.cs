@@ -18,7 +18,7 @@ namespace CargohubV2.Services
         }
 
         // Ophalen van alle leveranciers (max 100)
-        public async Task<List<Supplier>> GetAllSuppliersAsync(int amount)
+        public virtual async Task<List<Supplier>> GetAllSuppliersAsync(int amount)
         {
             return await _context.Suppliers
                 .OrderBy(s => s.Id)
@@ -27,13 +27,13 @@ namespace CargohubV2.Services
         }
 
         // Ophalen van een leverancier via ID
-        public async Task<Supplier> GetSupplierByIdAsync(int id)
+        public virtual async Task<Supplier?> GetSupplierByIdAsync(int id)
         {
             return await _context.Suppliers.FirstOrDefaultAsync(s => s.Id == id);
         }
 
         // Zoeken op naam (like filter)
-        public async Task<List<Supplier>> SearchSuppliersByNameAsync(string name)
+        public virtual async Task<List<Supplier>> SearchSuppliersByNameAsync(string name)
         {
             return await _context.Suppliers
                 .Where(s => EF.Functions.ILike(s.Name, $"%{name}%")) // Like query, case-insensitive
@@ -41,7 +41,7 @@ namespace CargohubV2.Services
         }
 
         // Zoeken op stad (like filter)
-        public async Task<List<Supplier>> SearchSuppliersByCityAsync(string city)
+        public virtual async Task<List<Supplier>> SearchSuppliersByCityAsync(string city)
         {
             return await _context.Suppliers
                 .Where(s => EF.Functions.ILike(s.City, $"%{city}%")) // Like query, case-insensitive
@@ -49,7 +49,7 @@ namespace CargohubV2.Services
         }
 
         // Zoeken op land (like filter)
-        public async Task<List<Supplier>> SearchSuppliersByCountryAsync(string country)
+        public virtual async Task<List<Supplier>> SearchSuppliersByCountryAsync(string country)
         {
             return await _context.Suppliers
                 .Where(s => EF.Functions.ILike(s.Country, $"%{country}%")) // Like query, case-insensitive
@@ -57,7 +57,7 @@ namespace CargohubV2.Services
         }
 
         // Filteren op aanmaakdatums (tussen start- en einddatum)
-        public async Task<List<Supplier>> GetSuppliersByDateRangeAsync(DateTime startDate, DateTime endDate)
+        public virtual async Task<List<Supplier>> GetSuppliersByDateRangeAsync(DateTime startDate, DateTime endDate)
         {
             return await _context.Suppliers
                 .Where(s => s.CreatedAt >= startDate && s.CreatedAt <= endDate)
@@ -65,7 +65,7 @@ namespace CargohubV2.Services
         }
 
         // Controle op duplicaat leveranciers
-        public async Task<bool> CheckDuplicateSupplierAsync(Supplier supplier)
+        public virtual async Task<bool> CheckDuplicateSupplierAsync(Supplier supplier)
         {
             return await _context.Suppliers.AnyAsync(s =>
                 s.Name == supplier.Name &&
@@ -74,7 +74,7 @@ namespace CargohubV2.Services
         }
 
         // Verwijderen van meerdere leveranciers tegelijk
-        public async Task<bool> DeleteSuppliersBatchAsync(List<int> ids)
+        public virtual async Task<bool> DeleteSuppliersBatchAsync(List<int> ids)
         {
             var suppliers = await _context.Suppliers
                 .Where(s => ids.Contains(s.Id))
@@ -94,12 +94,12 @@ namespace CargohubV2.Services
         }
 
         // Ophalen van totaal aantal leveranciers
-        public async Task<int> GetSupplierCountAsync()
+        public virtual async Task<int> GetSupplierCountAsync()
         {
             return await _context.Suppliers.CountAsync();
         }
 
-        public async Task<Supplier> AddSupplierAsync(Supplier supplier)
+        public virtual async Task<Supplier> AddSupplierAsync(Supplier supplier)
         {
             _context.Suppliers.Add(supplier);
             await _context.SaveChangesAsync();

@@ -7,6 +7,7 @@ BASE_URL = "http://localhost:5000/api/Shipments"
 @pytest.fixture
 def headers():
     return {
+        "API_KEY": "cargohub123",
         "Content-Type": "application/json"
     }
 
@@ -45,7 +46,7 @@ def sample_shipment():
 # Test GetAllShipments
 @pytest.mark.asyncio
 def test_get_all_shipments(headers):
-    url = f"{BASE_URL}"
+    url = f"{BASE_URL}/byAmount/10"
     response = requests.get(url, headers=headers)
 
     assert response.status_code == 200

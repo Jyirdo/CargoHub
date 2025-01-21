@@ -16,29 +16,21 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Inventory>> GetAllInventoriesAsync(int amount)
+        public virtual async Task<List<Inventory>> GetAllInventoriesAsync(int amount)
         {
             return await _context.Inventories
-                .Include(i => i.Description)
-                .Include(i => i.Locations)
-                .Include(i => i.TotalOnHand)
-                .Include(i => i.TotalOrdered)
-                .OrderBy(i => i.Id) // Order by Id in ascending order
+                .OrderBy(i => i.Id)
                 .Take(amount)
                 .ToListAsync();
         }
 
-        public async Task<Inventory?> GetInventoriesByIdAsync(int id)
+        public virtual async Task<Inventory?> GetInventoriesByIdAsync(int id)
         {
             return await _context.Inventories
-                .Include(i => i.Description)
-                .Include(i => i.Locations)
-                .Include(i => i.TotalOnHand)
-                .Include(i => i.TotalOrdered)
                 .FirstOrDefaultAsync(i => i.Id == id);
         }
 
-        public async Task<Inventory> AddInventoryAsync(Inventory newInventory)
+        public virtual async Task<Inventory> AddInventoryAsync(Inventory newInventory)
         {
             // Get the latest ID
             var lastInventory = await _context.Inventories
@@ -66,7 +58,7 @@ namespace CargohubV2.Services
             return newInventory;
         }
 
-        public async Task<bool> UpdateInventoryAsync(int id, Inventory updatedInventory)
+        public virtual async Task<bool> UpdateInventoryAsync(int id, Inventory updatedInventory)
         {
             var existingInvenvotry = await _context.Inventories.FindAsync(id);
 
@@ -94,7 +86,7 @@ namespace CargohubV2.Services
             return true;
         }
 
-        public async Task<bool> RemoveInventoryAsync(int id)
+        public virtual async Task<bool> RemoveInventoryAsync(int id)
         {
             var inventory = await _context.Inventories.FindAsync(id);
 
