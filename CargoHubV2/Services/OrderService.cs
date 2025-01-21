@@ -16,7 +16,13 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public virtual async Task<List<Order>> GetAllOrdersAsync(int amount)
+        public async Task<List<Order>> GetAllAsync()
+        {
+            return await _context.Orders
+                .ToListAsync();
+        }
+
+        public async Task<List<Order>> GetAllOrdersAsync(int amount)
         {
             return await _context.Orders
                 .OrderBy(o => o.Id)

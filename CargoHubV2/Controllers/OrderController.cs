@@ -17,6 +17,13 @@ namespace CargohubV2.Controllers
             _orderService = orderService;
         }
 
+        [HttpGet()]
+        public async Task<ActionResult<IEnumerable<Order>>> GetAll()
+        {
+            var orders = await _orderService.GetAllAsync();
+            return Ok(orders);
+        }
+
         // GET: api/Orders
         [HttpGet("byAmount/{amount}")]
 
