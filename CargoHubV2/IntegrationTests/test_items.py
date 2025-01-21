@@ -43,7 +43,7 @@ def test_get_all_items(headers):
     assert isinstance(response.json(), list)
 
 
-# Test GetItemById
+# Test GetItemByIdd
 def test_get_item_by_id(headers):
     item_id = "test-uid"  
     url = f"{BASE_URL}/{item_id}"
