@@ -41,30 +41,11 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    - name: Start CargoHub Web Application
-      run: |
-        nohup dotnet run > output.log &
-      working-directory: CargoHubV2
-    
-    - name: Wait for ASP.NET application to start (health check)
-      run: |
-        echo "Waiting for ASP.NET application to start..."
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
 
-        for i in {1..120}; do  # Retry every 5 seconds, up to 20 times (10 minutes total)
-          if curl -s http://localhost:5000/api/ | grep "Healthy"; then
-            echo "ASP.NET application is healthyt!"
-            break
-          fi
-          echo "Still waiting for ASP.NET application... (Attempt $i)"
-          sleep 5
-        done
-
-        if ! curl -s http://localhost:5000/api/ | grep "Healthy"; then
-          echo "Error: ASP.NET application is not healthy!"
-          cat output.log
-          exit 1
-        fi
-
-    - name: Run Integration Tests
-      run: pytest
+    - name: Run Unit Tests
+      run: dotnet test
       working-directory: CargoHubTest 
