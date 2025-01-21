@@ -1,130 +1,200 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Moq;
-using Xunit;
-using CargohubV2.Controllers;
-using CargohubV2.Models;
+using CargohubV2;
+using CargohubV2.Contexts;
 using CargohubV2.Services;
+using CargohubV2.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
+using System.Threading.Tasks;
+using System;
 
-namespace CargohubV2.Tests
+namespace UnitTests
 {
-    public class ClientsControllerTests
+    [TestClass]
+    public class UnitTest_Client
     {
-        private readonly Mock<ClientsService> _mockService;
-        private readonly ClientsController _controller;
+        private CargoHubDbContext _dbContext;
+        private ClientsService _clientService;
+        public TestContext TestContext { get; set; }
 
-        public ClientsControllerTests()
+        [TestInitialize]
+        public void Setup()
         {
-            _mockService = new Mock<ClientsService>(null); // Mocked service
-            _controller = new ClientsController(_mockService.Object);
+            var options = new DbContextOptionsBuilder<CargoHubDbContext>()
+                .UseSqlite("DataSource=:memory:")  // Use SQLite in-memory database
+                .Options;
+
+            _dbContext = new CargoHubDbContext(options);
+            _clientService = new ClientsService(_dbContext);
+
+            // Open the connection so it can be used
+            _dbContext.Database.OpenConnection();
+            _dbContext.Database.EnsureCreated();  // Ensure the database is created
+
+            SeedDatabase(_dbContext);  // Seed the database with initial data
         }
 
-        [Fact]
-        public async Task GetAllClients_ReturnsOkResult_WithListOfClients()
+
+        private void SeedDatabase(CargoHubDbContext context)
         {
-            // Arrange
-            var mockClients = new List<Client> { new Client { Id = 1, Name = "Test Client" } };
-            _mockService.Setup(service => service.GetAllClientsAsync(10)).ReturnsAsync(mockClients);
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
 
-            // Act
-            var result = await _controller.GetAllClients(10);
+            context.Clients.AddRange(
+                new Client
+                {
+                    Name = "Vincent",
+                    Address = "123 Street A",
+                    City = "Oosterland",
+                    ZipCode = "12345",
+                    Province = "Zeeland",
+                    Country = "Netherlands",
+                    ContactName = "Contact A",
+                    ContactPhone = "1234567890",
+                    ContactEmail = "vincent@gmail.com",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                },
+                new Client
+                {
+                    Name = "Xander",
+                    Address = "456 Street B",
+                    City = "CityB",
+                    ZipCode = "67890",
+                    Province = "Kiev",
+                    Country = "Ukraine",
+                    ContactName = "Xandertje",
+                    ContactPhone = "011231231",
+                    ContactEmail = "xanderbos@gmail.com",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                },
+                new Client
+                {
+                    Name = "Nolan",
+                    Address = "456 Street B",
+                    City = "CityB",
+                    ZipCode = "67890",
+                    Province = "Groningen",
+                    Country = "Netherlands",
+                    ContactName = "Contact B",
+                    ContactPhone = "012312312",
+                    ContactEmail = "nolananimations@gmail.com",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                },
+                new Client
+                {
+                    Name = "Efraim",
+                    Address = "456 Street B",
+                    City = "Ridderkerk",
+                    ZipCode = "67890",
+                    Province = "Zuid-Holland",
+                    Country = "Netherlands",
+                    ContactName = "Efraimpie",
+                    ContactPhone = "031231231",
+                    ContactEmail = "efraimcreampie@gmail.com",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                }
+            );
 
-            // Assert
-            var okResult = Xunit.Assert.IsType<OkObjectResult>(result.Result);
-            var returnedClients = Xunit.Assert.IsType<List<Client>>(okResult.Value);
-            Xunit.Assert.Single(returnedClients);
+            context.SaveChanges();
         }
 
-        [Fact]
-        public async Task GetClientById_ValidId_ReturnsClient()
+        [TestMethod]
+        public async Task TestGetAllClients()
         {
-            // Arrange
-            var mockClient = new Client { Id = 1, Name = "Test Client" };
-            _mockService.Setup(service => service.GetClientByIdAsync(1)).ReturnsAsync(mockClient);
-
-            // Act
-            var result = await _controller.GetClientById(1);
-
-            // Assert
-            var okResult = Xunit.Assert.IsType<OkObjectResult>(result.Result);
-            var returnedClient = Xunit.Assert.IsType<Client>(okResult.Value);
-            Xunit.Assert.Equal(mockClient.Id, returnedClient.Id);
+            var clients = await _clientService.GetAllClientsAsync(10);
+            Assert.AreEqual(4, clients.Count);
         }
 
-        [Fact]
-        public async Task GetClientById_InvalidId_ReturnsBadRequest()
+        [TestMethod]
+        [DataRow(1, true)]
+        [DataRow(999, false)]
+        public async Task TestGetClientById(int clientId, bool exists)
         {
-            // Act
-            var result = await _controller.GetClientById(-1);
-
-            // Assert
-            var badRequestResult = Xunit.Assert.IsType<BadRequestObjectResult>(result.Result);
-            Xunit.Assert.Contains("Invalid client ID", badRequestResult.Value.ToString());
+            var client = await _clientService.GetClientByIdAsync(clientId);
+            Assert.AreEqual(exists, client != null);
         }
 
-        [Fact]
-        public async Task CreateClient_ValidClient_ReturnsCreatedAtAction()
+        [TestMethod]
+        public async Task TestAddClient()
         {
-            // Arrange
-            var newClient = new Client { Id = 1, ContactEmail = "test@example.com" };
-            _mockService.Setup(service => service.GetClientByEmailAsync(newClient.ContactEmail)).ReturnsAsync((Client?)null);
-            _mockService.Setup(service => service.CreateClientAsync(newClient)).ReturnsAsync(newClient);
+            var client = new Client
+            {
+                Name = "Raymond Inc",
+                Address = "1296 Daniel Road Apt. 349",
+                City = "Pierceview",
+                ZipCode = "28301",
+                Province = "Colorado",
+                Country = "United States",
+                ContactName = "Bryan Clark",
+                ContactPhone = "242.732.3483x2573",
+                ContactEmail = "robertcharles@example.net"
+            };
 
-            // Act
-            var result = await _controller.CreateClient(newClient);
+            var newClient = await _clientService.CreateClientAsync(client);
 
-            // Assert
-            var createdAtActionResult = Xunit.Assert.IsType<CreatedAtActionResult>(result);
-            var returnedClient = Xunit.Assert.IsType<Client>(createdAtActionResult.Value);
-            Xunit.Assert.Equal(newClient.Id, returnedClient.Id);
+            Assert.IsNotNull(newClient);
+            Assert.AreEqual(5, (await _clientService.GetAllClientsAsync(10)).Count);
         }
 
-        [Fact]
-        public async Task CreateClient_DuplicateEmail_ReturnsBadRequest()
+        [TestMethod]
+        [DataRow("vincent@gmail.com", false)]
+        [DataRow("newclient@example.com", true)]
+        [DataRow("xanderbos@gmail.com", false)]
+        [DataRow("uniqueemail123@example.com", true)]
+        public async Task TestClientEmailDuplicateCheck(string email, bool expectedResult)
         {
-            // Arrange
-            var existingClient = new Client { Id = 1, ContactEmail = "test@example.com" };
-            _mockService.Setup(service => service.GetClientByEmailAsync(existingClient.ContactEmail)).ReturnsAsync(existingClient);
-
-            // Act
-            var result = await _controller.CreateClient(existingClient);
-
-            // Assert
-            var badRequestResult = Xunit.Assert.IsType<BadRequestObjectResult>(result);
-            Xunit.Assert.Contains("Client already exists", badRequestResult.Value.ToString());
+            var isEmailUnique = await _clientService.GetClientByEmailAsync(email) == null;
+            Assert.AreEqual(expectedResult, isEmailUnique);
         }
 
-        [Fact]
-        public async Task UpdateClient_ValidId_ReturnsUpdatedClient()
+        [TestMethod]
+        [DataRow(1, "Updated Name", true)]
+        [DataRow(999, "Nonexistent", false)]
+        public async Task TestUpdateClient(int clientId, string updatedName, bool expectedResult)
         {
-            // Arrange
-            var updatedClient = new Client { Id = 1, Name = "Updated Name" };
-            _mockService.Setup(service => service.UpdateClientAsync(updatedClient, 1)).ReturnsAsync(updatedClient);
+            var client = new Client
+            {
+                Name = updatedName,
+                Address = "Updated Address",
+                City = "Updated City",
+                ZipCode = "00000",
+                Province = "Updated Province",
+                Country = "Updated Country",
+                ContactName = "Updated Contact",
+                ContactPhone = "0000000000",
+                ContactEmail = "updated@example.com"
+            };
 
-            // Act
-            var result = await _controller.UpdateClient(1, updatedClient);
+            var updatedClient = await _clientService.UpdateClientAsync(client, clientId);
 
-            // Assert
-            var okResult = Xunit.Assert.IsType<OkObjectResult>(result);
-            var returnedClient = Xunit.Assert.IsType<Client>(okResult.Value);
-            Xunit.Assert.Equal(updatedClient.Name, returnedClient.Name);
+            if (expectedResult)
+            {
+                Assert.IsNotNull(updatedClient);
+                Assert.AreEqual(updatedName, updatedClient.Name);
+            }
+            else
+            {
+                Assert.IsNull(updatedClient);
+            }
         }
 
-        [Fact]
-        public async Task RemoveClientById_ValidId_ReturnsSuccessMessage()
+        [TestMethod]
+        [DataRow(1, true)]
+        [DataRow(999, false)]
+        public async Task TestDeleteClient(int clientId, bool expectedResult)
         {
-            // Arrange
-            var mockClient = new Client { Id = 1 };
-            _mockService.Setup(service => service.RemoveClientByIdAsync(1)).ReturnsAsync(mockClient);
+            var result = await _clientService.RemoveClientByIdAsync(clientId);
+            Assert.AreEqual(expectedResult, result != null);
 
-            // Act
-            var result = await _controller.RemoveClientById(1);
-
-            // Assert
-            var okResult = Xunit.Assert.IsType<OkObjectResult>(result);
-            Xunit.Assert.Contains("Client deleted successfully", okResult.Value.ToString());
+            if (result != null)
+            {
+                var client = await _clientService.GetClientByIdAsync(clientId);
+                Assert.IsTrue(client.IsDeleted);
+            }
         }
     }
 }

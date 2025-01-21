@@ -120,8 +120,36 @@ def test_get_items_by_supplier(headers):
         if response.json():
             assert isinstance(response.json()[0], dict)
 
-# Test UpdateItem
+# Test Populate weight
+def test_populate_weight_in_kg(headers):
+    url = f"{BASE_URL}/PopulateWeightInKg"  # Endpoint for populating WeightInKg column
 
+    # Make the request
+    response = requests.post(url, headers=headers)
+
+    # Log response for debugging
+    print(f"Response Status: {response.status_code}")
+    print(f"Response Text: {response.text}")
+
+    # Assert response
+    assert response.status_code == 200, f"Unexpected status code: {response.status_code}"
+    assert response.text == '"WeightInKg column populated with random values."', "Unexpected response text"
+
+    # Verify the WeightInKg values are populated
+    get_url = f"{BASE_URL}/byAmount/10"
+    get_response = requests.get(get_url, headers=headers)
+
+    assert get_response.status_code == 200, "Failed to retrieve items"
+    items = get_response.json()
+
+    # Ensure all items have a populated WeightInKg value
+    for item in items:
+        assert "weight_in_kg" in item, "WeightInKg is missing in the item"
+        assert isinstance(item["weight_in_kg"], int), "WeightInKg is not an integer"
+
+
+
+# Test UpdateItem
 
 @pytest.mark.asyncio
 def test_update_item(headers, sample_item):

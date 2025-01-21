@@ -38,7 +38,7 @@ namespace CargohubV2.Controllers
             var shipment = await _shipmentService.GetShipmentByIdAsync(shipmentId);
             if (shipment == null)
             {
-                return NotFound();
+                return NotFound(new { Message = $"Shipment with ID {shipmentId} not found." });
             }
             return Ok(shipment);
         }
@@ -51,12 +51,25 @@ namespace CargohubV2.Controllers
                 return BadRequest(new { Message = "Invalid shipment ID. It must be a positive integer." });
             }
             var items = await _shipmentService.GetItemsInShipmentAsync(shipmentId);
+            if (items == null || !items.Any())
+            {
+                return NotFound(new { Message = $"No items found for shipment ID {shipmentId}." });
+            }
             return Ok(items);
         }
 
         [HttpPost("Add")]
         public async Task<IActionResult> AddShipment([FromBody] Shipment newShipment)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var existingShipment = await _shipmentService.GetShipmentByIdAsync(newShipment.Id);
+            if (existingShipment != null)
+            {
+                return BadRequest("Shipment already exists");
+            }
             var createdShipment = await _shipmentService.AddShipmentAsync(newShipment);
             return CreatedAtAction(nameof(GetShipmentById), new { shipmentId = createdShipment.Id }, createdShipment);
         }
