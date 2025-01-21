@@ -70,5 +70,5 @@ jobs:
       working-directory: CargoHubV2
 
     - name: Run Integratie Tests
-      run: dotnet test
+      run: pytest
       working-directory: CargoHubV2
