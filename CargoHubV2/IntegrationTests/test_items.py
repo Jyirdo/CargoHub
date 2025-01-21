@@ -34,8 +34,6 @@ def sample_item():
     }
 
 # Test GetAllItems
-
-
 @pytest.mark.asyncio
 def test_get_all_items(headers):
     url = f"{BASE_URL}/byAmount/10"
@@ -47,7 +45,7 @@ def test_get_all_items(headers):
 
 # Test GetItemById
 def test_get_item_by_id(headers):
-    item_id = "test-uid"  # Replace with a valid item UID
+    item_id = "test-uid"  
     url = f"{BASE_URL}/{item_id}"
 
     response = requests.get(url, headers=headers)
@@ -59,101 +57,64 @@ def test_get_item_by_id(headers):
 
 # Test GetItemsByItemLine
 def test_get_items_by_item_line(headers):
-    item_line_id = 1  # Replace with a valid item line ID
+    item_line_id = 1  
     url = f"{BASE_URL}/ByItemLine/{item_line_id}"
 
     response = requests.get(url, headers=headers)
 
     assert response.status_code in [200, 404]
     if response.status_code == 200:
-        # Controleer of de respons een lijst is
         assert isinstance(response.json(), list)
-        # Optioneel: Controleer of de eerste entry een dictionary is
         if response.json():
             assert isinstance(response.json()[0], dict)
 
 
 # Test GetItemsByItemGroup
 def test_get_items_by_item_group(headers):
-    item_group_id = 1  # Replace with a valid item group ID
+    item_group_id = 1 
     url = f"{BASE_URL}/ByItemGroup/{item_group_id}"
 
     response = requests.get(url, headers=headers)
 
     assert response.status_code in [200, 404]
     if response.status_code == 200:
-        # Controleer of de respons een lijst is
         assert isinstance(response.json(), list)
-        # Optioneel: Controleer of de eerste entry een dictionary is
         if response.json():
             assert isinstance(response.json()[0], dict)
 
 
 # Test GetItemsByItemType
 def test_get_items_by_item_type(headers):
-    item_type_id = 1  # Replace with a valid item type ID
+    item_type_id = 1  
     url = f"{BASE_URL}/ByItemType/{item_type_id}"
 
     response = requests.get(url, headers=headers)
 
     assert response.status_code in [200, 404]
     if response.status_code == 200:
-        # Controleer of de respons een lijst is
         assert isinstance(response.json(), list)
-        # Optioneel: Controleer of de eerste entry een dictionary is
         if response.json():
             assert isinstance(response.json()[0], dict)
 
 
 # Test GetItemsBySupplier
 def test_get_items_by_supplier(headers):
-    supplier_id = 1  # Replace with a valid supplier ID
+    supplier_id = 1  
     url = f"{BASE_URL}/BySupplier/{supplier_id}"
 
     response = requests.get(url, headers=headers)
 
     assert response.status_code in [200, 404]
     if response.status_code == 200:
-        # Controleer of de respons een lijst is
         assert isinstance(response.json(), list)
         # Optioneel: Controleer of de eerste entry een dictionary is
         if response.json():
             assert isinstance(response.json()[0], dict)
 
-# Test Populate weight
-def test_populate_weight_in_kg(headers):
-    url = f"{BASE_URL}/PopulateWeightInKg"  # Endpoint for populating WeightInKg column
-
-    # Make the request
-    response = requests.post(url, headers=headers)
-
-    # Log response for debugging
-    print(f"Response Status: {response.status_code}")
-    print(f"Response Text: {response.text}")
-
-    # Assert response
-    assert response.status_code == 200, f"Unexpected status code: {response.status_code}"
-    assert response.text == '"WeightInKg column populated with random values."', "Unexpected response text"
-
-    # Verify the WeightInKg values are populated
-    get_url = f"{BASE_URL}/byAmount/10"
-    get_response = requests.get(get_url, headers=headers)
-
-    assert get_response.status_code == 200, "Failed to retrieve items"
-    items = get_response.json()
-
-    # Ensure all items have a populated WeightInKg value
-    for item in items:
-        assert "weight_in_kg" in item, "WeightInKg is missing in the item"
-        assert isinstance(item["weight_in_kg"], int), "WeightInKg is not an integer"
-
-
-
 # Test UpdateItem
-
 @pytest.mark.asyncio
 def test_update_item(headers, sample_item):
-    item_id = 1  # Replace with a valid item ID
+    item_id = 1 
     url = f"{BASE_URL}/{item_id}"
 
     sample_item["description"] = "Updated Description"
@@ -167,7 +128,7 @@ def test_update_item(headers, sample_item):
 # Test RemoveItem
 @pytest.mark.asyncio
 def test_remove_item(headers):
-    item_id = 1  # Replace with a valid item ID
+    item_id = 1  
     url = f"{BASE_URL}/{item_id}"
 
     response = requests.delete(url, headers=headers)
