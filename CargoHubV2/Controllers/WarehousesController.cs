@@ -17,16 +17,24 @@ namespace CargohubV2.Controllers
             _warehouseService = warehouseService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Warehouse>>> GetAllWarehouses()
+        [HttpGet("byAmount/{amount}")]
+        public async Task<ActionResult<IEnumerable<Warehouse>>> GetAllWarehouses(int amount)
         {
-            var warehouses = await _warehouseService.GetAllWarehousesAsync();
+            if (amount <= 0)
+            {
+                return BadRequest(new { Message = "Invalid amount. It must be a positive integer." });
+            }
+            var warehouses = await _warehouseService.GetAllWarehousesAsync(amount);
             return Ok(warehouses);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Warehouse>> GetWarehouseById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid warehouse ID. It must be a positive integer." });
+            }
             var warehouse = await _warehouseService.GetWarehouseByIdAsync(id);
             if (warehouse == null) return NotFound($"Warehouse with ID {id} not found.");
             return Ok(warehouse);
@@ -51,6 +59,10 @@ namespace CargohubV2.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateWarehouse(int id, [FromBody] Warehouse warehouse)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid warehouse ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var updatedWarehouse = await _warehouseService.UpdateWarehouseAsync(id, warehouse);
@@ -62,10 +74,14 @@ namespace CargohubV2.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteWarehouseById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid warehouse ID. It must be a positive integer." });
+            }
             var deleted = await _warehouseService.DeleteWarehouseByIdAsync(id);
             if (!deleted) return NotFound($"Warehouse with ID {id} not found.");
 
-            return NoContent();
+            return Ok("Warehouse deleted successfully");
         }
     }
 }

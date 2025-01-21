@@ -23,7 +23,7 @@ namespace CargohubV2.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Cargohub_V2.Models.Client", b =>
+            modelBuilder.Entity("CargohubV2.Models.Client", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -52,6 +52,9 @@ namespace CargohubV2.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
@@ -69,7 +72,7 @@ namespace CargohubV2.Migrations
                     b.ToTable("Clients");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.Inventory", b =>
+            modelBuilder.Entity("CargohubV2.Models.Inventory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -82,6 +85,9 @@ namespace CargohubV2.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("ItemId")
                         .HasColumnType("text");
@@ -115,7 +121,7 @@ namespace CargohubV2.Migrations
                     b.ToTable("Inventories");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.Item", b =>
+            modelBuilder.Entity("CargohubV2.Models.Item", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -134,6 +140,9 @@ namespace CargohubV2.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<int?>("ItemGroupId")
                         .HasColumnType("integer");
@@ -177,6 +186,9 @@ namespace CargohubV2.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("WeightInKg")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ItemGroupId");
@@ -190,7 +202,7 @@ namespace CargohubV2.Migrations
                     b.ToTable("Items");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.Item_Group", b =>
+            modelBuilder.Entity("CargohubV2.Models.Item_Group", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -204,6 +216,9 @@ namespace CargohubV2.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -217,7 +232,7 @@ namespace CargohubV2.Migrations
                     b.ToTable("Items_Groups");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.Item_Line", b =>
+            modelBuilder.Entity("CargohubV2.Models.Item_Line", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -231,6 +246,9 @@ namespace CargohubV2.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -244,7 +262,7 @@ namespace CargohubV2.Migrations
                     b.ToTable("Items_Lines");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.Item_Type", b =>
+            modelBuilder.Entity("CargohubV2.Models.Item_Type", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -259,6 +277,9 @@ namespace CargohubV2.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -271,7 +292,7 @@ namespace CargohubV2.Migrations
                     b.ToTable("Items_Types");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.Location", b =>
+            modelBuilder.Entity("CargohubV2.Models.Location", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -284,6 +305,9 @@ namespace CargohubV2.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -299,7 +323,7 @@ namespace CargohubV2.Migrations
                     b.ToTable("Locations");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.Order", b =>
+            modelBuilder.Entity("CargohubV2.Models.Order", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -312,6 +336,9 @@ namespace CargohubV2.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Notes")
                         .HasColumnType("text");
@@ -369,7 +396,7 @@ namespace CargohubV2.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.Shipment", b =>
+            modelBuilder.Entity("CargohubV2.Models.Shipment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -385,6 +412,9 @@ namespace CargohubV2.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Notes")
                         .HasColumnType("text");
@@ -433,7 +463,7 @@ namespace CargohubV2.Migrations
                     b.ToTable("Shipments");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.Stock", b =>
+            modelBuilder.Entity("CargohubV2.Models.Stock", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -461,7 +491,7 @@ namespace CargohubV2.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.Supplier", b =>
+            modelBuilder.Entity("CargohubV2.Models.Supplier", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -490,6 +520,9 @@ namespace CargohubV2.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
@@ -513,7 +546,7 @@ namespace CargohubV2.Migrations
                     b.ToTable("Suppliers");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.Transfer", b =>
+            modelBuilder.Entity("CargohubV2.Models.Transfer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -523,6 +556,9 @@ namespace CargohubV2.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Reference")
                         .HasColumnType("text");
@@ -544,7 +580,7 @@ namespace CargohubV2.Migrations
                     b.ToTable("Transfers");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.Warehouse", b =>
+            modelBuilder.Entity("CargohubV2.Models.Warehouse", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -567,6 +603,9 @@ namespace CargohubV2.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
@@ -584,9 +623,9 @@ namespace CargohubV2.Migrations
                     b.ToTable("Warehouses");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.OrderStock", b =>
+            modelBuilder.Entity("CargohubV2.Models.OrderStock", b =>
                 {
-                    b.HasBaseType("Cargohub_V2.Models.Stock");
+                    b.HasBaseType("CargohubV2.Models.Stock");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("integer");
@@ -596,9 +635,9 @@ namespace CargohubV2.Migrations
                     b.HasDiscriminator().HasValue("Order");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.ShipmentStock", b =>
+            modelBuilder.Entity("CargohubV2.Models.ShipmentStock", b =>
                 {
-                    b.HasBaseType("Cargohub_V2.Models.Stock");
+                    b.HasBaseType("CargohubV2.Models.Stock");
 
                     b.Property<int>("ShipmentId")
                         .HasColumnType("integer");
@@ -608,9 +647,9 @@ namespace CargohubV2.Migrations
                     b.HasDiscriminator().HasValue("Shipment");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.TransferStock", b =>
+            modelBuilder.Entity("CargohubV2.Models.TransferStock", b =>
                 {
-                    b.HasBaseType("Cargohub_V2.Models.Stock");
+                    b.HasBaseType("CargohubV2.Models.Stock");
 
                     b.Property<int>("TransferId")
                         .HasColumnType("integer");
@@ -620,21 +659,21 @@ namespace CargohubV2.Migrations
                     b.HasDiscriminator().HasValue("Transfer");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.Item", b =>
+            modelBuilder.Entity("CargohubV2.Models.Item", b =>
                 {
-                    b.HasOne("Cargohub_V2.Models.Item_Group", "ItemGroup")
+                    b.HasOne("CargohubV2.Models.Item_Group", "ItemGroup")
                         .WithMany()
                         .HasForeignKey("ItemGroupId");
 
-                    b.HasOne("Cargohub_V2.Models.Item_Line", "ItemLine")
+                    b.HasOne("CargohubV2.Models.Item_Line", "ItemLine")
                         .WithMany()
                         .HasForeignKey("ItemLineId");
 
-                    b.HasOne("Cargohub_V2.Models.Item_Type", "ItemType")
+                    b.HasOne("CargohubV2.Models.Item_Type", "ItemType")
                         .WithMany()
                         .HasForeignKey("ItemTypeId");
 
-                    b.HasOne("Cargohub_V2.Models.Supplier", "Supplier")
+                    b.HasOne("CargohubV2.Models.Supplier", "Supplier")
                         .WithMany()
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -649,9 +688,9 @@ namespace CargohubV2.Migrations
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.Warehouse", b =>
+            modelBuilder.Entity("CargohubV2.Models.Warehouse", b =>
                 {
-                    b.OwnsOne("Cargohub_V2.Models.Contact", "Contact", b1 =>
+                    b.OwnsOne("CargohubV2.Models.Contact", "Contact", b1 =>
                         {
                             b1.Property<int>("WarehouseId")
                                 .HasColumnType("integer");
@@ -680,9 +719,9 @@ namespace CargohubV2.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.OrderStock", b =>
+            modelBuilder.Entity("CargohubV2.Models.OrderStock", b =>
                 {
-                    b.HasOne("Cargohub_V2.Models.Order", "Order")
+                    b.HasOne("CargohubV2.Models.Order", "Order")
                         .WithMany("Stocks")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -691,9 +730,9 @@ namespace CargohubV2.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.ShipmentStock", b =>
+            modelBuilder.Entity("CargohubV2.Models.ShipmentStock", b =>
                 {
-                    b.HasOne("Cargohub_V2.Models.Shipment", "Shipment")
+                    b.HasOne("CargohubV2.Models.Shipment", "Shipment")
                         .WithMany("Stocks")
                         .HasForeignKey("ShipmentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -702,9 +741,9 @@ namespace CargohubV2.Migrations
                     b.Navigation("Shipment");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.TransferStock", b =>
+            modelBuilder.Entity("CargohubV2.Models.TransferStock", b =>
                 {
-                    b.HasOne("Cargohub_V2.Models.Transfer", "Transfer")
+                    b.HasOne("CargohubV2.Models.Transfer", "Transfer")
                         .WithMany("Stocks")
                         .HasForeignKey("TransferId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -713,17 +752,17 @@ namespace CargohubV2.Migrations
                     b.Navigation("Transfer");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.Order", b =>
+            modelBuilder.Entity("CargohubV2.Models.Order", b =>
                 {
                     b.Navigation("Stocks");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.Shipment", b =>
+            modelBuilder.Entity("CargohubV2.Models.Shipment", b =>
                 {
                     b.Navigation("Stocks");
                 });
 
-            modelBuilder.Entity("Cargohub_V2.Models.Transfer", b =>
+            modelBuilder.Entity("CargohubV2.Models.Transfer", b =>
                 {
                     b.Navigation("Stocks");
                 });

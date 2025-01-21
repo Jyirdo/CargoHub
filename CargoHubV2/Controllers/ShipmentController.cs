@@ -17,10 +17,14 @@ namespace CargohubV2.Controllers
             _shipmentService = shipmentService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<Shipment>>> GetAllShipments()
+        [HttpGet("byAmount/{amount}")]
+        public async Task<ActionResult<IEnumerable<Shipment>>> GetAllShipmentsByAmount(int amount)
         {
-            var shipments = await _shipmentService.GetAllShipmentsAsync();
+            if (amount <= 0)
+            {
+                return BadRequest(new { Message = "Invalid amount. It must be a positive integer." });
+            }
+            var shipments = await _shipmentService.GetAllShipmentsByAmountAsync(amount);
             return Ok(shipments);
         }
 
@@ -73,6 +77,10 @@ namespace CargohubV2.Controllers
         [HttpPut("{shipmentId}")]
         public async Task<IActionResult> UpdateShipment(int shipmentId, [FromBody] Shipment updatedShipment)
         {
+            if (shipmentId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid shipment ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -88,6 +96,10 @@ namespace CargohubV2.Controllers
         [HttpPut("{shipmentId}/items")]
         public async Task<IActionResult> UpdateItemsInShipment(int shipmentId, [FromBody] List<ShipmentStock> updatedItems)
         {
+            if (shipmentId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid shipment ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -103,6 +115,10 @@ namespace CargohubV2.Controllers
         [HttpDelete("{shipmentId}")]
         public async Task<IActionResult> RemoveShipment(int shipmentId)
         {
+            if (shipmentId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid shipment ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -112,7 +128,7 @@ namespace CargohubV2.Controllers
             {
                 return NoContent();
             }
-            return Ok(shipment);
+            return Ok("Shipment deleted successfully");
         }
     }
 }

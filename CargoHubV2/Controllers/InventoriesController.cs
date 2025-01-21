@@ -19,10 +19,14 @@ namespace CargohubV2.Controllers
         }
 
         // GET: api/inventories
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Inventory>>> GetAllInventories()
+        [HttpGet("byAmount/{amount}")]
+        public async Task<ActionResult<IEnumerable<Inventory>>> GetAllInventories(int amount)
         {
-            var inventories = await _inventoriesService.GetAllInventoriesAsync();
+            if (amount <= 0)
+            {
+                return BadRequest(new { Message = "Invalid amount. It must be a positive integer." });
+            }
+            var inventories = await _inventoriesService.GetAllInventoriesAsync(amount);
             return Ok(inventories);
         }
 
@@ -30,6 +34,11 @@ namespace CargohubV2.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Inventory>> GetInventoryById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid inventory ID. It must be a positive integer." });
+            }
+
             var inventory = await _inventoriesService.GetInventoriesByIdAsync(id);
 
             if (inventory == null)
@@ -60,6 +69,11 @@ namespace CargohubV2.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateInventory(int id, [FromBody] Inventory updatedInventory)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid inventory ID. It must be a positive integer." });
+            }
+
             if (id != updatedInventory.Id)
             {
                 return BadRequest(new { Message = "ID in the URL does not match the ID in the payload." });
@@ -79,14 +93,18 @@ namespace CargohubV2.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveInventory(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid inventory ID. It must be a positive integer." });
+            }
+            
             var success = await _inventoriesService.RemoveInventoryAsync(id);
 
             if (!success)
             {
                 return NotFound(new { Message = $"Inventory with ID {id} not found." });
             }
-
-            return NoContent();
+            return Ok("Inventory deleted successfully");
         }
     }
 }

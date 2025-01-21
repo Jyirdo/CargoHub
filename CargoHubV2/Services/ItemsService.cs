@@ -16,7 +16,7 @@ namespace CargohubV2.Services
             _context = context;
         }
 
-        public async Task<List<Item>> GetAllItemsAsync(int amount)
+        public virtual async Task<List<Item>> GetAllItemsAsync(int amount)
         {
             return await _context.Items
                 .Include(i => i.ItemLine)
@@ -24,12 +24,12 @@ namespace CargohubV2.Services
                 .Include(i => i.ItemType)
                 .Include(i => i.Supplier)
                 .OrderBy(i => i.Id) // Order by Id in ascending order
-                .Take(10)
+                .Take(amount)
                 .ToListAsync();
         }
 
 
-        public async Task<Item?> GetItemByUidAsync(string uid)
+        public virtual async Task<Item?> GetItemByUidAsync(string uid)
         {
             return await _context.Items
                 .Include(i => i.ItemLine)
@@ -38,7 +38,7 @@ namespace CargohubV2.Services
                 .Include(i => i.Supplier)
                 .FirstOrDefaultAsync(i => i.UId == uid);
         }
-        public async Task<Item?> GetItemsByItemLineAsync(int itemLineId)
+        public virtual async Task<Item?> GetItemsByItemLineAsync(int itemLineId)
         {
             return await _context.Items
                 .Include(i => i.ItemLine)
@@ -49,7 +49,7 @@ namespace CargohubV2.Services
             // .ToListAsync();
         }
 
-        public async Task<Item?> GetItemsByItemGroupAsync(int itemGroupId)
+        public virtual async Task<Item?> GetItemsByItemGroupAsync(int itemGroupId)
         {
             return await _context.Items
                 .Include(i => i.ItemGroup)
@@ -60,7 +60,7 @@ namespace CargohubV2.Services
             // .ToListAsync();
         }
 
-        public async Task<Item?> GetItemsByItemTypeAsync(int itemTypeId)
+        public virtual async Task<Item?> GetItemsByItemTypeAsync(int itemTypeId)
         {
             return await _context.Items
             .Include(i => i.ItemType)
@@ -70,46 +70,14 @@ namespace CargohubV2.Services
             // .ToListAsync();
         }
 
-        public async Task<Item?> GetItemsBySupplierAsync(int supplierId)
+        public virtual async Task<Item?> GetItemsBySupplierAsync(int supplierId)
         {
             return await _context.Items
                 .Include(i => i.Supplier)
                 .FirstOrDefaultAsync(i => i.Supplier.Id == supplierId);
         }
 
-        public async Task<Item> AddItemAsync(Item newItem)
-        {
-            // Get the latest UID
-            var lastItem = await _context.Items
-                .OrderByDescending(i => i.UId)
-                .FirstOrDefaultAsync();
-
-            // Generate UID (increment from last UID)
-            if (lastItem != null)
-            {
-                var lastUidNumericPart = int.Parse(lastItem.UId.Substring(1)); // Remove 'P' and parse number
-                newItem.UId = $"P{lastUidNumericPart + 1:D6}"; // Increment and format as P###### (e.g., P000002)
-            }
-            else
-            {
-                newItem.UId = "P000001"; // First UID
-            }
-
-            // Generate Code (random alphanumeric string)
-            newItem.Code = GenerateUniqueCode();
-
-            DateTime CreatedAt = DateTime.UtcNow;
-            DateTime UpdatedAt = DateTime.UtcNow;
-
-            newItem.CreatedAt = new DateTime(CreatedAt.Year, CreatedAt.Month, CreatedAt.Day, CreatedAt.Hour, CreatedAt.Minute, CreatedAt.Second, DateTimeKind.Utc);
-            newItem.UpdatedAt = new DateTime(UpdatedAt.Year, UpdatedAt.Month, UpdatedAt.Day, UpdatedAt.Hour, UpdatedAt.Minute, UpdatedAt.Second, DateTimeKind.Utc);
-
-            _context.Items.Add(newItem);
-            await _context.SaveChangesAsync();
-            return newItem;
-        }
-
-        public async Task<bool> UpdateItemAsync(int id, Item updatedItem)
+        public virtual async Task<bool> UpdateItemAsync(int id, Item updatedItem)
         {
             var existingItem = await _context.Items.FindAsync(id);
 
@@ -141,7 +109,7 @@ namespace CargohubV2.Services
             return true;
         }
 
-        public async Task<bool> RemoveItemAsync(int id)
+        public virtual async Task<bool> RemoveItemAsync(int id)
         {
             var item = await _context.Items.FindAsync(id);
 
@@ -150,17 +118,22 @@ namespace CargohubV2.Services
                 return false;
             }
 
-            _context.Items.Remove(item);
+            item.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }
 
-
-        private string GenerateUniqueCode()
+        public async Task PopulateWeightInKgAsync()
         {
             var random = new Random();
-            const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Range(0, 9).Select(_ => chars[random.Next(chars.Length)]).ToArray());
+
+            var items = await _context.Items.ToListAsync();
+            foreach (var item in items)
+            {
+                item.WeightInKg = random.Next(1, 100);
+            }
+
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -39,6 +39,8 @@ namespace CargohubV2.Models
         [JsonProperty("updated_at")]
         [JsonConverter(typeof(FlexibleDateTimeConverter))]
         public DateTime UpdatedAt { get; set; }
+        public bool IsDeleted { get; set; } = false;
+
     }
 
     public class Contact

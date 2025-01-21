@@ -18,10 +18,14 @@ namespace CargohubV2.Controllers
         }
 
         // Get all transfers
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Transfer>>> GetAllTransfers()
+        [HttpGet("byAmount/{amount}")]
+        public async Task<ActionResult<IEnumerable<Transfer>>> GetAllTransfers(int amount)
         {
-            var transfers = await _transferService.GetAllTransfersAsync();
+            if (amount <= 0)
+            {
+                return BadRequest(new { Message = "Invalid amount. It must be a positive integer." });
+            }
+            var transfers = await _transferService.GetAllTransfersAsync(amount);
             return Ok(transfers);
         }
 
@@ -29,6 +33,10 @@ namespace CargohubV2.Controllers
         [HttpGet("Status/{id}")]
         public async Task<ActionResult> GetTransferStatusById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid  transfer ID. It must be a positive integer." });
+            }
             var transfer = await _transferService.GetTransferByIdAsync(id);
             if (transfer == null)
                 return NotFound(new { Message = $"Transfer with ID {id} not found." });
@@ -41,6 +49,10 @@ namespace CargohubV2.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Transfer>> GetTransferById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid transfer ID. It must be a positive integer." });
+            }
             var transfer = await _transferService.GetTransferByIdAsync(id);
             if (transfer == null) return NotFound($"Transfer with ID {id} not found.");
             return Ok(transfer);
@@ -68,6 +80,10 @@ namespace CargohubV2.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTransfer(int id, [FromBody] Transfer transfer)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid transfer ID. It must be a positive integer." });
+            }
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var updatedTransfer = await _transferService.UpdateTransferAsync(id, transfer);
@@ -80,10 +96,14 @@ namespace CargohubV2.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTransferById(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new { Message = "Invalid transfer ID. It must be a positive integer." });
+            }
             var deleted = await _transferService.DeleteTransferByIdAsync(id);
             if (!deleted) return NotFound($"Transfer with ID {id} not found.");
 
-            return NoContent();
+            return Ok("Transfer deleted successfully");
         }
 
         // Delete transfers by status
