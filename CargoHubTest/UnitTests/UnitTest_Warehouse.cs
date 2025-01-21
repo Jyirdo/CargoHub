@@ -6,7 +6,6 @@ using Xunit;
 using CargohubV2.Controllers;
 using CargohubV2.Models;
 using CargohubV2.Services;
-using CargohubV2.Contexts; // Zorg dat dit aanwezig is
 
 namespace CargohubV2.Tests
 {
@@ -17,18 +16,17 @@ namespace CargohubV2.Tests
 
         public WarehousesControllerTests()
         {
-            _mockService = new Mock<WarehouseService>();
+            _mockService = new Mock<WarehouseService>(null); // Mocked service
             _controller = new WarehousesController(_mockService.Object);
         }
 
         [Fact]
-        public async Task GetAllWarehouses_ValidAmount_ReturnsOkResultWithListOfWarehouses()
+        public async Task GetAllWarehouses_ValidAmount_ReturnsOkResultWithWarehouses()
         {
             // Arrange
-            var mockWarehouses = new List<Warehouse>
-            {
-                new Warehouse { Id = 1, Name = "Warehouse 1" },
-                new Warehouse { Id = 2, Name = "Warehouse 2" }
+            var mockWarehouses = new List<Warehouse> 
+            { 
+                new Warehouse { Id = 1, Name = "Warehouse A" } 
             };
             _mockService.Setup(service => service.GetAllWarehousesAsync(5)).ReturnsAsync(mockWarehouses);
 
@@ -38,25 +36,14 @@ namespace CargohubV2.Tests
             // Assert
             var okResult = Xunit.Assert.IsType<OkObjectResult>(result.Result);
             var returnedWarehouses = Xunit.Assert.IsType<List<Warehouse>>(okResult.Value);
-            Xunit.Assert.Equal(2, returnedWarehouses.Count);
-        }
-
-        [Fact]
-        public async Task GetAllWarehouses_InvalidAmount_ReturnsBadRequest()
-        {
-            // Act
-            var result = await _controller.GetAllWarehouses(0);
-
-            // Assert
-            var badRequestResult = Xunit.Assert.IsType<BadRequestObjectResult>(result.Result);
-            Xunit.Assert.Contains("Invalid amount", badRequestResult.Value.ToString());
+            Xunit.Assert.Single(returnedWarehouses);
         }
 
         [Fact]
         public async Task GetWarehouseById_ValidId_ReturnsOkResultWithWarehouse()
         {
             // Arrange
-            var mockWarehouse = new Warehouse { Id = 1, Name = "Warehouse 1" };
+            var mockWarehouse = new Warehouse { Id = 1, Name = "Warehouse A" };
             _mockService.Setup(service => service.GetWarehouseByIdAsync(1)).ReturnsAsync(mockWarehouse);
 
             // Act
@@ -80,37 +67,42 @@ namespace CargohubV2.Tests
         }
 
         [Fact]
-        public async Task GetWarehouseById_NonExistingId_ReturnsNotFound()
+        public async Task GetWarehousesByCity_ValidCity_ReturnsOkResultWithWarehouses()
         {
             // Arrange
-            _mockService.Setup(service => service.GetWarehouseByIdAsync(99)).ReturnsAsync((Warehouse)null);
+            var mockWarehouses = new List<Warehouse> 
+            { 
+                new Warehouse { Id = 1, City = "Amsterdam" } 
+            };
+            _mockService.Setup(service => service.GetWarehousesByCityAsync("Amsterdam")).ReturnsAsync(mockWarehouses);
 
             // Act
-            var result = await _controller.GetWarehouseById(99);
+            var result = await _controller.GetWarehousesByCity("Amsterdam");
 
             // Assert
-            var notFoundResult = Xunit.Assert.IsType<NotFoundObjectResult>(result.Result);
-            Xunit.Assert.Contains("Warehouse with ID 99 not found", notFoundResult.Value.ToString());
+            var okResult = Xunit.Assert.IsType<OkObjectResult>(result.Result);
+            var returnedWarehouses = Xunit.Assert.IsType<List<Warehouse>>(okResult.Value);
+            Xunit.Assert.Single(returnedWarehouses);
         }
 
         [Fact]
-        public async Task AddWarehouse_ValidWarehouse_ReturnsCreatedAtActionResult()
+        public async Task AddWarehouse_ValidWarehouse_ReturnsCreatedAtAction()
         {
             // Arrange
-            var newWarehouse = new Warehouse { Id = 1, Name = "New Warehouse" };
+            var newWarehouse = new Warehouse { Id = 1, Name = "Warehouse A" };
             _mockService.Setup(service => service.AddWarehouseAsync(newWarehouse)).ReturnsAsync(newWarehouse);
 
             // Act
             var result = await _controller.AddWarehouse(newWarehouse);
 
             // Assert
-            var createdAtActionResult = Xunit.Assert.IsType<CreatedAtActionResult>(result);
+            var createdAtActionResult = Xunit.Assert.IsType<CreatedAtActionResult>(result.Result);
             var returnedWarehouse = Xunit.Assert.IsType<Warehouse>(createdAtActionResult.Value);
             Xunit.Assert.Equal(newWarehouse.Id, returnedWarehouse.Id);
         }
 
         [Fact]
-        public async Task UpdateWarehouse_ValidId_ReturnsUpdatedWarehouse()
+        public async Task UpdateWarehouse_ValidId_ReturnsOkResultWithUpdatedWarehouse()
         {
             // Arrange
             var updatedWarehouse = new Warehouse { Id = 1, Name = "Updated Warehouse" };
@@ -137,7 +129,7 @@ namespace CargohubV2.Tests
         }
 
         [Fact]
-        public async Task DeleteWarehouseById_ValidId_ReturnsSuccessMessage()
+        public async Task DeleteWarehouseById_ValidId_ReturnsOkResultWithSuccessMessage()
         {
             // Arrange
             _mockService.Setup(service => service.DeleteWarehouseByIdAsync(1)).ReturnsAsync(true);
@@ -162,13 +154,39 @@ namespace CargohubV2.Tests
         }
 
         [Fact]
-        public async Task DeleteWarehouseById_NonExistingId_ReturnsNotFound()
+        public async Task DeleteWarehouseById_NotFound_ReturnsNotFound()
         {
             // Arrange
             _mockService.Setup(service => service.DeleteWarehouseByIdAsync(99)).ReturnsAsync(false);
 
             // Act
             var result = await _controller.DeleteWarehouseById(99);
+
+            // Assert
+            var notFoundResult = Xunit.Assert.IsType<NotFoundObjectResult>(result);
+            Xunit.Assert.Contains("Warehouse with ID 99 not found", notFoundResult.Value.ToString());
+        }
+
+        [Fact]
+        public async Task GetAllWarehouses_ZeroAmount_ReturnsBadRequest()
+        {
+            // Act
+            var result = await _controller.GetAllWarehouses(0);
+
+            // Assert
+            var badRequestResult = Xunit.Assert.IsType<BadRequestObjectResult>(result.Result);
+            Xunit.Assert.Contains("Invalid amount", badRequestResult.Value.ToString());
+        }
+        
+        [Fact]
+        public async Task UpdateWarehouse_NotFound_ReturnsNotFound()
+        {
+            // Arrange
+            var mockWarehouse = new Warehouse { Id = 1, Name = "Warehouse A" };
+            _mockService.Setup(service => service.UpdateWarehouseAsync(99, mockWarehouse)).ReturnsAsync((Warehouse)null);
+
+            // Act
+            var result = await _controller.UpdateWarehouse(99, mockWarehouse);
 
             // Assert
             var notFoundResult = Xunit.Assert.IsType<NotFoundObjectResult>(result);
