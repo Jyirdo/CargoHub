@@ -123,11 +123,17 @@ namespace CargohubV2.Services
             return true;
         }
 
-        // private string GenerateUniqueCode()
-        // {
-        //     var random = new Random();
-        //     const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        //     return new string(Enumerable.Range(0, 9).Select(_ => chars[random.Next(chars.Length)]).ToArray());
-        // }
+        public async Task PopulateWeightInKgAsync()
+        {
+            var random = new Random();
+
+            var items = await _context.Items.ToListAsync();
+            foreach (var item in items)
+            {
+                item.WeightInKg = random.Next(1, 100);
+            }
+
+            await _context.SaveChangesAsync();
+        }
     }
 }
