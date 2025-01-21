@@ -116,15 +116,14 @@ namespace CargohubV2.Services
             return true;
         }
 
-        public virtual async Task PopulateWeightInKgAsync()
+        public virtual async Task PopulateWeightInKgAsync() 
         {
             var random = new Random();
             var items = await _context.Items.ToListAsync();
 
             foreach (var item in items)
             {
-                // Stel een willekeurige waarde in voor WeightInKg (tussen 0.0 en 50.0)
-                item.WeightInKg = (int)Math.Round(random.NextDouble() * 50); // Converteren naar int
+                item.WeightInKg = random.Next(1, 101);
             }
 
             await _context.SaveChangesAsync();
