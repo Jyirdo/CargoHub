@@ -143,14 +143,15 @@ namespace CargohubV2.Services
 
             // Sum up the total amounts of these orders
             var totalRevenue = ordersInRange.Sum(o => o.TotalAmount);
+            var totalRevenuerounded = Math.Round(totalRevenue, 2);
 
             // Log the result for debugging purposes
-            Console.WriteLine($"Total revenue between {startDate} and {endDate}: {totalRevenue}");
+            Console.WriteLine($"Total revenue between {startDate} and {endDate}: {totalRevenuerounded}");
 
             // Return the result in the DTO
             return new revenewResultOrders
             {
-                TotalRevenewInBetweenDates = totalRevenue
+                TotalRevenewInBetweenDates = totalRevenuerounded
             };
         }
 
