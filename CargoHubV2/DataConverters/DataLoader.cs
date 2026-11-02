@@ -195,64 +195,8 @@
             context.Locations.AddRange(locations);
             context.SaveChanges();
 
-            // Load Stocks from Shipments
-            foreach (var shipment in shipments)
-            {
-                if (shipment.Stocks != null)
-                {
-                    foreach (var item in shipment.Stocks)
-                    {
-                        var stock = new ShipmentStock
-                        {
-                            ItemId = item.ItemId,
-                            Quantity = item.Quantity,
-                            ShipmentId = shipment.Id,
-                        };
-                        context.Stocks.Add(stock);
-                    }
-                }
-            }
-            context.SaveChanges();
-
-            // Load Stocks from Transfers
-            foreach (var transfer in transfers)
-            {
-                if (transfer.Stocks != null)
-                {
-                    foreach (var item in transfer.Stocks)
-                    {
-                        var stock = new TransferStock
-                        {
-                            ItemId = item.ItemId,
-                            Quantity = item.Quantity,
-                            TransferId = transfer.Id,
-                        };
-                        context.Stocks.Add(stock);
-                    }
-                    
-                }
-            }
-            context.SaveChanges();
-
-            // Load Stocks from Orders
-            foreach (var order in orders)
-            {
-                if (order.Stocks != null)
-                {
-                    foreach (var item in order.Stocks)
-                    {
-                        var stock = new OrderStock
-                        {
-                            ItemId = item.ItemId,
-                            Quantity = item.Quantity,
-                            OrderId = order.Id,
-                        };
-                        context.Stocks.Add(stock);
-                    }
-                    
-                }
-            }
-            context.SaveChanges();
+            // Stocks of orders, shipments and transfers are deserialized from "items" into their
+            // Stocks navigation property and are already saved together with their parent above.
         }
     }
 
