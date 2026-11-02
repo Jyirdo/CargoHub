@@ -42,6 +42,20 @@ jobs:
   IntegrationTests:
     needs: Build
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: CargoHub
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
@@ -62,13 +76,38 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest requests
     
+    - name: Build API
+      run: dotnet build
+      working-directory: CargoHubV2
+
+    - name: Apply Database Migrations
+      run: |
+        dotnet tool install --global dotnet-ef --version 8.0.10
+        dotnet ef database update --no-build
+      working-directory: CargoHubV2
+      env:
+        ASPNETCORE_ENVIRONMENT: Development
+
     - name: Start API
       run: |
-        dotnet run &
-        sleep 10
-        curl http://localhost:5000/
+        nohup dotnet run --no-build -- seed > api.log 2>&1 &
+        for i in $(seq 1 90); do
+          if curl -sf -o /dev/null http://localhost:5000/; then
+            echo "API is up after $((i*2))s"
+            exit 0
+          fi
+          sleep 2
+        done
+        echo "API did not start in time:"
+        cat api.log
+        exit 1
       working-directory: CargoHubV2
 
     - name: Run Integratie Tests
       run: pytest
+      working-directory: CargoHubV2
+
+    - name: Show API Log
+      if: failure()
+      run: cat api.log || true
       working-directory: CargoHubV2
