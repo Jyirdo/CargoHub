@@ -8,7 +8,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "DetailedErrors": true,
+      "DetailedErrors": true
     }
   }
 }
